@@ -6,40 +6,45 @@ import java.util.PriorityQueue;
  */
 public class Controller {
 
-    private final Board board;
+    private final Problem problem;
     PriorityQueue<Node> open = new PriorityQueue<Node>();
     //TODO:evaluate data structure
     ArrayList<Node> closed = new ArrayList<Node>();
 
-    public Controller(Board board) {
-        this.board = board;
+    public Controller(Problem problem) {
+        this.problem = problem;
     }
 
     public void bestFirst(){
-        board.getStartNode().setG(0);
-        board.getStartNode().calculateHAndF(board.getEndNode());
-        open.add(board.getStartNode());
+        Node n0 = problem.generateInitNode();
+        n0.setG(0);
+        problem.calculateH(n0);
+        n0.calculateF();
+        open.add(n0);
         while (!open.isEmpty()){
             Node current = open.remove();
             closed.add(current);
             //TODO; if current is solution return success
             //TODO: remove h calculation ot of this method
-            ArrayList<Node> neighbors = board.getNeighbors(current);
-            for(Node s: neighbors){
+            ArrayList<Node> succ = problem.getSuccessors(current);
+            for(Node s: succ){
+                //TODO: has been created
                 current.addChild(s);
                 if (!open.contains(s) && !closed.contains(s)){
                     attachAndEval(s,current);
+                    open.add(s);//TODO: check that it is sorted.
+                    
                 }
             }
-
         }
-
+        //TODO: Fail
     }
 
-    private void attachAndEval(Node s, Node current) {
-        s.setParent(current);
-        s.setG(current.getG()+Constants.LINEAR_TRAVEL_WEIGHT);
-        s.calculateHAndF(board.getEndNode());
+    private void attachAndEval(Node child, Node parent) {
+        child.setParent(parent);
+        child.setG(parent.getG() + problem.getArcCost(child, parent));
+        problem.calculateH(child);
+        child.calculateF();
     }
 
     public void printBoard() {
