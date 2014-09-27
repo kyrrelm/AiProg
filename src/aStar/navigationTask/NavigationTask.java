@@ -99,7 +99,7 @@ public class NavigationTask implements Problem{
 
     @Override
     public boolean isSolution(Node n) {
-        if (n.getStateId() == startState.getId()){
+        if (n.getStateId() == endState.getId()){
             return true;
         }
         return false;

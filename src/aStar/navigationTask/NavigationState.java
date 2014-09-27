@@ -33,4 +33,9 @@ public class NavigationState extends State {
     public int getY() {
         return y;
     }
+
+    @Override
+    public String toString() {
+        return "x: "+x+" y: "+y+"               id: "+id;
+    }
 }

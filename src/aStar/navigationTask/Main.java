@@ -42,6 +42,7 @@ public class Main {
             println("next:");
         }
         Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers));
+        controller.bestFirst();
     }
 
     static void println(String line){

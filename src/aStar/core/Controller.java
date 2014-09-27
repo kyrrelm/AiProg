@@ -13,33 +13,38 @@ public class Controller {
     PriorityQueue<Node> open;
     //TODO:evaluate data structure
     ArrayList<Node> closed;
-    HashMap<Long, Node> existingStates;
+    HashMap<Long, Node> existingNodes;
 
     public Controller(Problem problem) {
         this.problem = problem;
         open = new PriorityQueue<Node>();
         closed = new ArrayList<Node>();
-        existingStates = new HashMap<Long, Node>();
+        existingNodes = new HashMap<Long, Node>();
     }
 
     //TODO: generate states on node creation
     public Node bestFirst(){
         Node n0 = problem.generateInitNode();
-        existingStates.put(n0.getStateId(), n0);
+        existingNodes.put(n0.getStateId(), n0);
         n0.setG(0);
         problem.calculateH(n0);
         n0.calculateF();
         open.add(n0);
+        int loopCount = 0;
         while (!open.isEmpty()){
-            Node current = open.remove();
+            Node current = open.poll();
             closed.add(current);
             if (problem.isSolution(current)){
+                System.out.println("======  SUCCESS?  ======");
+                System.out.println("Loop iterations: "+loopCount);
                 return(current);
             }
             ArrayList<Node> succ = problem.getSuccessors(current);
             for(Node s: succ){
-                if (existingStates.containsKey(s.getStateId())){
-                    s = existingStates.get(s.getStateId());
+                if (existingNodes.containsKey(s.getStateId())){
+                    s = existingNodes.get(s.getStateId());
+                }else {
+                    existingNodes.put(s.getStateId(),s);
                 }
                 current.addChild(s);
                 if (!open.contains(s) && !closed.contains(s)){
@@ -52,8 +57,12 @@ public class Controller {
                     }
                 }
             }
+            loopCount++;
+            if (loopCount%10000 == 0){
+                System.out.println("Loop iterations: "+loopCount);
+            }
         }
-        System.out.println("======  FAIL  ======");
+        System.out.println("======  FAILED  ======");
         return null;
     }
 
