@@ -1,3 +1,7 @@
+package aStar.navigationTask;
+
+import aStar.core.Controller;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,9 +13,9 @@ public class Main {
     public static void main(String[] args) {
         ArrayList<int[]> barriers = new ArrayList<int[]>();
         Scanner sc = new Scanner(System.in);
-        println("Board size x:");
+        println("aStar.navigationTask.NavigationTask size x:");
         int dimX = sc.nextInt();
-        println("Board size y:");
+        println("aStar.navigationTask.NavigationTask size y:");
         int dimY = sc.nextInt();
         println("Start pos x:");
         int startX = sc.nextInt();
@@ -37,9 +41,7 @@ public class Main {
             barriers.add(intbar);
             println("next:");
         }
-        Controller controller = new Controller(new Board(dimX,dimY,startX,startY,endX,endY,barriers));
-        controller.printBoard();
-
+        Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers));
     }
 
     static void println(String line){

@@ -1,4 +1,7 @@
+package aStar.core;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 
 /**
@@ -7,16 +10,22 @@ import java.util.PriorityQueue;
 public class Controller {
 
     private final Problem problem;
-    PriorityQueue<Node> open = new PriorityQueue<Node>();
+    PriorityQueue<Node> open;
     //TODO:evaluate data structure
-    ArrayList<Node> closed = new ArrayList<Node>();
+    ArrayList<Node> closed;
+    HashMap<Long, Node> existingStates;
 
     public Controller(Problem problem) {
         this.problem = problem;
+        open = new PriorityQueue<Node>();
+        closed = new ArrayList<Node>();
+        existingStates = new HashMap<Long, Node>();
     }
 
-    public void bestFirst(){
+    //TODO: generate states on node creation
+    public Node bestFirst(){
         Node n0 = problem.generateInitNode();
+        existingStates.put(n0.getStateId(), n0);
         n0.setG(0);
         problem.calculateH(n0);
         n0.calculateF();
@@ -24,10 +33,14 @@ public class Controller {
         while (!open.isEmpty()){
             Node current = open.remove();
             closed.add(current);
-            //TODO; if current is solution return success
+            if (problem.isSolution(current)){
+                return(current);
+            }
             ArrayList<Node> succ = problem.getSuccessors(current);
             for(Node s: succ){
-                //TODO: has been created
+                if (existingStates.containsKey(s.getStateId())){
+                    s = existingStates.get(s.getStateId());
+                }
                 current.addChild(s);
                 if (!open.contains(s) && !closed.contains(s)){
                     attachAndEval(s,current);
@@ -40,7 +53,8 @@ public class Controller {
                 }
             }
         }
-        //TODO: Fail
+        System.out.println("======  FAIL  ======");
+        return null;
     }
 
     private void attachAndEval(Node child, Node parent) {
@@ -60,9 +74,5 @@ public class Controller {
             }
         }
 
-    }
-
-    public void printBoard() {
-        board.crudePrint();
     }
 }

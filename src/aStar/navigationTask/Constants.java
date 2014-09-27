@@ -1,3 +1,5 @@
+package aStar.navigationTask;
+
 /**
  * Created by Kyrre on 23/9/2014.
  */

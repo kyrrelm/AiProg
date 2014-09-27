@@ -1,3 +1,5 @@
+package aStar.core;
+
 import java.util.ArrayList;
 
 /**
@@ -7,9 +9,11 @@ public interface Problem {
 
     public Node generateInitNode();
 
-    void calculateH(Node n);
+    int calculateH(Node n);
 
     ArrayList<Node> getSuccessors(Node n);
 
-    int getArcCost(Node n0, Node n2);
+    int getArcCost(Node n1, Node n2);
+
+    boolean isSolution(Node n);
 }

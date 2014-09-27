@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+package aStar.core;
+
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -13,8 +14,9 @@ public class Node implements Comparable<Node>{
     private Node parent;
     private HashSet<Node> children;
 
-    public Node() {
+    public Node(State state) {
         children = new HashSet<Node>();
+        this.state = state;
     }
 
     public void setG(int g) {
@@ -34,10 +36,13 @@ public class Node implements Comparable<Node>{
         return 0;
     }
 
+    public long getStateId(){
+        return state.getId();
+    }
+
     public int getG() {
         return g;
     }
-
 
     public void setParent(Node parent) {
         this.parent = parent;
@@ -53,5 +58,9 @@ public class Node implements Comparable<Node>{
 
     public HashSet<Node> getChildren() {
         return children;
+    }
+
+    public State getState() {
+        return state;
     }
 }
