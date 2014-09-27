@@ -50,4 +50,8 @@ public class Node implements Comparable<Node>{
     public void calculateF() {
         f = g + h;
     }
+
+    public HashSet<Node> getChildren() {
+        return children;
+    }
 }
