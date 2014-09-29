@@ -13,8 +13,16 @@ public class Main {
     public static void main(String[] args) {
         ArrayList<int[]> barriers = new ArrayList<int[]>();
         Scanner sc = new Scanner(System.in);
+        println("Iteration sleep time:");
+        int sleepTime = sc.nextInt();
         println("aStar.navigationTask.NavigationTask size x:");
         int dimX = sc.nextInt();
+        if(dimX == -5){
+            taskFive(sleepTime);
+        }
+        if(dimX == -2){
+            taskTwo(sleepTime);
+        }
         println("aStar.navigationTask.NavigationTask size y:");
         int dimY = sc.nextInt();
         println("Start pos x:");
@@ -41,9 +49,28 @@ public class Main {
             barriers.add(intBar);
             println("next:");
         }
-        println("Iteration sleep time:");
-        int sleepTime = sc.nextInt();
         Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers),sleepTime);
+        new GUI(controller);
+        controller.bestFirst();
+    }
+
+    static void taskFive(int sleepTime){
+        ArrayList<int[]> barriers = new ArrayList<int[]>();
+        barriers.add(new int[]{4,0,4,16});
+        barriers.add(new int[]{12,4,2,16});
+        barriers.add(new int[]{16,8,4,4});
+        Controller controller = new Controller(new NavigationTask(20,20,0,0,19,13,barriers),sleepTime);
+        new GUI(controller);
+        controller.bestFirst();
+    }
+    static void taskTwo(int sleepTime){
+        ArrayList<int[]> barriers = new ArrayList<int[]>();
+        barriers.add(new int[]{17,10,2,1});
+        barriers.add(new int[]{14,4,5,2});
+        barriers.add(new int[]{3,16,10,2});
+        barriers.add(new int[]{13,7,5,3});
+        barriers.add(new int[]{15,15,3,3});
+        Controller controller = new Controller(new NavigationTask(20,20,0,0,19,19,barriers),sleepTime);
         new GUI(controller);
         controller.bestFirst();
     }

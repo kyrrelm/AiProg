@@ -1,6 +1,7 @@
 package aStar.navigationTask;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by Kyrre on 27.09.2014.
@@ -32,6 +33,13 @@ public class Square extends JButton {
     }
 
     public void setType(Type type) {
+        if (type == Type.DEFAULT){
+            if (this.type == Type.PATH || this.type == Type.OLD_PATH){
+                this.type = Type.OLD_PATH;
+                setVisual();
+                return;
+            }
+        }
         if(this.type != Type.START && this.type != Type.END){
             this.type = type;
             setVisual();
@@ -41,11 +49,15 @@ public class Square extends JButton {
     private void setVisual() {
         switch (type){
             case BARRIER:{
-                setText("#");
+                setText("");
+                setBackground(Color.BLACK);
+                setOpaque(true);
                 break;
             }
             case PATH:{
-                setText("P");
+                setText("");
+                setBackground(Color.YELLOW);
+                setOpaque(true);
                 break;
             }
             case DEFAULT:{
@@ -53,11 +65,21 @@ public class Square extends JButton {
                 break;
             }
             case START:{
-                setText("S");
+                setText("");
+                setBackground(Color.BLUE);
+                setOpaque(true);
+                break;
+            }
+            case OLD_PATH:{
+                setText("");
+                setBackground(Color.LIGHT_GRAY);
+                setOpaque(true);
                 break;
             }
             case END:{
-                setText("E");
+                setText("");
+                setBackground(Color.RED);
+                setOpaque(true);
                 break;
             }
             default:{

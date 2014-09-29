@@ -49,17 +49,6 @@ public class NavigationTask implements Problem{
     }
 
     @Override
-    /**
-     * Using Manhattan distance
-     */
-    public void calculateH(Node n) {
-        NavigationState nState = (NavigationState) n.getState();
-        int absX = Math.abs(nState.getX() - endState.getX());
-        int absY = Math.abs(nState.getY() - endState.getY());
-        n.setH(absX + absY);
-    }
-
-    @Override
     public ArrayList<Node> getSuccessors(Node n) {
         NavigationState nState = (NavigationState) n.getState();
         int x = nState.getX();
@@ -89,12 +78,23 @@ public class NavigationTask implements Problem{
     }
 
     @Override
+    /**
+     * Using Manhattan distance
+     */
+    public void calculateH(Node n) {
+        NavigationState nState = (NavigationState) n.getState();
+        int absX = Math.abs(nState.getX() - endState.getX());
+        int absY = Math.abs(nState.getY() - endState.getY());
+        n.setH((absX + absY)*100);
+    }
+
+    @Override
     public int getArcCost(Node n1, Node n2) {
         NavigationState n1State = (NavigationState) n1.getState();
         NavigationState n2State = (NavigationState) n2.getState();
         int absX = Math.abs(n1State.getX() - n2State.getX());
         int absY = Math.abs(n1State.getY() - n2State.getY());
-        return (absX + absY)*10;
+        return (absX + absY)*1;
     }
 
     @Override
