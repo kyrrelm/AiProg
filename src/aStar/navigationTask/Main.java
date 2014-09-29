@@ -15,15 +15,28 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         println("Iteration sleep time:");
         int sleepTime = sc.nextInt();
-        println("aStar.navigationTask.NavigationTask size x:");
+        println("Search type:");
+        println("1. Best first");
+        println("2. Depth first");
+        println("3. Breath first");
+        int t = sc.nextInt();
+        Controller.SearchType type = null;
+        if (t == 2){
+            type = Controller.SearchType.DEPTH_FIRST;
+        }else if (t == 3){
+            type = Controller.SearchType.BREADTH_FIRST;
+        }else {
+            type = Controller.SearchType.BEST_FIRST;
+        }
+        println("NavigationTask size x:");
         int dimX = sc.nextInt();
         if(dimX == -5){
-            taskFive(sleepTime);
+            taskFive(sleepTime, type);
         }
         if(dimX == -2){
-            taskTwo(sleepTime);
+            taskTwo(sleepTime, type);
         }
-        println("aStar.navigationTask.NavigationTask size y:");
+        println("NavigationTask size y:");
         int dimY = sc.nextInt();
         println("Start pos x:");
         int startX = sc.nextInt();
@@ -51,19 +64,19 @@ public class Main {
         }
         Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers),sleepTime);
         new GUI(controller);
-        controller.bestFirst();
+        controller.search(type);
     }
 
-    static void taskFive(int sleepTime){
+    static void taskFive(int sleepTime, Controller.SearchType type){
         ArrayList<int[]> barriers = new ArrayList<int[]>();
         barriers.add(new int[]{4,0,4,16});
         barriers.add(new int[]{12,4,2,16});
         barriers.add(new int[]{16,8,4,4});
         Controller controller = new Controller(new NavigationTask(20,20,0,0,19,13,barriers),sleepTime);
         new GUI(controller);
-        controller.bestFirst();
+        controller.search(type);
     }
-    static void taskTwo(int sleepTime){
+    static void taskTwo(int sleepTime, Controller.SearchType type){
         ArrayList<int[]> barriers = new ArrayList<int[]>();
         barriers.add(new int[]{17,10,2,1});
         barriers.add(new int[]{14,4,5,2});
@@ -72,7 +85,7 @@ public class Main {
         barriers.add(new int[]{15,15,3,3});
         Controller controller = new Controller(new NavigationTask(20,20,0,0,19,19,barriers),sleepTime);
         new GUI(controller);
-        controller.bestFirst();
+        controller.search(type);
     }
 
     static void println(String line){

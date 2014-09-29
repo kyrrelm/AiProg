@@ -1,17 +1,21 @@
 package aStar.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Created by Kyrre on 23/9/2014.
  */
 public class Controller {
 
+    public enum SearchType {
+        BEST_FIRST,
+        DEPTH_FIRST,
+        BREADTH_FIRST
+    }
+
     private final Problem problem;
     private final int sleepTime;
-    PriorityQueue<Node> open;
+    Collection<Node> open;
     //TODO:evaluate data structure
     ArrayList<Node> closed;
     HashMap<Long, Node> existingNodes;
@@ -20,14 +24,20 @@ public class Controller {
     public Controller(Problem problem, int sleepTime) {
         this.problem = problem;
         this.sleepTime = sleepTime;
-        open = new PriorityQueue<Node>();
         closed = new ArrayList<Node>();
         existingNodes = new HashMap<Long, Node>();
         currentListeners = new ArrayList<CurrentListener>();
     }
 
     //TODO: generate states on node creation
-    public Node bestFirst(){
+    public Node search(SearchType type){
+        if (type == SearchType.BEST_FIRST){
+            open = new PriorityQueue<Node>();
+        }else if(type == SearchType.DEPTH_FIRST){
+            open = new Stack<Node>();
+        }else if (type == SearchType.BREADTH_FIRST){
+            open = new LinkedList<Node>();
+        }
         Node n0 = problem.generateInitNode();
         existingNodes.put(n0.getStateId(), n0);
         n0.setG(0);
@@ -41,11 +51,18 @@ public class Controller {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Node current = open.poll();
+            Node current = null;
+            if (type == SearchType.BEST_FIRST){
+                current = ((PriorityQueue<Node>)open).poll();
+            }else if (type == SearchType.DEPTH_FIRST){
+                current = ((Stack<Node>)open).pop();
+            }else if (type == SearchType.BREADTH_FIRST){
+                current = ((LinkedList<Node>)open).removeFirst();
+            }
             notifyCurrentListeners(current);
             closed.add(current);
             if (problem.isSolution(current)){
-                System.out.println("======  SUCCESS?  ======");
+                System.out.println("======  SUCCESS  ======");
                 System.out.println("Loop iterations: "+loopCount);
                 return(current);
             }
