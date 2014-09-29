@@ -1,5 +1,7 @@
 package aStar.core;
 
+import aStar.navigationTask.GUI;
+
 import java.util.*;
 
 /**
@@ -10,6 +12,7 @@ public class Controller {
     public enum SearchType {
         BEST_FIRST,
         DEPTH_FIRST,
+        ALL,
         BREADTH_FIRST
     }
 
@@ -19,19 +22,27 @@ public class Controller {
     //TODO:evaluate data structure
     ArrayList<Node> closed;
     HashMap<Long, Node> existingNodes;
-    private ArrayList<CurrentListener> currentListeners;
+    private ArrayList<ControllerListener> controllerListeners;
 
     public Controller(Problem problem, int sleepTime) {
         this.problem = problem;
         this.sleepTime = sleepTime;
+        controllerListeners = new ArrayList<ControllerListener>();
+        init();
+    }
+
+    private void init() {
         closed = new ArrayList<Node>();
         existingNodes = new HashMap<Long, Node>();
-        currentListeners = new ArrayList<CurrentListener>();
     }
+
 
     //TODO: generate states on node creation
     public Node search(SearchType type){
-        if (type == SearchType.BEST_FIRST){
+        if(type == SearchType.ALL){
+            doAll();
+            return null;
+        }else if (type == SearchType.BEST_FIRST){
             open = new PriorityQueue<Node>();
         }else if(type == SearchType.DEPTH_FIRST){
             open = new Stack<Node>();
@@ -93,6 +104,26 @@ public class Controller {
         return null;
     }
 
+    private void doAll() {
+        search(SearchType.DEPTH_FIRST);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        init();
+        new GUI(this);
+        search(SearchType.BREADTH_FIRST);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        init();
+        new GUI(this);
+        search(SearchType.BEST_FIRST);
+    }
+
     private void attachAndEval(Node child, Node parent) {
         child.setParent(parent);
         child.setG(parent.getG() + problem.getArcCost(child, parent));
@@ -116,11 +147,11 @@ public class Controller {
         return problem;
     }
 
-    public void addCurrentListener(CurrentListener c){
-        this.currentListeners.add(c);
+    public void addControllerListener(ControllerListener c){
+        this.controllerListeners.add(c);
     }
     public void notifyCurrentListeners(Node current){
-        for(CurrentListener c: currentListeners){
+        for(ControllerListener c: controllerListeners){
             c.currentNodeChange(current);
         }
     }

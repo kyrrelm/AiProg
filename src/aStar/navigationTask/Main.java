@@ -13,29 +13,16 @@ public class Main {
     public static void main(String[] args) {
         ArrayList<int[]> barriers = new ArrayList<int[]>();
         Scanner sc = new Scanner(System.in);
+        println("Predefined board? (y/n):");
+        String in = sc.next();
+        if (!in.equals("n")){
+            predefined(sc);
+        }
         println("Iteration sleep time:");
         int sleepTime = sc.nextInt();
-        println("Search type:");
-        println("1. Best first");
-        println("2. Depth first");
-        println("3. Breath first");
-        int t = sc.nextInt();
-        Controller.SearchType type = null;
-        if (t == 2){
-            type = Controller.SearchType.DEPTH_FIRST;
-        }else if (t == 3){
-            type = Controller.SearchType.BREADTH_FIRST;
-        }else {
-            type = Controller.SearchType.BEST_FIRST;
-        }
+        Controller.SearchType type = chooseType(sc);
         println("NavigationTask size x:");
         int dimX = sc.nextInt();
-        if(dimX == -5){
-            taskFive(sleepTime, type);
-        }
-        if(dimX == -2){
-            taskTwo(sleepTime, type);
-        }
         println("NavigationTask size y:");
         int dimY = sc.nextInt();
         println("Start pos x:");
@@ -67,25 +54,62 @@ public class Main {
         controller.search(type);
     }
 
-    static void taskFive(int sleepTime, Controller.SearchType type){
-        ArrayList<int[]> barriers = new ArrayList<int[]>();
-        barriers.add(new int[]{4,0,4,16});
-        barriers.add(new int[]{12,4,2,16});
-        barriers.add(new int[]{16,8,4,4});
-        Controller controller = new Controller(new NavigationTask(20,20,0,0,19,13,barriers),sleepTime);
-        new GUI(controller);
-        controller.search(type);
+    private static Controller.SearchType chooseType(Scanner sc) {
+        println("Search type:");
+        println("1. Depth first");
+        println("2. Breath first");
+        println("3. Best first");
+        println("4. All");
+        int t = sc.nextInt();
+        Controller.SearchType type = null;
+        if (t == 1){
+            type = Controller.SearchType.DEPTH_FIRST;
+        }else if (t == 2){
+            type = Controller.SearchType.BREADTH_FIRST;
+        }
+        else if (t == 3){
+            type = Controller.SearchType.BEST_FIRST;
+        }else {
+            type = Controller.SearchType.ALL;
+        }
+        return type;
     }
-    static void taskTwo(int sleepTime, Controller.SearchType type){
-        ArrayList<int[]> barriers = new ArrayList<int[]>();
-        barriers.add(new int[]{17,10,2,1});
-        barriers.add(new int[]{14,4,5,2});
-        barriers.add(new int[]{3,16,10,2});
-        barriers.add(new int[]{13,7,5,3});
-        barriers.add(new int[]{15,15,3,3});
-        Controller controller = new Controller(new NavigationTask(20,20,0,0,19,19,barriers),sleepTime);
-        new GUI(controller);
-        controller.search(type);
+
+    private static void predefined(Scanner sc) {
+        println("Iteration sleep time:");
+        int sleepTime = sc.nextInt();
+        Controller.SearchType type = chooseType(sc);
+        println("Choose predefined board (0-5):");
+        int input = sc.nextInt();
+        switch (input){
+            case 0:{
+                StandardBoards.taskZero(sleepTime, type);
+                break;
+            }
+            case 1:{
+                StandardBoards.taskOne(sleepTime, type);
+                break;
+            }
+            case 2:{
+                StandardBoards.taskTwo(sleepTime, type);
+                break;
+            }
+            case 3:{
+                StandardBoards.taskThree(sleepTime, type);
+                break;
+            }
+            case 4:{
+                StandardBoards.taskFour(sleepTime, type);
+                break;
+            }
+            case 5:{
+                StandardBoards.taskFive(sleepTime, type);
+                break;
+            }
+            default:{
+                StandardBoards.taskFive(sleepTime, type);
+            }
+        }
     }
 
     static void println(String line){

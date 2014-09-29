@@ -1,7 +1,7 @@
 package aStar.navigationTask;
 
 import aStar.core.Controller;
-import aStar.core.CurrentListener;
+import aStar.core.ControllerListener;
 import aStar.core.Node;
 
 import javax.swing.*;
@@ -29,21 +29,16 @@ public class GUI extends JFrame{
         squares = new Square[board.length][board[0].length];
         init();
         add(p);
-        controller.addCurrentListener(new CurrentListener() {
+        controller.addControllerListener(new ControllerListener() {
             @Override
             public void currentNodeChange(Node c) {
                 for (int i = 0; i < squares.length; i++) {
                     for (int j = 0; j < squares[0].length; j++) {
                         if (board[i][j].isBarrier()) {
                             squares[i][j].setType(Square.Type.BARRIER);
-                        }else  {
+                        } else {
                             squares[i][j].setType(Square.Type.DEFAULT);
                         }
-//                        }else if (squares[i][j].getText().equals("X")){
-//                            squares[i][j].setText("O");
-//                        }else if(!squares[i][j].getText().equals("O")) {
-//                            squares[i][j].setText("");
-//                        }
                     }
                 }
                 setPath(c);
