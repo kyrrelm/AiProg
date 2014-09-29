@@ -85,7 +85,7 @@ public class NavigationTask implements Problem{
         NavigationState nState = (NavigationState) n.getState();
         int absX = Math.abs(nState.getX() - endState.getX());
         int absY = Math.abs(nState.getY() - endState.getY());
-        n.setH((absX + absY)*100);
+        n.setH((absX + absY));
     }
 
     @Override
@@ -94,7 +94,7 @@ public class NavigationTask implements Problem{
         NavigationState n2State = (NavigationState) n2.getState();
         int absX = Math.abs(n1State.getX() - n2State.getX());
         int absY = Math.abs(n1State.getY() - n2State.getY());
-        return (absX + absY)*1;
+        return (absX + absY);
     }
 
     @Override
