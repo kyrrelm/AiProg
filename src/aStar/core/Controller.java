@@ -10,16 +10,20 @@ import java.util.PriorityQueue;
 public class Controller {
 
     private final Problem problem;
+    private final int sleepTime;
     PriorityQueue<Node> open;
     //TODO:evaluate data structure
     ArrayList<Node> closed;
     HashMap<Long, Node> existingNodes;
+    private ArrayList<CurrentListener> currentListeners;
 
-    public Controller(Problem problem) {
+    public Controller(Problem problem, int sleepTime) {
         this.problem = problem;
+        this.sleepTime = sleepTime;
         open = new PriorityQueue<Node>();
         closed = new ArrayList<Node>();
         existingNodes = new HashMap<Long, Node>();
+        currentListeners = new ArrayList<CurrentListener>();
     }
 
     //TODO: generate states on node creation
@@ -32,7 +36,13 @@ public class Controller {
         open.add(n0);
         int loopCount = 0;
         while (!open.isEmpty()){
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Node current = open.poll();
+            notifyCurrentListeners(current);
             closed.add(current);
             if (problem.isSolution(current)){
                 System.out.println("======  SUCCESS?  ======");
@@ -49,7 +59,7 @@ public class Controller {
                 current.addChild(s);
                 if (!open.contains(s) && !closed.contains(s)){
                     attachAndEval(s,current);
-                    open.add(s);//TODO: check that it is sorted.
+                    open.add(s);
                 }else if(current.getG() + problem.getArcCost(s, current) < s.getG()){
                     attachAndEval(s, current);
                     if (closed.contains(s)){
@@ -83,5 +93,18 @@ public class Controller {
             }
         }
 
+    }
+
+    public Problem getProblem() {
+        return problem;
+    }
+
+    public void addCurrentListener(CurrentListener c){
+        this.currentListeners.add(c);
+    }
+    public void notifyCurrentListeners(Node current){
+        for(CurrentListener c: currentListeners){
+            c.currentNodeChange(current);
+        }
     }
 }

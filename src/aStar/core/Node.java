@@ -29,9 +29,9 @@ public class Node implements Comparable<Node>{
 
     @Override
     public int compareTo(Node o) {
-        if(this.g < o.g)
+        if (this.f < o.getF())
             return -1;
-        if (this.g > o.g)
+        if (this.f > o.getF())
             return 1;
         return 0;
     }
@@ -62,5 +62,17 @@ public class Node implements Comparable<Node>{
 
     public State getState() {
         return state;
+    }
+
+    public int getF() {
+        return f;
+    }
+
+    public void setH(int h) {
+        this.h = h;
+    }
+
+    public Node getParent() {
+        return parent;
     }
 }

@@ -19,7 +19,7 @@ public class NavigationTask implements Problem{
         board = new NavigationState[dimX][dimY];
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
-                board[i][j] = new NavigationState(j,i);
+                board[i][j] = new NavigationState(i,j);
             }
         }
         startState = board[startX][startY];
@@ -52,11 +52,11 @@ public class NavigationTask implements Problem{
     /**
      * Using Manhattan distance
      */
-    public int calculateH(Node n) {
+    public void calculateH(Node n) {
         NavigationState nState = (NavigationState) n.getState();
         int absX = Math.abs(nState.getX() - endState.getX());
         int absY = Math.abs(nState.getY() - endState.getY());
-        return absX + absY;
+        n.setH(absX + absY);
     }
 
     @Override
@@ -124,5 +124,9 @@ public class NavigationTask implements Problem{
             }
             System.out.println();
         }
+    }
+
+    public NavigationState[][] getBoard() {
+        return board;
     }
 }

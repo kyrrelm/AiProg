@@ -9,7 +9,7 @@ public interface Problem {
 
     public Node generateInitNode();
 
-    int calculateH(Node n);
+    void calculateH(Node n);
 
     ArrayList<Node> getSuccessors(Node n);
 

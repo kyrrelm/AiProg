@@ -34,14 +34,17 @@ public class Main {
                 break;
             }
             String[] barrier = input.split(",");
-            int[] intbar = new int[4];
+            int[] intBar = new int[4];
             for (int i = 0; i < 4; i++) {
-                intbar[i] = Integer.parseInt(barrier[i]);
+                intBar[i] = Integer.parseInt(barrier[i]);
             }
-            barriers.add(intbar);
+            barriers.add(intBar);
             println("next:");
         }
-        Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers));
+        println("Iteration sleep time:");
+        int sleepTime = sc.nextInt();
+        Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers),sleepTime);
+        new GUI(controller);
         controller.bestFirst();
     }
 

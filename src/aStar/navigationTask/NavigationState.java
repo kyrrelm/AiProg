@@ -36,6 +36,6 @@ public class NavigationState extends State {
 
     @Override
     public String toString() {
-        return "x: "+x+" y: "+y+"               id: "+id;
+        return "x: "+x+" y: "+y+" id: "+id;
     }
 }
