@@ -1,7 +1,5 @@
 package aStar.core;
 
-import aStar.navigationTask.GUI;
-
 import java.util.*;
 
 /**
@@ -28,10 +26,10 @@ public class Controller {
         this.problem = problem;
         this.sleepTime = sleepTime;
         controllerListeners = new ArrayList<ControllerListener>();
-        init();
+        reset();
     }
 
-    private void init() {
+    public void reset() {
         closed = new ArrayList<Node>();
         existingNodes = new HashMap<Long, Node>();
     }
@@ -39,10 +37,7 @@ public class Controller {
 
     //TODO: generate states on node creation
     public Node search(SearchType type){
-        if(type == SearchType.ALL){
-            doAll();
-            return null;
-        }else if (type == SearchType.BEST_FIRST){
+        if (type == SearchType.BEST_FIRST){
             open = new PriorityQueue<Node>();
         }else if(type == SearchType.DEPTH_FIRST){
             open = new Stack<Node>();
@@ -102,26 +97,6 @@ public class Controller {
         }
         System.out.println("======  FAILED  ======");
         return null;
-    }
-
-    private void doAll() {
-        search(SearchType.DEPTH_FIRST);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        init();
-        new GUI(this);
-        search(SearchType.BREADTH_FIRST);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        init();
-        new GUI(this);
-        search(SearchType.BEST_FIRST);
     }
 
     private void attachAndEval(Node child, Node parent) {

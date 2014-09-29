@@ -17,7 +17,7 @@ public class GUI extends JFrame{
     private final Square[][] squares;
     JPanel p = new JPanel();
 
-    public GUI(Controller controller) {
+    public GUI(Controller controller, Controller.SearchType type) {
         super("A* Navigation Task");
         this.controller = controller;
         this.task = (NavigationTask) controller.getProblem();

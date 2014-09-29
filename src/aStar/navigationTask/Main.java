@@ -50,7 +50,11 @@ public class Main {
             println("next:");
         }
         Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers),sleepTime);
-        new GUI(controller);
+        if (type == Controller.SearchType.ALL){
+            StandardBoards.doAll(controller);
+            return;
+        }
+        new GUI(controller,type);
         controller.search(type);
     }
 
