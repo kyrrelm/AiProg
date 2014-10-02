@@ -34,7 +34,6 @@ public class NavigationTask implements Problem{
                 }
             }
         }
-        crudePrint();
     }
     public NavigationState getStartState() {
         return startState;

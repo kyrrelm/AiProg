@@ -29,11 +29,11 @@ public class Node implements Comparable<Node>{
 
     @Override
     public int compareTo(Node o) {
-        if (this.f < o.getF())
-            return -1;
-        if (this.f > o.getF())
-            return 1;
-        return 0;
+        if(this.f == o.getF()){
+            return o.getG() - this.g;
+        }
+        return this.f - o.getF();
+
     }
 
     public long getStateId(){
