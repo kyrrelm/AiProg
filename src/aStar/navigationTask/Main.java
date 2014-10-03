@@ -19,6 +19,7 @@ public class Main {
             predefined(sc);
         }
         println("Iteration sleep time:");
+        println("Test ________TEST_________:");
         int sleepTime = sc.nextInt();
         Controller.SearchType type = chooseType(sc);
         println("NavigationTask size x:");
