@@ -3,6 +3,7 @@ package aStarGAC;
 import aStar.core.State;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -16,6 +17,7 @@ public abstract class GACState extends State {
 
     protected Variable assumedVariable;
     private boolean solution;
+    private Variable variableById;
 
     protected GACState(long id) {
         super(id);
@@ -45,5 +47,28 @@ public abstract class GACState extends State {
             }
         }
         return true;
+    }
+
+    public Variable getVariableWithSmallestDomain() {
+        Variable current = null;
+        for (Variable v: variables){
+            if (current == null){
+                current = v;
+            }else if(v.getDomainSize() < current.getDomainSize()){
+                current = v;
+            }
+        }
+        return current;
+    }
+
+    public abstract GACState deepCopy();
+
+    public Variable getVariableById(int id) {
+        for (Variable v: variables){
+            if (v.getId() == id){
+                return v;
+            }
+        }
+        return null;
     }
 }

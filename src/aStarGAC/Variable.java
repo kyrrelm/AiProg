@@ -7,7 +7,7 @@ import java.util.List;
  */
 public abstract class Variable {
     protected long id;
-    List<Object> domain;
+    private List<Object> domain;
 
     public long getId() {
         return id;
@@ -22,5 +22,13 @@ public abstract class Variable {
 
     public boolean hasEmptyDomain() {
         return domain.isEmpty();
+    }
+
+    public int getDomainSize() {
+        return domain.size();
+    }
+
+    public List<Object> getDomain() {
+        return domain;
     }
 }

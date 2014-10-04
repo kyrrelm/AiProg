@@ -1,9 +1,11 @@
 package aStarGAC;
 
 import aStar.core.Controller;
+import aStar.core.Node;
 import aStar.core.Problem;
 import aStar.core.State;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,10 +19,11 @@ public abstract class GACProblem implements Problem {
     protected LinkedList<Revise> queue = new LinkedList<Revise>();
     protected List<Constraint> constraints;
     HashSet<Variable> variables;
+    GACState s0 = null;
 
 
     protected GACState run(){
-        GACState s0 = generateInitState();
+        s0 = generateInitState();
         init(s0);
         domainFilterLoop(s0);
         if (s0.isContradictory()){
@@ -30,6 +33,34 @@ public abstract class GACProblem implements Problem {
         }
         Controller cont = new Controller(this, 0);
         return (GACState)cont.search(Controller.SearchType.BEST_FIRST).getState();
+    }
+    //TODO: calculateH here?
+
+
+    @Override
+    //TODO:Move to subclass.
+    public ArrayList<Node> getSuccessors(Node n) {
+        GACState state = (GACState) n.getState();
+        Variable small = state.getVariableWithSmallestDomain();
+        for (Object o: small.getDomain()){
+            GACState child = state.deepCopy();
+            //child.getVariableById() = new Variable()
+        }
+        //TODO:Run GAC
+        return null;
+    }
+
+    @Override
+    public Node generateInitNode() {
+        if (s0 == null){
+            //TODO: FAIL THE SEARCH...
+        }
+        return new Node(s0);
+    }
+
+    @Override
+    public boolean isSolution(Node n) {
+        return s0.isSolution();
     }
 
     protected abstract GACState generateInitState();
