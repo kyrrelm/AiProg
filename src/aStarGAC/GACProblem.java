@@ -17,11 +17,15 @@ public abstract class GACProblem implements Problem {
 
 
     protected LinkedList<Revise> queue = new LinkedList<Revise>();
-    protected List<Constraint> constraints;
+    protected List<? extends Constraint> constraints;
     HashSet<Variable> variables;
     GACState s0 = null;
 
 
+    protected GACProblem(List<? extends Constraint> constraints, HashSet<Variable> variables) {
+        this.constraints = constraints;
+        this.variables = variables;
+    }
     protected GACState run(){
         s0 = generateInitState();
         init(s0);
@@ -34,20 +38,26 @@ public abstract class GACProblem implements Problem {
         Controller cont = new Controller(this, 0);
         return (GACState)cont.search(Controller.SearchType.BEST_FIRST).getState();
     }
-    //TODO: calculateH here?
 
+
+    //TODO: calculateH here?
 
     @Override
     //TODO:Move to subclass.
     public ArrayList<Node> getSuccessors(Node n) {
         GACState state = (GACState) n.getState();
         Variable small = state.getVariableWithSmallestDomain();
+        ArrayList<Node> successors = new ArrayList<Node>();
         for (Object o: small.getDomain()){
             GACState child = state.deepCopy();
-            //child.getVariableById() = new Variable()
+            ArrayList<Object> newDomain = new ArrayList<Object>();
+            newDomain.add(o);
+            child.getVariableWithSmallestDomain().setDomain(newDomain);
+            child.setAssumedVariable(child.getVariableWithSmallestDomain());
+            reRun(child);
+            successors.add(new Node(child));
         }
-        //TODO:Run GAC
-        return null;
+        return successors;
     }
 
     @Override
@@ -65,16 +75,11 @@ public abstract class GACProblem implements Problem {
 
     protected abstract GACState generateInitState();
 
-    protected GACProblem(List<Constraint> constraints, HashSet<Variable> variables) {
-        this.constraints = constraints;
-        this.variables = variables;
-    }
-
     protected void init(GACState s0){
         for (Constraint c: constraints){
             for (Variable v: s0.getVariables()){
                 if (c.contains(v)){
-                    queue.add(new Revise(v,c));
+                    queue.add(new Revise(v,c,s0));
                 }
             }
         }
@@ -91,7 +96,7 @@ public abstract class GACProblem implements Problem {
                             continue;
                         }
                         if (c.contains(v)){
-                            queue.add(new Revise(v,c));
+                            queue.add(new Revise(v,c,state));
                         }
                     }
                 }
@@ -107,7 +112,7 @@ public abstract class GACProblem implements Problem {
             }
             for (Variable v: state.getVariables()){
                 if (c.contains(v)){
-                    queue.add(new Revise(v,c));
+                    queue.add(new Revise(v,c,state));
                 }
             }
         }

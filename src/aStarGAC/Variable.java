@@ -1,5 +1,6 @@
 package aStarGAC;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -7,7 +8,12 @@ import java.util.List;
  */
 public abstract class Variable {
     protected long id;
-    private List<Object> domain;
+    protected List<?> domain;
+
+    protected Variable(long id, List<?> domain) {
+        this.id = id;
+        this.domain = domain;
+    }
 
     public long getId() {
         return id;
@@ -28,7 +34,13 @@ public abstract class Variable {
         return domain.size();
     }
 
-    public List<Object> getDomain() {
+    public List<?> getDomain() {
         return domain;
+    }
+
+    public abstract Variable deepCopy();
+
+    public  void setDomain(List<?> domain){
+        this.domain = domain;
     }
 }

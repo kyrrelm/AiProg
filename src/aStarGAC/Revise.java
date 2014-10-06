@@ -6,9 +6,12 @@ package aStarGAC;
 public class Revise {
     private final Variable v;
     private final Constraint c;
-    public Revise(Variable v, Constraint c) {
+    private final GACState state;
+
+    public Revise(Variable v, Constraint c, GACState state) {
         this.v = v;
         this.c = c;
+        this.state = state;
     }
 
     public Variable getV() {
@@ -17,5 +20,9 @@ public class Revise {
 
     public Constraint getC() {
         return c;
+    }
+
+    public GACState getState() {
+        return state;
     }
 }

@@ -13,17 +13,22 @@ public abstract class GACState extends State {
     /**
      * @param id should be calculated based on it's fields.
      */
-    protected HashSet<Variable> variables;
-
+    protected HashSet<? extends Variable> variables;
     protected Variable assumedVariable;
-    private boolean solution;
-    private Variable variableById;
+    protected boolean solution;
+
+    protected GACState(long id, HashSet<? extends Variable> variables, Variable assumedVariable, boolean solution) {
+        super(id);
+        this.variables = variables;
+        this.assumedVariable = assumedVariable;
+        this.solution = solution;
+    }
 
     protected GACState(long id) {
         super(id);
     }
 
-    public HashSet<Variable> getVariables() {
+    public HashSet<? extends Variable> getVariables() {
         return variables;
     }
 
@@ -61,8 +66,6 @@ public abstract class GACState extends State {
         return current;
     }
 
-    public abstract GACState deepCopy();
-
     public Variable getVariableById(int id) {
         for (Variable v: variables){
             if (v.getId() == id){
@@ -70,5 +73,11 @@ public abstract class GACState extends State {
             }
         }
         return null;
+    }
+
+    public abstract GACState deepCopy();
+
+    public void setAssumedVariable(Variable assumedVariable) {
+        this.assumedVariable = assumedVariable;
     }
 }

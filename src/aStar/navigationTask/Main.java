@@ -2,6 +2,7 @@ package aStar.navigationTask;
 
 import aStar.core.Controller;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+
         ArrayList<int[]> barriers = new ArrayList<int[]>();
         Scanner sc = new Scanner(System.in);
         println("Predefined board? (y/n):");
