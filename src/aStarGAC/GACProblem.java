@@ -17,12 +17,12 @@ public abstract class GACProblem implements Problem {
 
 
     protected LinkedList<Revise> queue = new LinkedList<Revise>();
-    protected List<? extends Constraint> constraints;
-    HashSet<Variable> variables;
+    protected final List<? extends Constraint> constraints;
+    protected final HashSet<? extends Variable> variables;
     GACState s0 = null;
 
 
-    protected GACProblem(List<? extends Constraint> constraints, HashSet<Variable> variables) {
+    protected GACProblem(List<? extends Constraint> constraints, HashSet<? extends Variable> variables) {
         this.constraints = constraints;
         this.variables = variables;
     }
@@ -122,4 +122,7 @@ public abstract class GACProblem implements Problem {
     protected abstract boolean revise(Revise current);
 
 
+    public HashSet<? extends Variable> getVariables() {
+        return variables;
+    }
 }

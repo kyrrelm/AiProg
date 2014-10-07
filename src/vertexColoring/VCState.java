@@ -24,4 +24,9 @@ public class VCState extends GACState {
         Vertex assumedVariableCopy = (Vertex)assumedVariable.deepCopy();
         return new VCState(id, variablesCopy, assumedVariableCopy, solution);
     }
+
+    @Override
+    public HashSet<Vertex> getVariables() {
+        return (HashSet<Vertex>) super.getVariables();
+    }
 }
