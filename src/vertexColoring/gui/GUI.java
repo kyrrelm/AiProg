@@ -1,8 +1,10 @@
 package vertexColoring.gui;
 
+import aStar.core.Node;
 import aStar.core.State;
 import aStarGAC.StateListener;
 import vertexColoring.VCState;
+import vertexColoring.Vertex;
 import vertexColoring.VertexColoringProblem;
 
 import javax.swing.*;
@@ -66,14 +68,15 @@ public class GUI extends JFrame {
 
         gui.redrawGraph();
 
-        problem.run();
+        Node goal = problem.run();
 
-        //AstarGAC algorithm = new AstarGAC(problem);
-        //Result result = algorithm.bestFirstSearch();
-
-        //	gui.solution((VCState) result.solution());
-
-        //System.out.println("RESULT: "+result.report());
+        int counter = 0;
+        for (Vertex v: ((VCState)goal.getState()).getVariables()){
+            if (v.color == Color.GRAY){
+                counter++;
+            }
+        }
+        System.out.println("Number of vertices without color: "+counter);
     }
 
 }

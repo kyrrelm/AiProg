@@ -28,7 +28,7 @@ public abstract class GACProblem implements Problem {
         this.variables = variables;
         this.stateListeners = new HashSet<StateListener>();
     }
-    public GACState run(){
+    public Node run(){
         s0 = generateInitState();
         init(s0);
         domainFilterLoop(s0);
@@ -37,7 +37,7 @@ public abstract class GACProblem implements Problem {
             //TODO: Return failure
             System.out.println("Contradictory");
         }else if (s0.isSolution()){
-            return s0;
+            return new Node(s0);
         }
         Controller cont = new Controller(this, 0);
         cont.addControllerListener(new ControllerListener() {
@@ -46,7 +46,7 @@ public abstract class GACProblem implements Problem {
                 notifyStateListeners((GACState) current.getState());
             }
         });
-        return (GACState)cont.search(Controller.SearchType.BEST_FIRST).getState();
+        return cont.search(Controller.SearchType.BEST_FIRST);
     }
 
     private void notifyStateListeners(GACState newState) {
@@ -63,7 +63,10 @@ public abstract class GACProblem implements Problem {
     //TODO:Move to subclass.
     public ArrayList<Node> getSuccessors(Node n) {
         GACState state = (GACState) n.getState();
-        if (state.isContradictory() || state.isSolution()){
+        if (state.isContradictory()){
+            System.out.println("contradictory");
+        }
+        if (state.isSolution()){
             return null;
         }
         ArrayList<Node> successors = new ArrayList<Node>();
@@ -75,6 +78,9 @@ public abstract class GACProblem implements Problem {
             child.getVariableById(assumed.getId()).setDomain(newDomain);
             child.setAssumedVariable(child.getVariableById(assumed.getId()));
             reRun(child);
+            if (child.isContradictory()){
+                continue;
+            }
             successors.add(new Node(child));
         }
         return successors;
@@ -124,10 +130,10 @@ public abstract class GACProblem implements Problem {
                             pos++;
                         }
                     }
+                    queue.add(new Revise(vars[1],c,vars[0]));
+                    queue.add(new Revise(vars[0],c,vars[1]));
                     if (vars[0].equals(current.getFocal())){
-                        queue.add(new Revise(vars[1],c,vars[0]));
                     }else {
-                        queue.add(new Revise(vars[0],c,vars[1]));
                     }
                 }
             }

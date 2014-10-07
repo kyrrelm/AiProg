@@ -38,11 +38,11 @@ public abstract class GACState extends State {
 
     public boolean isContradictory() {
         for (Variable v: variables){
-            if(!v.hasEmptyDomain()){
-                return false;
+            if(v.hasEmptyDomain()){
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public boolean isSolution() {

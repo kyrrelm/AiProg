@@ -35,9 +35,7 @@ public class VertexColoringProblem extends GACProblem {
     protected boolean revise(Revise revise) {
         ArrayList<Object> toBeRemoved = new ArrayList<Object>();
         List<?> focalTEST = revise.getFocal().getDomain();
-        System.out.println("focal: "+focalTEST.size());
         List<?> nonFocalTEST = revise.getNonFocal().getDomain();
-        System.out.println("nonFocal:"+nonFocalTEST.size());
         for (Object focal: revise.getFocal().getDomain()){
             boolean valid = false;
             for (Object nonFocal: revise.getNonFocal().getDomain()){
@@ -50,6 +48,9 @@ public class VertexColoringProblem extends GACProblem {
             if(!valid){
                 toBeRemoved.add(focal);
             }
+        }
+        if (focalTEST.size() == 1 && nonFocalTEST.size() == 1 && focalTEST.get(0).equals(nonFocalTEST.get(0))){
+            focalTEST.size();
         }
         for (Object o: toBeRemoved){
             revise.getFocal().getDomain().remove(o);

@@ -1,5 +1,9 @@
 package aStar.core;
 
+import aStarGAC.Variable;
+import vertexColoring.VCState;
+import vertexColoring.Vertex;
+
 import java.util.*;
 
 /**
@@ -13,7 +17,8 @@ public class Controller {
         ALL,
         BREADTH_FIRST
     }
-
+    private int treeCount = 0;
+    private int expCount = 0;
     private final Problem problem;
     private final int sleepTime;
     Collection<Node> open;
@@ -50,6 +55,7 @@ public class Controller {
         problem.calculateH(n0);
         n0.calculateF();
         open.add(n0);
+        treeCount++;
         int loopCount = 0;
         while (!open.isEmpty()){
             try {
@@ -65,17 +71,21 @@ public class Controller {
             }else if (type == SearchType.BREADTH_FIRST){
                 current = ((LinkedList<Node>)open).removeFirst();
             }
+
             notifyCurrentListeners(current);
             closed.add(current);
             if (problem.isSolution(current)){
                 System.out.println("======  SUCCESS  ======");
-                System.out.println("Loop iterations: "+loopCount);
+                System.out.println("Length of the path from the root node to the solution node: "+loopCount);
+                System.out.println("Number of nodes in the search tree: "+treeCount);
+                System.out.println("Number of nodes that were popped from the agenda and expanded: "+expCount);
                 return(current);
             }
             ArrayList<Node> succ = problem.getSuccessors(current);
             if (succ == null){
                 continue;
             }
+            expCount++;
             for(Node s: succ){
                 if (existingNodes.containsKey(s.getStateId())){
                     s = existingNodes.get(s.getStateId());
@@ -86,6 +96,7 @@ public class Controller {
                 if (!open.contains(s) && !closed.contains(s)){
                     attachAndEval(s,current);
                     open.add(s);
+                    treeCount++;
                 }else if(current.getG() + problem.getArcCost(s, current) < s.getG()){
                     attachAndEval(s, current);
                     if (closed.contains(s)){
@@ -97,9 +108,10 @@ public class Controller {
             if (loopCount%10000 == 0){
                 System.out.println("Loop iterations: "+loopCount);
             }
+
         }
         System.out.println("======  FAILED  ======");
-        System.out.println("Loop iterations: "+loopCount);
+        System.out.println("Length of the path from the root node to the solution node: "+loopCount);
         return null;
     }
 
