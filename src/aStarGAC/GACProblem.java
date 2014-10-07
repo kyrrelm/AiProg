@@ -1,6 +1,7 @@
 package aStarGAC;
 
 import aStar.core.Controller;
+import aStar.core.ControllerListener;
 import aStar.core.Node;
 import aStar.core.Problem;
 
@@ -19,11 +20,13 @@ public abstract class GACProblem implements Problem {
     protected final List<? extends Constraint> constraints;
     protected final HashSet<? extends Variable> variables;
     GACState s0 = null;
+    private HashSet<StateListener> stateListeners;
 
 
     protected GACProblem(List<? extends Constraint> constraints, HashSet<? extends Variable> variables) {
         this.constraints = constraints;
         this.variables = variables;
+        this.stateListeners = new HashSet<StateListener>();
     }
     public GACState run(){
         s0 = generateInitState();
@@ -37,7 +40,22 @@ public abstract class GACProblem implements Problem {
             return s0;
         }
         Controller cont = new Controller(this, 0);
+        cont.addControllerListener(new ControllerListener() {
+            @Override
+            public void currentNodeChange(Node current) {
+                notifyStateListeners((GACState) current.getState());
+            }
+        });
         return (GACState)cont.search(Controller.SearchType.BEST_FIRST).getState();
+    }
+
+    private void notifyStateListeners(GACState newState) {
+        for (StateListener sl: stateListeners){
+            sl.onStateChanged(newState);
+        }
+    }
+    public void addStateListener(StateListener sl){
+        stateListeners.add(sl);
     }
 
 
@@ -45,14 +63,10 @@ public abstract class GACProblem implements Problem {
     //TODO:Move to subclass.
     public ArrayList<Node> getSuccessors(Node n) {
         GACState state = (GACState) n.getState();
-        if (state.isContradictory()){
+        if (state.isContradictory() || state.isSolution()){
             return null;
         }
-        if (state.isSolution()){
-            System.out.println("Hurray");
-            return null;
-        }
-            ArrayList<Node> successors = new ArrayList<Node>();
+        ArrayList<Node> successors = new ArrayList<Node>();
         Variable assumed = state.getVariableWithSmallestDomainLargerThanOne();
         for (Object o: assumed.getDomain()){
             GACState child = state.deepCopy();
@@ -76,16 +90,16 @@ public abstract class GACProblem implements Problem {
 
     @Override
     public boolean isSolution(Node n) {
-        return s0.isSolution();
+        return ((GACState)n.getState()).isSolution();
     }
 
     protected abstract GACState generateInitState();
 
-    protected void init(GACState s0){
+    protected void init(GACState state){
         for (Constraint c: constraints){
             Variable[] vars = new Variable[2];
             int pos = 0;
-            for (Variable v: s0.getVariables()){
+            for (Variable v: state.getVariables()){
                 if (c.contains(v)){
                     vars[pos] = v;
                     pos++;
@@ -104,7 +118,7 @@ public abstract class GACProblem implements Problem {
                 for (Constraint c: constraints){
                     Variable[] vars = new Variable[2];
                     int pos = 0;
-                    for (Variable v: s0.getVariables()){
+                    for (Variable v: state.getVariables()){
                         if (c.contains(v)){
                             vars[pos] = v;
                             pos++;
@@ -128,7 +142,7 @@ public abstract class GACProblem implements Problem {
             }
             Variable[] vars = new Variable[2];
             int pos = 0;
-            for (Variable v: s0.getVariables()){
+            for (Variable v: state.getVariables()){
                 if (c.contains(v)){
                     vars[pos] = v;
                     pos++;

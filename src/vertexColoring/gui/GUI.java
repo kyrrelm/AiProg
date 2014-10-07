@@ -1,5 +1,7 @@
 package vertexColoring.gui;
 
+import aStar.core.State;
+import aStarGAC.StateListener;
 import vertexColoring.VCState;
 import vertexColoring.VertexColoringProblem;
 
@@ -27,6 +29,13 @@ public class GUI extends JFrame {
 		setBounds(100, 100, 900, 900);
 		setVisible(true);
 		redrawGraph();
+
+        problem.addStateListener(new StateListener() {
+            @Override
+            public void onStateChanged(State newState) {
+                redrawGraph((VCState) newState);
+            }
+        });
 				
 	}
 	
@@ -43,6 +52,7 @@ public class GUI extends JFrame {
 	
 	public void redrawGraph(VCState state) {
 		if(!solutionFound)
+            state.updateColor();
 			graph.reDraw(state);
 	}
 
@@ -50,11 +60,11 @@ public class GUI extends JFrame {
         ProblemGenerator generator = new ProblemGenerator(gui);
         VertexColoringProblem problem = generator.getProblem();
 
-        //gui = new GUI(problem);
+        gui = new GUI(problem);
 
-        //problem.gui = gui;
+        problem.gui = gui;
 
-        //gui.redrawGraph();
+        gui.redrawGraph();
 
         problem.run();
 

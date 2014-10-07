@@ -38,4 +38,12 @@ public class VCState extends GACState {
     public HashSet<Vertex> getVariables() {
         return (HashSet<Vertex>) super.getVariables();
     }
+
+    public void updateColor() {
+        for (Vertex v: (HashSet<Vertex>)variables){
+            if (v.isDomainSingleton()){
+                v.color = (java.awt.Color) v.getDomain().get(0);
+            }
+        }
+    }
 }
