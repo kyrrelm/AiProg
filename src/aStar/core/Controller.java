@@ -73,6 +73,9 @@ public class Controller {
                 return(current);
             }
             ArrayList<Node> succ = problem.getSuccessors(current);
+            if (succ == null){
+                continue;
+            }
             for(Node s: succ){
                 if (existingNodes.containsKey(s.getStateId())){
                     s = existingNodes.get(s.getStateId());
@@ -96,6 +99,7 @@ public class Controller {
             }
         }
         System.out.println("======  FAILED  ======");
+        System.out.println("Loop iterations: "+loopCount);
         return null;
     }
 

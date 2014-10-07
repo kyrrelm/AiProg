@@ -3,7 +3,6 @@ package aStarGAC;
 import aStar.core.Controller;
 import aStar.core.Node;
 import aStar.core.Problem;
-import aStar.core.State;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,12 +25,14 @@ public abstract class GACProblem implements Problem {
         this.constraints = constraints;
         this.variables = variables;
     }
-    protected GACState run(){
+    public GACState run(){
         s0 = generateInitState();
         init(s0);
         domainFilterLoop(s0);
+        //TODO: fix so it stops here
         if (s0.isContradictory()){
             //TODO: Return failure
+            System.out.println("Contradictory");
         }else if (s0.isSolution()){
             return s0;
         }
@@ -40,20 +41,25 @@ public abstract class GACProblem implements Problem {
     }
 
 
-    //TODO: calculateH here?
-
     @Override
     //TODO:Move to subclass.
     public ArrayList<Node> getSuccessors(Node n) {
         GACState state = (GACState) n.getState();
-        Variable small = state.getVariableWithSmallestDomain();
-        ArrayList<Node> successors = new ArrayList<Node>();
-        for (Object o: small.getDomain()){
+        if (state.isContradictory()){
+            return null;
+        }
+        if (state.isSolution()){
+            System.out.println("Hurray");
+            return null;
+        }
+            ArrayList<Node> successors = new ArrayList<Node>();
+        Variable assumed = state.getVariableWithSmallestDomainLargerThanOne();
+        for (Object o: assumed.getDomain()){
             GACState child = state.deepCopy();
             ArrayList<Object> newDomain = new ArrayList<Object>();
             newDomain.add(o);
-            child.getVariableWithSmallestDomain().setDomain(newDomain);
-            child.setAssumedVariable(child.getVariableWithSmallestDomain());
+            child.getVariableById(assumed.getId()).setDomain(newDomain);
+            child.setAssumedVariable(child.getVariableById(assumed.getId()));
             reRun(child);
             successors.add(new Node(child));
         }
@@ -77,11 +83,16 @@ public abstract class GACProblem implements Problem {
 
     protected void init(GACState s0){
         for (Constraint c: constraints){
+            Variable[] vars = new Variable[2];
+            int pos = 0;
             for (Variable v: s0.getVariables()){
                 if (c.contains(v)){
-                    queue.add(new Revise(v,c,s0));
+                    vars[pos] = v;
+                    pos++;
                 }
             }
+            queue.add(new Revise(vars[0],c,vars[1]));
+            queue.add(new Revise(vars[1],c,vars[0]));
         }
     }
 
@@ -91,13 +102,18 @@ public abstract class GACProblem implements Problem {
             Revise current = queue.poll();
             if(revise(current)){
                 for (Constraint c: constraints){
-                    for (Variable v: state.getVariables()){
-                        if (v.equals(current.getV())){
-                            continue;
-                        }
+                    Variable[] vars = new Variable[2];
+                    int pos = 0;
+                    for (Variable v: s0.getVariables()){
                         if (c.contains(v)){
-                            queue.add(new Revise(v,c,state));
+                            vars[pos] = v;
+                            pos++;
                         }
+                    }
+                    if (vars[0].equals(current.getFocal())){
+                        queue.add(new Revise(vars[1],c,vars[0]));
+                    }else {
+                        queue.add(new Revise(vars[0],c,vars[1]));
                     }
                 }
             }
@@ -110,11 +126,16 @@ public abstract class GACProblem implements Problem {
             if (!c.contains(state.getAssumedVariable())){
                 continue;
             }
-            for (Variable v: state.getVariables()){
+            Variable[] vars = new Variable[2];
+            int pos = 0;
+            for (Variable v: s0.getVariables()){
                 if (c.contains(v)){
-                    queue.add(new Revise(v,c,state));
+                    vars[pos] = v;
+                    pos++;
                 }
             }
+            queue.add(new Revise(vars[0],c,vars[1]));
+            queue.add(new Revise(vars[1],c,vars[0]));
         }
         domainFilterLoop(state);
     }

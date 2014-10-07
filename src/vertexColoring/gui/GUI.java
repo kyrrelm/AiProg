@@ -4,6 +4,7 @@ import vertexColoring.VCState;
 import vertexColoring.VertexColoringProblem;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class GUI extends JFrame {
 
@@ -49,11 +50,13 @@ public class GUI extends JFrame {
         ProblemGenerator generator = new ProblemGenerator(gui);
         VertexColoringProblem problem = generator.getProblem();
 
-        gui = new GUI(problem);
+        //gui = new GUI(problem);
 
-        problem.gui = gui;
+        //problem.gui = gui;
 
-        gui.redrawGraph();
+        //gui.redrawGraph();
+
+        problem.run();
 
         //AstarGAC algorithm = new AstarGAC(problem);
         //Result result = algorithm.bestFirstSearch();

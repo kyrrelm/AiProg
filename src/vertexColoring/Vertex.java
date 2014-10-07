@@ -15,7 +15,7 @@ public class Vertex extends Variable {
     public double y;
     public Color color = Color.GRAY;
     //TODO: generate id.
-    public Vertex(long id, double x, double y, List<Color> domain) {
+    public Vertex(int id, double x, double y, List<Color> domain) {
         super(id, domain);
         this.x = x;
         this.y = y;

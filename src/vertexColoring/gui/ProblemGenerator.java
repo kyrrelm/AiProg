@@ -101,17 +101,22 @@ public class ProblemGenerator {
 		HashSet<Vertex> vertices = new HashSet<Vertex>();
 		for(int i=1; i<nv+1; i++) {
 			Object[] values = getValues(input.get(i), true);
-			vertices.add(new Vertex((Long)values[0], (Double)values[1], (Double)values[2], generateDomain(domainSize)));
+			vertices.add(new Vertex((Integer)values[0], (Double)values[1], (Double)values[2], generateDomain(domainSize)));
 		}
+
 		
-		//Edges
-		ArrayList<Edge> edges = new ArrayList<Edge>();
+		//Edges and Constraints
+        ArrayList<Edge> edges = new ArrayList<Edge>();
+        ArrayList<Constraint> constraints = new ArrayList<Constraint>();
 		for(int j=nv+1; j<input.size(); j++) {
 			Object[] values = getValues(input.get(j), false);
 			edges.add(new Edge((Integer)values[0], (Integer)values[1]));
+            HashSet<Integer> containingVariablesId = new HashSet<Integer>();
+            containingVariablesId.add((Integer) values[0]);
+            containingVariablesId.add((Integer) values[1]);
+            constraints.add(new Constraint(containingVariablesId,"x != y"));
 		}
-        //TODO: fix constraints
-		return new VertexColoringProblem(new ArrayList<Constraint>(),vertices, edges, parent);
+		return new VertexColoringProblem(constraints,vertices, edges, parent);
 	}
 	
 	private Object[] getValues(String s, boolean vertex) {

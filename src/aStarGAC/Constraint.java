@@ -7,19 +7,22 @@ import java.util.HashSet;
  */
 //TODO: create runtime constraints. This is not generic, and only works for graph coloring.
 public class Constraint {
+    private final String logicalRule;
     /**
      * Checks variable type, and not object.
      * @param v
      * @return
      */
-    private HashSet<Long> variables;
-    public Constraint (HashSet<Long> variables){
-        this.variables = variables;
+    private HashSet<Integer> variablesId;
+    public Constraint (HashSet<Integer> variablesId, String logicalRule){
+        this.variablesId = variablesId;
+        this.logicalRule = logicalRule;
     }
     public boolean contains(Variable v){
-        return variables.contains(v.getId());
-    };
+        return variablesId.contains(v.getId());
+    }
 
-
-
+    public String getLogicalRule(){
+        return logicalRule;
+    }
 }

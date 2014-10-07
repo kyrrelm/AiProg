@@ -7,15 +7,15 @@ import java.util.List;
  * Created by Kyrre on 03/10/2014.
  */
 public abstract class Variable {
-    protected long id;
+    protected int id;
     protected List<?> domain;
 
-    protected Variable(long id, List<?> domain) {
+    protected Variable(int id, List<?> domain) {
         this.id = id;
         this.domain = domain;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

@@ -54,12 +54,14 @@ public abstract class GACState extends State {
         return true;
     }
 
-    public Variable getVariableWithSmallestDomain() {
+    public Variable getVariableWithSmallestDomainLargerThanOne() {
         Variable current = null;
         for (Variable v: variables){
             if (current == null){
-                current = v;
-            }else if(v.getDomainSize() < current.getDomainSize()){
+                if (!v.isDomainSingleton()){
+                    current = v;
+                }
+            }else if(v.getDomainSize() < current.getDomainSize() && !v.isDomainSingleton()){
                 current = v;
             }
         }

@@ -1,28 +1,30 @@
 package aStarGAC;
 
+import java.util.HashSet;
+
 /**
  * Created by Kyrre on 03/10/2014.
  */
 public class Revise {
-    private final Variable v;
-    private final Constraint c;
-    private final GACState state;
+    private final Variable focal;
+    private final Constraint constraint;
+    private final Variable nonFocal;
 
-    public Revise(Variable v, Constraint c, GACState state) {
-        this.v = v;
-        this.c = c;
-        this.state = state;
+    public Revise(Variable focal, Constraint constraint, Variable nonFocal) {
+        this.focal = focal;
+        this.constraint = constraint;
+        this.nonFocal = nonFocal;
     }
 
-    public Variable getV() {
-        return v;
+    public Variable getFocal() {
+        return focal;
     }
 
-    public Constraint getC() {
-        return c;
+    public Constraint getConstraint() {
+        return constraint;
     }
 
-    public GACState getState() {
-        return state;
+    public Variable getNonFocal() {
+        return nonFocal;
     }
 }

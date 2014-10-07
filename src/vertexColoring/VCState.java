@@ -9,8 +9,14 @@ import java.util.HashSet;
  * Created by Kyrre on 06/10/2014.
  */
 public class VCState extends GACState {
+    //TODO: not thread safe.
+    private static long idGenerator = 0;
 
-    protected VCState(long id, HashSet<Vertex> variables, Vertex assumedVariable, boolean solution) {
+    protected VCState(HashSet<Vertex> variables, Vertex assumedVariable, boolean solution) {
+        this(idGenerator,variables, assumedVariable, solution);
+        idGenerator++;
+    }
+    private VCState(long id, HashSet<Vertex> variables, Vertex assumedVariable, boolean solution) {
         super(id, variables, assumedVariable, solution);
     }
 
@@ -21,8 +27,11 @@ public class VCState extends GACState {
         for (Variable v: variables){
             variablesCopy.add((Vertex)v.deepCopy());
         }
-        Vertex assumedVariableCopy = (Vertex)assumedVariable.deepCopy();
-        return new VCState(id, variablesCopy, assumedVariableCopy, solution);
+        Vertex assumedVariableCopy = null;
+        if (assumedVariable != null){
+            assumedVariableCopy = (Vertex)assumedVariable.deepCopy();
+        }
+        return new VCState(variablesCopy, assumedVariableCopy, solution);
     }
 
     @Override

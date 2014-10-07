@@ -15,39 +15,40 @@ import java.util.List;
  */
 public class VertexColoringProblem extends GACProblem {
 
+    private final HashSet<Vertex> vertexVariables;
     public ArrayList<Edge> edges;
     public GUI gui;
 
     public VertexColoringProblem(List<Constraint> constraints, HashSet<Vertex> variables, ArrayList<Edge> edges, GUI gui) {
         super(constraints, variables);
+        this.vertexVariables = variables;
         this.edges = edges;
         this.gui = gui;
     }
     @Override
     protected GACState generateInitState() {
-        return null;
+        return new VCState(vertexVariables, null, false);
     }
 
     @Override
     //TODO: Check that logic is right
     protected boolean revise(Revise revise) {
-        for (Object focal: revise.getV().getDomain()) {
-            boolean free = false;
-            for (Variable v: revise.getState().getVariables()){
-                if (!revise.getC().contains(v) || revise.getV().equals(v)) {
-                    continue;
+        ArrayList<Object> toBeRemoved = new ArrayList<Object>();
+        for (Object focal: revise.getFocal().getDomain()){
+            boolean valid = false;
+            for (Object nonFocal: revise.getNonFocal().getDomain()){
+                Object[] objs = new Object[]{focal, nonFocal};
+                if(Interpreter.interpret(revise.getConstraint().getLogicalRule(),objs)){
+                    valid = true;
+                    break;
                 }
-                Color c = (Color) focal;
-                for (Object neighbour: v.getDomain()){
-                    if (!focal.equals(neighbour)){
-                        free = true;
-                    }
-                }
-
             }
-            if (!free){
-                //TODO: remove focal
+            if(!valid){
+                toBeRemoved.add(focal);
             }
+        }
+        for (Object o: toBeRemoved){
+            revise.getFocal().getDomain().remove(o);
         }
         return false;//TODO: remove
     }

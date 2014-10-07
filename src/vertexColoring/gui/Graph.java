@@ -14,7 +14,7 @@ public class Graph extends JPanel{
 	
 	HashMap<Integer, Graphics> guiVertices;
 	HashMap<Integer, Graphics> guiEdges;
-	HashMap<Long, Vertex> test = new HashMap<Long, Vertex>();
+	HashMap<Integer, Vertex> test = new HashMap<Integer, Vertex>();
 
 	VertexColoringProblem problem;
 	VCState state;
