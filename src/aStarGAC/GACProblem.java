@@ -18,6 +18,7 @@ import java.util.List;
 public abstract class GACProblem implements Problem {
 
 
+    private final int sleepTime;
     protected LinkedList<Revise> queue = new LinkedList<Revise>();
     protected final List<? extends Constraint> constraints;
     protected final HashSet<? extends Variable> variables;
@@ -25,10 +26,11 @@ public abstract class GACProblem implements Problem {
     private HashSet<StateListener> stateListeners;
 
 
-    protected GACProblem(List<? extends Constraint> constraints, HashSet<? extends Variable> variables) {
+    protected GACProblem(List<? extends Constraint> constraints, HashSet<? extends Variable> variables, int sleepTime) {
         this.constraints = constraints;
         this.variables = variables;
         this.stateListeners = new HashSet<StateListener>();
+        this.sleepTime = sleepTime;
     }
     public Node run(){
         s0 = generateInitState();
@@ -41,7 +43,7 @@ public abstract class GACProblem implements Problem {
         }else if (s0.isSolution()){
             return new Node(s0);
         }
-        Controller cont = new Controller(this, 0);
+        Controller cont = new Controller(this, sleepTime);
         cont.addControllerListener(new ControllerListener() {
             @Override
             public void currentNodeChange(Node current) {

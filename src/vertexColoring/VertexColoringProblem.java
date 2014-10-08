@@ -18,8 +18,8 @@ public class VertexColoringProblem extends GACProblem {
     public ArrayList<Edge> edges;
     public GUI gui;
 
-    public VertexColoringProblem(List<Constraint> constraints, HashSet<Vertex> variables, ArrayList<Edge> edges, GUI gui) {
-        super(constraints, variables);
+    public VertexColoringProblem(List<Constraint> constraints, HashSet<Vertex> variables, ArrayList<Edge> edges, GUI gui, int sleepTime) {
+        super(constraints, variables, sleepTime);
         this.vertexVariables = variables;
         this.edges = edges;
         this.gui = gui;

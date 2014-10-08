@@ -20,6 +20,7 @@ public class ProblemGenerator {
 	private GUI parent;
 	
 	private int domainSize;
+    private int sleepTime;
 	
 	public ProblemGenerator(GUI gui) {
 		
@@ -38,6 +39,7 @@ public class ProblemGenerator {
 		}
 		
 		getDomainSize();
+        getSleepTime();
 		
 		//Generate Problem
 		problem = generateProblem(input);
@@ -56,6 +58,14 @@ public class ProblemGenerator {
 		}
 		domainSize = Integer.parseInt(d);
 	}
+    private void getSleepTime() {
+        JOptionPane pane = new JOptionPane();
+        String d;
+        while(!isInteger(d = pane.showInputDialog("Sleep time:"))) {
+            JOptionPane.showMessageDialog(null, "Input not a number, try again");
+        }
+        sleepTime = Integer.parseInt(d);
+    }
 	
 	private boolean isInteger(String s) {
 		try {
@@ -126,7 +136,7 @@ public class ProblemGenerator {
             containingVariablesId.add((Integer) values[1]);
             constraints.add(new Constraint(containingVariablesId,"x != y"));
 		}
-		return new VertexColoringProblem(constraints,vertices, edges, parent);
+		return new VertexColoringProblem(constraints,vertices, edges, parent, sleepTime);
 	}
 	
 	private Object[] getValues(String s, boolean vertex) {
