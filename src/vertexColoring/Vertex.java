@@ -20,12 +20,16 @@ public class Vertex extends Variable {
         this.x = x;
         this.y = y;
     }
+    private Vertex(int id, double x, double y, List<Color> domain, Color c) {
+        this(id, x, y, domain);
+        color = c;
+    }
     @Override
     public Vertex deepCopy() {
         ArrayList<Color> domainCopy = new ArrayList<Color>();
         for (Object obj: domain){
             domainCopy.add((Color)obj);
         }
-        return new Vertex(id, x, y, domainCopy);
+        return new Vertex(id, x, y, domainCopy, color);
     }
 }

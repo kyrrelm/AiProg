@@ -4,6 +4,8 @@ import aStar.core.Controller;
 import aStar.core.ControllerListener;
 import aStar.core.Node;
 import aStar.core.Problem;
+import vertexColoring.VCState;
+import vertexColoring.Vertex;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,7 +48,14 @@ public abstract class GACProblem implements Problem {
                 notifyStateListeners((GACState) current.getState());
             }
         });
-        return cont.search(Controller.SearchType.BEST_FIRST);
+        Node goal = cont.search(Controller.SearchType.BEST_FIRST);
+        HashSet<Vertex> variables = ((VCState)goal.getState()).getVariables();
+        for (Vertex v: variables){
+            for (Constraint c: constraints){
+                variables.
+            }
+        }
+        return goal;
     }
 
     private void notifyStateListeners(GACState newState) {

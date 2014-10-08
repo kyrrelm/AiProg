@@ -21,6 +21,9 @@ public class Constraint {
     public boolean contains(Variable v){
         return variablesId.contains(v.getId());
     }
+    public boolean contains(int id){
+        return variablesId.contains(id);
+    }
 
     public String getLogicalRule(){
         return logicalRule;
