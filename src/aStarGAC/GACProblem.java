@@ -50,12 +50,40 @@ public abstract class GACProblem implements Problem {
         });
         Node goal = cont.search(Controller.SearchType.BEST_FIRST);
         HashSet<Vertex> variables = ((VCState)goal.getState()).getVariables();
-        for (Vertex v: variables){
-            for (Constraint c: constraints){
-                variables.
+        int countViolations = 0;
+        for (Constraint c: constraints){
+            if (doesViolate(c, ((VCState) goal.getState()))){
+                countViolations++;
             }
         }
+        System.out.println("Number of constraints violation: "+countViolations);
         return goal;
+    }
+
+    private boolean doesViolate(Constraint c, VCState state) {
+        int[] array = c.getVariablesIdAsArray();
+        if (array.length == 2){
+            boolean firstValid = false;
+            for (Object o: state.getVariableById(array[0]).getDomain()){
+                for (Object o1: state.getVariableById(array[1]).getDomain()){
+                    if (!Interpreter.violates(c.getLogicalRule(), new Object[]{o, o1})){
+                        firstValid = true;
+                    }
+                }
+            }
+            boolean secondValid = false;
+            for (Object o: state.getVariableById(array[1]).getDomain()){
+                for (Object o1: state.getVariableById(array[0]).getDomain()){
+                    if (!Interpreter.violates(c.getLogicalRule(), new Object[]{o, o1})){
+                        secondValid = true;
+                    }
+                }
+            }
+            if (firstValid && secondValid){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void notifyStateListeners(GACState newState) {

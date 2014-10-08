@@ -23,12 +23,24 @@ public class Graph extends JPanel{
 	public boolean done = false;
 	
 	private final int SIZE = 10;
-	private final double DIM = 10;
+	private final double DIM;
 	
 	public Graph(VertexColoringProblem problem, Dimension d) {
 		this.problem = problem;
 		this.d = d;
 		setSize(800, 800);
+
+        double big = 0;
+        double bigY = 0;
+        for (Vertex v: problem.getVariables()){
+            if (v.x > big){
+                big = v.x;
+            }
+            if (v.y > big){
+                big = v.y;
+            }
+        }
+        DIM = 800/big;
 	}
 	
 	public void reDraw(VCState state) {

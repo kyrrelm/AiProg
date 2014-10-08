@@ -5,7 +5,6 @@ import aStarGAC.*;
 import vertexColoring.gui.Edge;
 import vertexColoring.gui.GUI;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +39,7 @@ public class VertexColoringProblem extends GACProblem {
             boolean valid = false;
             for (Object nonFocal: revise.getNonFocal().getDomain()){
                 Object[] objs = new Object[]{focal, nonFocal};
-                if(Interpreter.interpret(revise.getConstraint().getLogicalRule(),objs)){
+                if(!Interpreter.violates(revise.getConstraint().getLogicalRule(), objs)){
                     valid = true;
                     break;
                 }

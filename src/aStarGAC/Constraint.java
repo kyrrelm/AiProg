@@ -25,7 +25,20 @@ public class Constraint {
         return variablesId.contains(id);
     }
 
+    public HashSet<Integer> getVariablesId() {
+        return variablesId;
+    }
+
     public String getLogicalRule(){
         return logicalRule;
+    }
+
+    public int[] getVariablesIdAsArray() {
+        int[] array = new int[variablesId.size()];
+        int counter = 0;
+        for (int i: variablesId){
+            array[counter++] = i;
+        }
+        return array;
     }
 }

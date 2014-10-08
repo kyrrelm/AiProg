@@ -69,7 +69,7 @@ public class ProblemGenerator {
 	private File selectFile() {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Textfiles", "txt");
-		chooser.setCurrentDirectory(new File("C:\\Users\\Kyrre\\Div\\AiProg_Hallvard\\src\\module2_vertexColoring\\problems"));
+		chooser.setCurrentDirectory(new File("C:\\Users\\Kyrre\\Div\\AiProg\\problems"));
 		chooser.setFileFilter(filter);
 		int returnVal = chooser.showOpenDialog(parent);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -97,14 +97,24 @@ public class ProblemGenerator {
 		int nv = (Integer)first[0];			//Number of vertices
 		int ne = (Integer)first[1];			//Number of edges
 
-		//Vertices
-		HashSet<Vertex> vertices = new HashSet<Vertex>();
-		for(int i=1; i<nv+1; i++) {
-			Object[] values = getValues(input.get(i), true);
-			vertices.add(new Vertex((Integer)values[0], (Double)values[1], (Double)values[2], generateDomain(domainSize)));
-		}
-
-		
+        //Normalize Vertices
+        double negativeX = 99999999;
+        double negativeY = 99999999;
+        for(int i=1; i<nv+1; i++) {
+            Object[] values = getValues(input.get(i), true);
+            if ((Double)values[1] < negativeX){
+                negativeX = (Double)values[1];
+            }
+            if ((Double)values[2] < negativeY){
+                negativeY = (Double)values[2];
+            }
+        }
+        //Vertices
+        HashSet<Vertex> vertices = new HashSet<Vertex>();
+        for(int i=1; i<nv+1; i++) {
+            Object[] values = getValues(input.get(i), true);
+            vertices.add(new Vertex((Integer)values[0], (Double)values[1]+(negativeX*-1), (Double)values[2]+(negativeY*-1), generateDomain(domainSize)));
+        }
 		//Edges and Constraints
         ArrayList<Edge> edges = new ArrayList<Edge>();
         ArrayList<Constraint> constraints = new ArrayList<Constraint>();
