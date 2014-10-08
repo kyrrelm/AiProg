@@ -48,7 +48,7 @@ public abstract class GACProblem implements Problem {
             }
         });
         Node goal = cont.search(Controller.SearchType.BEST_FIRST);
-        HashSet<Vertex> variables = ((VCState)goal.getState()).getVariables();
+        //HashSet<? extends Variable> variables = ((GACState)goal.getState()).getVariables();
         int countViolations = 0;
         for (Constraint c: constraints){
             if (doesViolate(c, ((VCState) goal.getState()))){
@@ -59,7 +59,7 @@ public abstract class GACProblem implements Problem {
         return goal;
     }
 
-    private boolean doesViolate(Constraint c, VCState state) {
+    private boolean doesViolate(Constraint c, GACState state) {
         int[] array = c.getVariablesIdAsArray();
         if (array.length == 2){
             boolean firstValid = false;
@@ -101,27 +101,39 @@ public abstract class GACProblem implements Problem {
         GACState state = (GACState) n.getState();
         if (state.isContradictory()){
             System.out.println("contradictory");
+            return new ArrayList<Node>();
         }
         if (state.isSolution()){
-            return null;
+            return new ArrayList<Node>();
         }
-        ArrayList<Node> successors = new ArrayList<Node>();
-        Variable assumed = state.getVariableWithSmallestDomainLargerThanOne();
-//        PriorityQueue<GACState> pq = new PriorityQueue<GACState>();
-//        for ()
-        for (Object o: assumed.getDomain()){
-            GACState child = state.deepCopy();
-            ArrayList<Object> newDomain = new ArrayList<Object>();
-            newDomain.add(o);
-            child.getVariableById(assumed.getId()).setDomain(newDomain);
-            child.setAssumedVariable(child.getVariableById(assumed.getId()));
-            reRun(child);
-            if (child.isContradictory()){
-                continue;
+        PriorityQueue<Variable> pq = new PriorityQueue<Variable>();
+        for (Variable v: state.getVariables()){
+            if (v.getDomainSize() > 1){
+                pq.add(v);
             }
-            successors.add(new Node(child));
         }
-        return successors;
+        while(!pq.isEmpty()){
+            Variable assumed = pq.poll();
+            //Variable assumed = state.getVariableWithSmallestDomainLargerThanOne();
+
+            ArrayList<Node> successors = new ArrayList<Node>();
+            for (Object o: assumed.getDomain()){
+                GACState child = state.deepCopy();
+                ArrayList<Object> newDomain = new ArrayList<Object>();
+                newDomain.add(o);
+                child.getVariableById(assumed.getId()).setDomain(newDomain);
+                child.setAssumedVariable(child.getVariableById(assumed.getId()));
+                reRun(child);
+                if (child.isContradictory()){
+                    continue;
+                }
+                successors.add(new Node(child));
+            }
+            if(!successors.isEmpty()){
+                return successors;
+            }
+        }
+        return  new ArrayList<Node>(); //return null;
     }
 
     @Override

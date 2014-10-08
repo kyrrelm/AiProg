@@ -58,6 +58,10 @@ public class Controller {
         treeCount++;
         int loopCount = 0;
         while (!open.isEmpty()){
+            loopCount++;
+            if (loopCount%100 == 0){
+                System.out.println("Loop iterations: "+loopCount);
+            }
             try {
                 Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
@@ -103,10 +107,6 @@ public class Controller {
                         propagatePathImprovement(s);
                     }
                 }
-            }
-            loopCount++;
-            if (loopCount%100 == 0){
-                System.out.println("Loop iterations: "+loopCount);
             }
 
         }
