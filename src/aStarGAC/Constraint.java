@@ -5,7 +5,6 @@ import java.util.HashSet;
 /**
  * Created by Kyrre on 03/10/2014.
  */
-//TODO: create runtime constraints. This is not generic, and only works for graph coloring.
 public class Constraint {
     private final String logicalRule;
     /**

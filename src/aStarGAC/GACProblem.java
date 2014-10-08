@@ -155,10 +155,10 @@ public abstract class GACProblem implements Problem {
         }
     }
 
-    //TODO: Fix contradictory states
     protected void domainFilterLoop(GACState state){
         while (!queue.isEmpty()){
             Revise current = queue.poll();
+            Constraint i = current.getConstraint();
             if(revise(current)){
                 for (Constraint c: constraints){
                     Variable[] vars = new Variable[2];
@@ -169,17 +169,16 @@ public abstract class GACProblem implements Problem {
                             pos++;
                         }
                     }
-                    queue.add(new Revise(vars[1],c,vars[0]));
-                    queue.add(new Revise(vars[0],c,vars[1]));
                     if (vars[0].equals(current.getFocal())){
+                        queue.add(new Revise(vars[0],c,vars[1]));
                     }else {
+                        queue.add(new Revise(vars[1],c,vars[0]));
                     }
                 }
             }
         }
     }
 
-    //TODO: Fix contradictory states
     protected void reRun(GACState state){
         for (Constraint c: constraints){
             if (!c.contains(state.getAssumedVariable())){
