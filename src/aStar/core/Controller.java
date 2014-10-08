@@ -105,7 +105,7 @@ public class Controller {
                 }
             }
             loopCount++;
-            if (loopCount%10000 == 0){
+            if (loopCount%100 == 0){
                 System.out.println("Loop iterations: "+loopCount);
             }
 

@@ -7,10 +7,7 @@ import aStar.core.Problem;
 import vertexColoring.VCState;
 import vertexColoring.Vertex;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Kyrre on 03/10/2014.
@@ -110,6 +107,8 @@ public abstract class GACProblem implements Problem {
         }
         ArrayList<Node> successors = new ArrayList<Node>();
         Variable assumed = state.getVariableWithSmallestDomainLargerThanOne();
+//        PriorityQueue<GACState> pq = new PriorityQueue<GACState>();
+//        for ()
         for (Object o: assumed.getDomain()){
             GACState child = state.deepCopy();
             ArrayList<Object> newDomain = new ArrayList<Object>();
