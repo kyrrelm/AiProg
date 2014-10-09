@@ -4,6 +4,8 @@ import aStar.core.State;
 
 /**
  * Created by Kyrre on 27.09.2014.
+ * Problem specific State that works in coherence with
+ * NavigationTask.
  */
 public class NavigationState extends State {
 

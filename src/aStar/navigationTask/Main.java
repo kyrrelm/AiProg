@@ -1,8 +1,7 @@
 package aStar.navigationTask;
 
-import aStar.core.Controller;
+import aStar.core.Astar;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,7 +21,7 @@ public class Main {
         }
         println("Iteration sleep time:");
         int sleepTime = sc.nextInt();
-        Controller.SearchType type = chooseType(sc);
+        Astar.SearchType type = chooseType(sc);
         println("NavigationTask size x:");
         int dimX = sc.nextInt();
         println("NavigationTask size y:");
@@ -51,32 +50,32 @@ public class Main {
             barriers.add(intBar);
             println("next:");
         }
-        Controller controller = new Controller(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers),sleepTime);
-        if (type == Controller.SearchType.ALL){
-            StandardBoards.doAll(controller);
+        Astar astar = new Astar(new NavigationTask(dimX,dimY,startX,startY,endX,endY,barriers),sleepTime);
+        if (type == Astar.SearchType.ALL){
+            StandardBoards.doAll(astar);
             return;
         }
-        new GUI(controller,type);
-        controller.search(type);
+        new GUI(astar,type);
+        astar.search(type);
     }
 
-    private static Controller.SearchType chooseType(Scanner sc) {
+    private static Astar.SearchType chooseType(Scanner sc) {
         println("Search type:");
         println("1. Depth first");
         println("2. Breath first");
         println("3. Best first");
         println("4. All");
         int t = sc.nextInt();
-        Controller.SearchType type = null;
+        Astar.SearchType type = null;
         if (t == 1){
-            type = Controller.SearchType.DEPTH_FIRST;
+            type = Astar.SearchType.DEPTH_FIRST;
         }else if (t == 2){
-            type = Controller.SearchType.BREADTH_FIRST;
+            type = Astar.SearchType.BREADTH_FIRST;
         }
         else if (t == 3){
-            type = Controller.SearchType.BEST_FIRST;
+            type = Astar.SearchType.BEST_FIRST;
         }else {
-            type = Controller.SearchType.ALL;
+            type = Astar.SearchType.ALL;
         }
         return type;
     }
@@ -84,7 +83,7 @@ public class Main {
     private static void predefined(Scanner sc) {
         println("Iteration sleep time:");
         int sleepTime = sc.nextInt();
-        Controller.SearchType type = chooseType(sc);
+        Astar.SearchType type = chooseType(sc);
         println("Choose predefined board (0-5):");
         int input = sc.nextInt();
         switch (input){
