@@ -1,6 +1,6 @@
 package aStar.navigationTask;
 
-import aStar.core.Controller;
+import aStar.core.Astar;
 import aStar.core.ControllerListener;
 import aStar.core.Node;
 
@@ -9,18 +9,19 @@ import java.awt.*;
 
 /**
  * Created by Kyrre on 27.09.2014.
+ * JFrame for showing navigationTasks using Astar
  */
 public class GUI extends JFrame{
-    private final Controller controller;
+    private final Astar astar;
     private final NavigationTask task;
     private final NavigationState[][] board;
     private final Square[][] squares;
     JPanel p = new JPanel();
 
-    public GUI(Controller controller, Controller.SearchType type) {
+    public GUI(Astar astar, Astar.SearchType type) {
         super("A* Navigation Task");
-        this.controller = controller;
-        this.task = (NavigationTask) controller.getProblem();
+        this.astar = astar;
+        this.task = (NavigationTask) astar.getProblem();
         board = task.getBoard();
         setSize(1000, 1000);
         setResizable(false);
@@ -29,7 +30,7 @@ public class GUI extends JFrame{
         squares = new Square[board.length][board[0].length];
         init();
         add(p);
-        controller.addControllerListener(new ControllerListener() {
+        astar.addControllerListener(new ControllerListener() {
             @Override
             public void currentNodeChange(Node c) {
                 for (int i = 0; i < squares.length; i++) {

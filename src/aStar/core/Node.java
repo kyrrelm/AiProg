@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 /**
  * Created by Kyrre on 23/9/2014.
+ * Node is used to encapsulate Problem specific State's for use in Astar.
  */
 public class Node implements Comparable<Node>{
     private State state;

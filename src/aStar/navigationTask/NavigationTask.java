@@ -8,6 +8,9 @@ import java.util.List;
 
 /**
  * Created by Kyrre on 23/9/2014.
+ * sub class of Problem, used in Astar.
+ * This class contains all search elements specific to
+ * a navigation task. It works in coherence with NavigationState.
  */
 public class NavigationTask implements Problem{
     private NavigationState [][] board;

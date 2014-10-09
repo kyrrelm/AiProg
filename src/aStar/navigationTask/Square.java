@@ -5,6 +5,8 @@ import java.awt.*;
 
 /**
  * Created by Kyrre on 27.09.2014.
+ * Gui elements representing each node in the navigation task,
+ * e.i. the squares on the grid.
  */
 public class Square extends JButton {
 
