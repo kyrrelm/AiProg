@@ -28,7 +28,7 @@ public class FlowVariable extends Variable{
     }
 
     public FlowVariable(int x, int y) {
-        super(idFunction(x,y), new ArrayList<Integer>()); //TODO: FIX THIS
+        super(idFunction(x,y), new ArrayList<Integer>());
         this.startPoint = false;
         this.endPoint = false;
         this.x = x;

@@ -170,7 +170,6 @@ public abstract class GACProblem implements Problem {
     protected void domainFilterLoop(GACState state){
         while (!queue.isEmpty()){
             Revise current = queue.poll();
-            Constraint i = current.getConstraint();
             if(revise(current)){
                 for (Constraint c: constraints){
                     Variable[] vars = new Variable[2];
@@ -181,7 +180,7 @@ public abstract class GACProblem implements Problem {
                             pos++;
                         }
                     }
-                    if (vars[0].equals(current.getFocal())){
+                    if (vars[1].equals(current.getFocal())){
                         queue.add(new Revise(vars[0],c,vars[1]));
                     }else {
                         queue.add(new Revise(vars[1],c,vars[0]));

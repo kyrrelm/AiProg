@@ -1,11 +1,9 @@
 package aStarGAC.flow;
 
 import aStar.core.Node;
-import aStarGAC.core.Constraint;
-import aStarGAC.core.GACProblem;
-import aStarGAC.core.GACState;
-import aStarGAC.core.Variable;
+import aStarGAC.core.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,12 +14,12 @@ import java.util.List;
 public class FlowProblem extends GACProblem {
 
     private final HashMap<Integer, FlowVariable> initVariablesAsHashMap;
-    private final int dimesions;
+    private final int dimensions;
 
     public FlowProblem(List<? extends Constraint> constraints, HashSet<FlowVariable> flowVariables, int sleepTime, int dimensions) {
         super(constraints, flowVariables, sleepTime);
         initVariablesAsHashMap = new HashMap<Integer, FlowVariable>();
-        this.dimesions = dimensions;
+        this.dimensions = dimensions;
 
         for (FlowVariable v: flowVariables){
             initVariablesAsHashMap.put(v.getId(), v);
@@ -35,13 +33,13 @@ public class FlowProblem extends GACProblem {
             if (fv.getX() > 0){
                 generateLeft(fv);
             }
-            if (fv.getX() < dimesions -1){
+            if (fv.getX() < dimensions -1){
                 generateRight(fv);
             }
             if (fv.getY() > 0){
                 generateOver(fv);
             }
-            if (fv.getY() < dimesions -1){
+            if (fv.getY() < dimensions -1){
                 generateUnder(fv);
             }
         }
@@ -49,20 +47,53 @@ public class FlowProblem extends GACProblem {
 
     private void generateLeft(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()-1,fv.getY()));
-        fv.addToDomain(neighbour.getId());
+        if (!neighbour.isEndPoint() || !neighbour.isStartPoint()) {
+            fv.addToDomain(neighbour.getId());
+        }
     }
     private void generateRight(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()+1,fv.getY()));
-        fv.addToDomain(neighbour.getId());
+        if (!neighbour.isEndPoint() || !neighbour.isStartPoint()) {
+            fv.addToDomain(neighbour.getId());
+        }
     }
     private void generateOver(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()-1));
-        fv.addToDomain(neighbour.getId());
+        if (!neighbour.isEndPoint() || !neighbour.isStartPoint()) {
+            fv.addToDomain(neighbour.getId());
+        }
     }
     private void generateUnder(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()+1));
-        fv.addToDomain(neighbour.getId());
+        if (!neighbour.isEndPoint() || !neighbour.isStartPoint()) {
+            fv.addToDomain(neighbour.getId());
+        }
     }
+    @Override
+    protected boolean revise(Revise revise) {
+        ArrayList<Object> toBeRemoved = new ArrayList<Object>();
+        for (Object focal: revise.getFocal().getDomain()){
+            boolean valid = false;
+            for (Object nonFocal: revise.getNonFocal().getDomain()){
+                Object[] objs = new Object[]{focal, nonFocal};
+                if(!Interpreter.violates(revise.getConstraint().getLogicalRule(), objs)){
+                    valid = true;
+                    break;
+                }
+            }
+            if(!valid){
+                toBeRemoved.add(focal);
+            }
+        }
+        if (!toBeRemoved.isEmpty()){
+            for (Object o: toBeRemoved){
+                revise.getFocal().getDomain().remove(o);
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     protected GACState generateInitState() {
