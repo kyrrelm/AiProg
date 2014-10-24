@@ -19,20 +19,22 @@ public class Input {
     private FlowVariable[][] initFlowVariableGrid;
 
     private final JFrame parent;
+    private int dimension;
 
     public Input(JFrame parent) {
         this.parent = parent;
+        dimension = 0;
     }
 
     public HashSet<FlowVariable> getInitVariables(){
         LinkedList<String> list = getFileAsList();
-        int dimension = Integer.parseInt(list.pollFirst());
+        dimension = Integer.parseInt(list.pollFirst());
         int numberOfColors = Integer.parseInt(list.pollFirst());
         initFlowVariableGrid = new FlowVariable[dimension][dimension];
         HashSet<FlowVariable> variables = new HashSet<FlowVariable>();
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
-                FlowVariable v = new FlowVariable(i,j, generateDomain(numberOfColors));
+                FlowVariable v = new FlowVariable(i,j);
                 variables.add(v);
                 initFlowVariableGrid[i][j] = v;
             }
@@ -163,7 +165,7 @@ public class Input {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Input input = new Input(f);
-        FlowProblem flowProblem = new FlowProblem(null, input.getInitVariables(),input.getSleepTime()); //TODO: FIX THIS
+        FlowProblem flowProblem = new FlowProblem(null, input.getInitVariables(),input.getSleepTime(), input.dimension); //TODO: FIX THIS
         GUI gui = new GUI(flowProblem, input.initFlowVariableGrid);
         System.out.println("worked");
     }

@@ -6,6 +6,7 @@ import aStarGAC.core.GACProblem;
 import aStarGAC.core.GACState;
 import aStarGAC.core.Variable;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -14,9 +15,53 @@ import java.util.List;
  */
 public class FlowProblem extends GACProblem {
 
+    private final HashMap<Integer, FlowVariable> initVariablesAsHashMap;
+    private final int dimesions;
 
-    public FlowProblem(List<? extends Constraint> constraints, HashSet<FlowVariable> flowVariables, int sleepTime) {
+    public FlowProblem(List<? extends Constraint> constraints, HashSet<FlowVariable> flowVariables, int sleepTime, int dimensions) {
         super(constraints, flowVariables, sleepTime);
+        initVariablesAsHashMap = new HashMap<Integer, FlowVariable>();
+        this.dimesions = dimensions;
+
+        for (FlowVariable v: flowVariables){
+            initVariablesAsHashMap.put(v.getId(), v);
+        }
+        generateDomains();
+    }
+
+    private void generateDomains() {
+        for (Variable v: variables){
+            FlowVariable fv = (FlowVariable) v;
+            if (fv.getX() > 0){
+                generateLeft(fv);
+            }
+            if (fv.getX() < dimesions -1){
+                generateRight(fv);
+            }
+            if (fv.getY() > 0){
+                generateOver(fv);
+            }
+            if (fv.getY() < dimesions -1){
+                generateUnder(fv);
+            }
+        }
+    }
+
+    private void generateLeft(FlowVariable fv) {
+        FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()-1,fv.getY()));
+        fv.addToDomain(neighbour.getId());
+    }
+    private void generateRight(FlowVariable fv) {
+        FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()+1,fv.getY()));
+        fv.addToDomain(neighbour.getId());
+    }
+    private void generateOver(FlowVariable fv) {
+        FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()-1));
+        fv.addToDomain(neighbour.getId());
+    }
+    private void generateUnder(FlowVariable fv) {
+        FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()+1));
+        fv.addToDomain(neighbour.getId());
     }
 
     @Override

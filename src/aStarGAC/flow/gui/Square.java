@@ -37,7 +37,7 @@ public class Square extends JButton {
         setText("");
         if (flowVariable.isStartPoint() || flowVariable.isEndPoint()){
             this.type = Type.NODE;
-        }else if (flowVariable.isDomainSingleton()){
+        }else if(flowVariable.getColor() != null){
             this.type = Type.PATH;
         }else{
             this.type = Type.DEFAULT;
@@ -47,15 +47,14 @@ public class Square extends JButton {
     @Override
     protected void paintComponent(Graphics g) {
         if (this.type == Type.NODE){
-            g.setColor((Color) flowVariable.getDomain().get(0));
+            g.setColor(flowVariable.getColor());
             g.fillRect(getHorizontalAlignment(), getVerticalAlignment(), getWidth(), getHeight());
             g.setColor(Color.BLACK);
             g.fillOval(getHorizontalAlignment()+1, getVerticalAlignment()+1, getWidth()-4, getHeight()-4);
-            g.setColor((Color) flowVariable.getDomain().get(0));
+            g.setColor(flowVariable.getColor());
             g.fillOval(getHorizontalAlignment()+4, getVerticalAlignment()+4, getWidth()-10, getHeight()-10);
-
         }else if (this.type == Type.PATH){
-            g.setColor((Color) flowVariable.getDomain().get(0));
+            g.setColor(flowVariable.getColor());
             g.fillRect(getHorizontalAlignment(), getVerticalAlignment(), getWidth(), getHeight());
         }else if (this.type == Type.DEFAULT){
             g.setColor(defaultColor);

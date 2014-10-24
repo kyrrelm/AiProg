@@ -3,6 +3,7 @@ package aStarGAC.flow;
 import aStarGAC.core.Variable;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +19,16 @@ public class FlowVariable extends Variable{
     public static int idFunction(int x, int y){
         return (x*10000000)+y;
     }
+    //TODO:verify this
+    public static int getXFromId(int id){
+        return id/10000000;
+    }
+    public static int getYFromId(int id){
+        return id%10000000;
+    }
 
-    public FlowVariable(int x, int y, List<Integer> domain) {
-        super(idFunction(x,y), domain); //TODO: FIX THIS
+    public FlowVariable(int x, int y) {
+        super(idFunction(x,y), new ArrayList<Integer>()); //TODO: FIX THIS
         this.startPoint = false;
         this.endPoint = false;
         this.x = x;
@@ -68,5 +76,12 @@ public class FlowVariable extends Variable{
 
     public int getY() {
         return y;
+    }
+
+    public void addToDomain(int id) {
+        List<Integer> intDomain = (List<Integer>) this.domain;
+        if (!intDomain.contains(id)){
+            intDomain.add(id);
+        }
     }
 }
