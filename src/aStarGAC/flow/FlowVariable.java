@@ -2,6 +2,7 @@ package aStarGAC.flow;
 
 import aStarGAC.core.Variable;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -12,13 +13,19 @@ public class FlowVariable extends Variable{
     private final int x;
     private boolean endPoint;
     private boolean startPoint;
+    private Color color;
 
-    public FlowVariable(int x, int y, List<?> domain) {
-        super(0, domain); //TODO: FIX THIS
+    public static int idFunction(int x, int y){
+        return (x*10000000)+y;
+    }
+
+    public FlowVariable(int x, int y, List<Integer> domain) {
+        super(idFunction(x,y), domain); //TODO: FIX THIS
         this.startPoint = false;
         this.endPoint = false;
         this.x = x;
         this.y = y;
+        this.color = null;
     }
 
     @Override
@@ -45,6 +52,14 @@ public class FlowVariable extends Variable{
     @Override
     public String toString() {
         return super.toString() + " x = "+x+" y = "+y+" startPoint = "+startPoint+" endPoint = "+endPoint+" domainSize = "+domain.size();
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public int getX() {

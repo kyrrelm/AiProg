@@ -9,12 +9,23 @@ import java.util.HashSet;
  * Created by Kyrre on 16.10.2014.
  */
 public class FlowState extends GACState{
-    protected FlowState(long id, HashSet<? extends Variable> variables, Variable assumedVariable, boolean solution) {
-        super(id, variables, assumedVariable, solution);
+    private static long idGenerator = 0;
+
+    protected FlowState(HashSet<? extends Variable> variables, Variable assumedVariable, boolean solution) {
+        super(idGenerator, variables, assumedVariable, solution);
+        idGenerator++;
     }
 
     @Override
-    public GACState deepCopy() {
-        return null;
+    public FlowState deepCopy() {
+        HashSet<FlowVariable> variablesCopy = new HashSet<FlowVariable>();
+        for (Variable v: variables){
+            variablesCopy.add((FlowVariable)v.deepCopy());
+        }
+        FlowVariable assumedVariableCopy = null;
+        if (assumedVariable != null){
+            assumedVariableCopy = (FlowVariable)assumedVariable.deepCopy();
+        }
+        return new FlowState(variablesCopy, assumedVariableCopy, solution);
     }
 }

@@ -1,5 +1,6 @@
 package aStarGAC.flow.gui;
 
+import aStarGAC.flow.FlowProblem;
 import aStarGAC.flow.FlowVariable;
 
 import javax.swing.*;
@@ -15,6 +16,8 @@ import java.util.List;
  */
 public class Input {
 
+    private FlowVariable[][] initFlowVariableGrid;
+
     private final JFrame parent;
 
     public Input(JFrame parent) {
@@ -25,10 +28,13 @@ public class Input {
         LinkedList<String> list = getFileAsList();
         int dimension = Integer.parseInt(list.pollFirst());
         int numberOfColors = Integer.parseInt(list.pollFirst());
+        initFlowVariableGrid = new FlowVariable[dimension][dimension];
         HashSet<FlowVariable> variables = new HashSet<FlowVariable>();
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
-                variables.add(new FlowVariable(i,j, generateDomain(numberOfColors)));
+                FlowVariable v = new FlowVariable(i,j, generateDomain(numberOfColors));
+                variables.add(v);
+                initFlowVariableGrid[i][j] = v;
             }
         }
         int counter = 0;
@@ -40,16 +46,34 @@ public class Input {
             int endY = Integer.parseInt(list.pollFirst());
             for (FlowVariable v: variables){
                 if (v.getX() == startX && v.getY() == startY){
-                    v.setDomain(getSingletonDomain(counter));
+                    v.setColor(getColor(counter));
                     v.setStartPoint(true);
                 } else if (v.getX() == endX && v.getY() == endY){
-                    v.setDomain(getSingletonDomain(counter));
+                    v.setColor(getColor(counter));
                     v.setEndPoint(true);
                 }
             }
             counter++;
         }
         return variables;
+    }
+
+    public int getSleepTime() {
+        JOptionPane pane = new JOptionPane();
+        String d;
+        while(!isInteger(d = pane.showInputDialog("Sleep time:"))) {
+            JOptionPane.showMessageDialog(null, "Input not a number, try again");
+        }
+        return Integer.parseInt(d);
+    }
+
+    private boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     private List<Color> getSingletonDomain(int id) {
@@ -121,16 +145,16 @@ public class Input {
                 return Color.CYAN;
             }
             case 7:{
-                return Color.BLACK;
+                return Color.GRAY;
             }
             case 8:{
-                return Color.WHITE;
+                return Color.DARK_GRAY;
             }
             case 9:{
                 return Color.PINK;
             }
             default:{
-                return Color.GRAY;
+                return Color.LIGHT_GRAY;
             }
         }
     }
@@ -138,9 +162,9 @@ public class Input {
     public static void main(String[] args) {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setBounds(200,200,400,400);
-        //f.setVisible(true);
         Input input = new Input(f);
-        input.getInitVariables();
+        FlowProblem flowProblem = new FlowProblem(null, input.getInitVariables(),input.getSleepTime()); //TODO: FIX THIS
+        GUI gui = new GUI(flowProblem, input.initFlowVariableGrid);
+        System.out.println("worked");
     }
 }

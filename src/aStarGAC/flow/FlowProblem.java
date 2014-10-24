@@ -15,13 +15,13 @@ import java.util.List;
 public class FlowProblem extends GACProblem {
 
 
-    protected FlowProblem(List<? extends Constraint> constraints, HashSet<? extends Variable> variables, int sleepTime) {
-        super(constraints, variables, sleepTime);
+    public FlowProblem(List<? extends Constraint> constraints, HashSet<FlowVariable> flowVariables, int sleepTime) {
+        super(constraints, flowVariables, sleepTime);
     }
 
     @Override
     protected GACState generateInitState() {
-        return null;
+        return new FlowState(this.variables, null, false);
     }
 
     @Override
@@ -31,6 +31,6 @@ public class FlowProblem extends GACProblem {
 
     @Override
     public int getArcCost(Node n1, Node n2) {
-        return 0;
+        return 1;
     }
 }
