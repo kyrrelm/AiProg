@@ -1,10 +1,10 @@
 package aStarGAC.flow;
 
 import aStarGAC.core.Variable;
+import aStarGAC.flow.gui.ModelHolder;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -89,6 +89,7 @@ public class FlowVariable extends Variable{
 
     public void setColor(Color color) {
         this.color = color;
+        ModelHolder.notifyChange(this);
     }
 
     public int getX() {
@@ -112,7 +113,7 @@ public class FlowVariable extends Variable{
 
     public void setParent(FlowVariable parent) {
         this.parent = parent.getId();
-        this.color = parent.getColor();
+        setColor(parent.getColor());
         parent.setChild(this.id);
 
     }

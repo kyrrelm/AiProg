@@ -44,16 +44,6 @@ public class GUI extends JFrame{
         setVisible(true);
         setAlwaysOnTop(true);
         setAlwaysOnTop(false);
-
-        flowProblem.addStateListener(new StateListener() {
-            @Override
-            public void onStateChanged(State newState) {
-                FlowState state = (FlowState)newState;
-                for (Variable v: state.getVariables()){
-                    squares.get(v.getId()).setFlowVariable((FlowVariable) v);
-                }
-            }
-        });
     }
 
 }

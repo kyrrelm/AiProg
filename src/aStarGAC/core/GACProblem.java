@@ -4,6 +4,7 @@ import aStar.core.Astar;
 import aStar.core.ControllerListener;
 import aStar.core.Node;
 import aStar.core.Problem;
+import aStarGAC.flow.FlowVariable;
 import aStarGAC.vertexColoring.VCState;
 import aStarGAC.vertexColoring.Vertex;
 

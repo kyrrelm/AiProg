@@ -31,6 +31,12 @@ public class Square extends JButton {
         this.y = flowVariable.getY();
         chooseType();
         setOpaque(false);
+        ModelHolder.setFlowVariableListener(flowVariable.getId(), new FlowVariableListener() {
+            @Override
+            public void onFlowVariableChange(FlowVariable flowVariable) {
+                setFlowVariable(flowVariable);
+            }
+        });
     }
 
     private void chooseType(){
