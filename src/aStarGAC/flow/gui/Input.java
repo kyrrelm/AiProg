@@ -1,5 +1,6 @@
 package aStarGAC.flow.gui;
 
+import aStarGAC.core.Constraint;
 import aStarGAC.flow.FlowProblem;
 import aStarGAC.flow.FlowVariable;
 
@@ -165,8 +166,20 @@ public class Input {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Input input = new Input(f);
-        FlowProblem flowProblem = new FlowProblem(null, input.getInitVariables(),input.getSleepTime(), input.dimension); //TODO: FIX THIS
+        HashSet<FlowVariable> variables = input.getInitVariables();
+        ArrayList<Constraint> constraints = new ArrayList<Constraint>(variables.size()*2);
+        for (FlowVariable v0: variables){
+            for (FlowVariable v1: variables){
+                if (!v0.equals(v1)){
+                    HashSet<Integer> members = new HashSet<Integer>();
+                    members.add(v0.getId());
+                    members.add(v1.getId());
+                    constraints.add(new Constraint(members, "x != y"));
+                }
+            }
+        }
+        FlowProblem flowProblem = new FlowProblem(constraints, variables,input.getSleepTime(), input.dimension); //TODO: FIX THIS
         GUI gui = new GUI(flowProblem, input.initFlowVariableGrid);
-        System.out.println("worked");
+        flowProblem.run();
     }
 }

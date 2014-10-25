@@ -3,10 +3,7 @@ package aStarGAC.flow;
 import aStar.core.Node;
 import aStarGAC.core.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Kyrre on 17.10.2014.
@@ -71,29 +68,57 @@ public class FlowProblem extends GACProblem {
     }
     @Override
     protected boolean revise(Revise revise) {
-        ArrayList<Object> toBeRemoved = new ArrayList<Object>();
-        for (Object focal: revise.getFocal().getDomain()){
-            boolean valid = false;
-            for (Object nonFocal: revise.getNonFocal().getDomain()){
-                Object[] objs = new Object[]{focal, nonFocal};
-                if(!Interpreter.violates(revise.getConstraint().getLogicalRule(), objs)){
-                    valid = true;
-                    break;
+        //TODO: move to init
+        if (((FlowVariable)revise.getNonFocal()).hasParent()){
+            System.out.println("revise");
+            for (int i = 0; i < revise.getFocal().getDomain().size(); i++) {
+                if (revise.getFocal().getDomain().get(i).equals(((FlowVariable) revise.getNonFocal()).getParentId())){
+                    revise.getFocal().getDomain().remove(i);
+                    return true;
                 }
             }
-            if(!valid){
-                toBeRemoved.add(focal);
-            }
-        }
-        if (!toBeRemoved.isEmpty()){
-            for (Object o: toBeRemoved){
-                revise.getFocal().getDomain().remove(o);
-            }
-            return true;
         }
         return false;
     }
 
+    @Override
+    public ArrayList<Node> getSuccessors(Node n) {
+        GACState state = (GACState) n.getState();
+        if (state.isContradictory()){
+            System.out.println("contradictory");
+            return new ArrayList<Node>();
+        }
+        if (state.isSolution()){
+            return new ArrayList<Node>();
+        }
+        PriorityQueue<Variable> pq = new PriorityQueue<Variable>();
+        for (Variable v: state.getVariables()){
+            if (v.getDomainSize() > 1 && ((FlowVariable)v).hasParent()){
+                pq.add(v);
+            }
+        }
+        while(!pq.isEmpty()){
+            Variable assumed = pq.poll();
+
+            ArrayList<Node> successors = new ArrayList<Node>();
+            for (Object o: assumed.getDomain()){
+                GACState child = state.deepCopy();
+                ArrayList<Object> newDomain = new ArrayList<Object>();
+                newDomain.add(o);
+                child.getVariableById(assumed.getId()).setDomain(newDomain);
+                child.setAssumedVariable(child.getVariableById(assumed.getId()));
+                reRun(child);
+                if (child.isContradictory()){
+                    continue;
+                }
+                successors.add(new Node(child));
+            }
+            if(!successors.isEmpty()){
+                return successors;
+            }
+        }
+        return  new ArrayList<Node>();
+    }
 
     @Override
     protected GACState generateInitState() {
@@ -102,7 +127,7 @@ public class FlowProblem extends GACProblem {
 
     @Override
     public void calculateH(Node n) {
-
+        n.setH(4); //TODO:Fix this
     }
 
     @Override

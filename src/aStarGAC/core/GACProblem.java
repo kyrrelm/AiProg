@@ -53,7 +53,7 @@ public abstract class GACProblem implements Problem {
 
         int countViolations = 0;
         for (Constraint c: constraints){
-            if (doesViolate(c, ((VCState) goal.getState()))){
+            if (doesViolate(c, ((GACState) goal.getState()))){
                 countViolations++;
             }
         }
@@ -115,7 +115,6 @@ public abstract class GACProblem implements Problem {
         }
         while(!pq.isEmpty()){
             Variable assumed = pq.poll();
-            //Variable assumed = state.getVariableWithSmallestDomainLargerThanOne();
 
             ArrayList<Node> successors = new ArrayList<Node>();
             for (Object o: assumed.getDomain()){
@@ -134,7 +133,7 @@ public abstract class GACProblem implements Problem {
                 return successors;
             }
         }
-        return  new ArrayList<Node>(); //return null;
+        return  new ArrayList<Node>();
     }
 
     @Override

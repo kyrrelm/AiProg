@@ -53,6 +53,11 @@ public class Square extends JButton {
             g.fillOval(getHorizontalAlignment()+1, getVerticalAlignment()+1, getWidth()-4, getHeight()-4);
             g.setColor(flowVariable.getColor());
             g.fillOval(getHorizontalAlignment()+4, getVerticalAlignment()+4, getWidth()-10, getHeight()-10);
+            if (flowVariable.isStartPoint()){
+                g.setColor(Color.BLACK);
+                g.fillOval(getHorizontalAlignment()+(getWidth()/2)-10, getVerticalAlignment()+(getHeight()/2)-10, 20, 20);
+
+            }
         }else if (this.type == Type.PATH){
             g.setColor(flowVariable.getColor());
             g.fillRect(getHorizontalAlignment(), getVerticalAlignment(), getWidth(), getHeight());
@@ -62,11 +67,14 @@ public class Square extends JButton {
         }else{
             super.paintComponent(g);
         }
+        g.setColor(Color.BLACK);
+        g.drawRect(getHorizontalAlignment(), getVerticalAlignment(), getWidth(), getHeight());
     }
 
     public void setFlowVariable(FlowVariable flowVariable) {
         this.flowVariable = flowVariable;
         chooseType();
+        paintComponent(this.getGraphics());
     }
 
     public Type getType() {
