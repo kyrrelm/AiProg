@@ -63,7 +63,9 @@ public class FlowVariable extends Variable{
 
     public void setStartPoint(boolean startPoint) {
         this.startPoint = startPoint;
-        parent = this.id;
+        if (startPoint){
+            parent = this.id;
+        }
     }
 
     public void setEndPoint(boolean endPoint) {
@@ -113,6 +115,9 @@ public class FlowVariable extends Variable{
 
     public void setParent(FlowVariable parent) {
         this.parent = parent.getId();
+        if (parent.getColor() == null){
+            System.out.println("AHA");
+        }
         setColor(parent.getColor());
         parent.setChild(this.id);
 
@@ -127,6 +132,6 @@ public class FlowVariable extends Variable{
     }
 
     public boolean hasParent() {
-        return id != -1;
+        return parent != -1;
     }
 }

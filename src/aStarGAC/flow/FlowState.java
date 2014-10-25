@@ -3,6 +3,7 @@ package aStarGAC.flow;
 import aStarGAC.core.GACState;
 import aStarGAC.core.Variable;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -10,9 +11,14 @@ import java.util.HashSet;
  */
 public class FlowState extends GACState{
     private static long idGenerator = 0;
+    private HashMap<Integer, FlowVariable> hashMap;
 
     protected FlowState(HashSet<? extends Variable> variables, Variable assumedVariable, boolean solution) {
         super(idGenerator, variables, assumedVariable, solution);
+        hashMap = new HashMap<Integer, FlowVariable>();
+        for (Variable v: variables){
+            hashMap.put(v.getId(), (FlowVariable) v);
+        }
         idGenerator++;
     }
 
@@ -27,5 +33,17 @@ public class FlowState extends GACState{
             assumedVariableCopy = (FlowVariable)assumedVariable.deepCopy();
         }
         return new FlowState(variablesCopy, assumedVariableCopy, solution);
+    }
+
+    public boolean updatePaths(){
+        boolean change = false;
+        for (Variable v: variables){
+            FlowVariable fl = (FlowVariable) v;
+            if (fl.hasParent() && fl.isDomainSingleton()){
+                hashMap.get(fl.getDomain().get(0)).setParent(fl);
+                change = true;
+            }
+        }
+        return change;
     }
 }

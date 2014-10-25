@@ -22,6 +22,18 @@ public class FlowProblem extends GACProblem {
             initVariablesAsHashMap.put(v.getId(), v);
         }
         generateDomains();
+
+        boolean change = true;
+
+        while (change) {
+            change = false;
+            for (FlowVariable v: flowVariables){
+                if (v.isDomainSingleton() && v.hasParent()){
+                    initVariablesAsHashMap.get(v.getDomain().get(0)).setParent(v);
+                    change = false;
+                }
+            }
+        }
     }
 
     private void generateDomains() {
@@ -84,9 +96,9 @@ public class FlowProblem extends GACProblem {
     @Override
     protected boolean revise(Revise revise) {
         //TODO: move to init
-        if (((FlowVariable)revise.getNonFocal()).hasParent()){
+        if (((FlowVariable)revise.getNonFocal()).hasParent() && !((FlowVariable)revise.getFocal()).hasParent()){
             for (int i = 0; i < revise.getFocal().getDomain().size(); i++) {
-                if (revise.getFocal().getDomain().get(i).equals(((FlowVariable) revise.getNonFocal()).getParentId())){
+                if (revise.getFocal().getDomain().get(i).equals(revise.getNonFocal().getId())){
                     if (revise.getFocal().isDomainSingleton()){
                         System.out.println("dont contradict man");
                     }
@@ -99,15 +111,12 @@ public class FlowProblem extends GACProblem {
     }
 
     @Override
-    protected void domainFilterLoop(GACState state){
+    protected void domainFilterLoop(GACState s){
+        FlowState state = (FlowState) s;
         while (!queue.isEmpty()){
             Revise current = queue.poll();
             if(revise(current)){
-                //TODO: REMOVE THIS! SUCH NO NO, JUST FOR TESTING!
-                if (current.getFocal().isDomainSingleton()){
-                    System.out.println("do you even?");
-                    ((FlowVariable)state.getVariableById((Integer) current.getFocal().getDomain().get(0))).setParent((FlowVariable) current.getFocal());
-                }
+                state.updatePaths();
                 for (Constraint c: constraints){
                     Variable[] vars = new Variable[2];
                     int pos = 0;
@@ -143,25 +152,25 @@ public class FlowProblem extends GACProblem {
 
     private void generateLeft(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()-1,fv.getY()));
-        if (!neighbour.isStartPoint() || !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateRight(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()+1,fv.getY()));
-        if (!neighbour.isStartPoint() || !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateOver(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()-1));
-        if (!neighbour.isStartPoint() || !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateUnder(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()+1));
-        if (!neighbour.isStartPoint() || !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }
