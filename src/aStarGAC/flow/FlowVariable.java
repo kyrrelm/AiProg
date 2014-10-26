@@ -127,7 +127,7 @@ public class FlowVariable extends Variable{
 
     }
 
-    private boolean hasChild() {
+    protected boolean hasChild() {
         return child != -1;
     }
 
@@ -135,7 +135,7 @@ public class FlowVariable extends Variable{
         return child;
     }
 
-    public void setChild(int child) {
+    private void setChild(int child) {
         this.child = child;
     }
 

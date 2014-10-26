@@ -36,29 +36,12 @@ public class FlowProblem extends GACProblem {
 //        }
     }
 
-    private void generateDomains() {
-        for (Variable v: variables){
-            FlowVariable fv = (FlowVariable) v;
-            if (fv.getX() > 0){
-                generateLeft(fv);
-            }
-            if (fv.getX() < dimensions -1){
-                generateRight(fv);
-            }
-            if (fv.getY() > 0){
-                generateOver(fv);
-            }
-            if (fv.getY() < dimensions -1){
-                generateUnder(fv);
-            }
-        }
-    }
-    private static int succCount = 0;
+    private static int succCount = 1;
     @Override
     public ArrayList<Node> getSuccessors(Node n) {
         GACState state = (GACState) n.getState();
         if (state.isContradictory()){
-            System.out.println("contradictory");
+            System.out.println("getSuccessors(): input state is Contradictory");
             return new ArrayList<Node>();
         }
         if (state.isSolution()){
@@ -100,7 +83,7 @@ public class FlowProblem extends GACProblem {
         ((FlowState) s).updatePaths();
         try {
             System.out.println("done updating paths");
-            Thread.sleep(2000);
+            Thread.sleep(000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -131,12 +114,11 @@ public class FlowProblem extends GACProblem {
             e.printStackTrace();
         }
     }
-
     protected boolean revise(Revise revise, FlowState state) {
         FlowVariable focal = (FlowVariable) revise.getFocal();
         FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
 
-        if (!focal.isNeighbour(nonFocal)){
+        if (!focal.isNeighbour(nonFocal) || focal.hasChild()){
             return false;
         }
         if (nonFocal.hasParent()){
@@ -156,11 +138,11 @@ public class FlowProblem extends GACProblem {
         }
         return false;
     }
+
     @Override
     protected GACState generateInitState() {
         return new FlowState(this.variables, null, false);
     }
-
     @Override
     public void calculateH(Node n) {
         n.setH(4); //TODO:Fix this
@@ -171,27 +153,52 @@ public class FlowProblem extends GACProblem {
         return 1;
     }
 
+    private void generateDomains() {
+        for (Variable v: variables){
+            FlowVariable fv = (FlowVariable) v;
+            if (fv.getId() == 0){
+                System.out.println("dfg");
+            }
+            if (fv.isEndPoint()){
+                fv.addToDomain(fv.getId());
+                continue;
+            }
+            if (fv.getX() > 0){
+                generateLeft(fv);
+            }
+            if (fv.getX() < dimensions -1){
+                generateRight(fv);
+            }
+            if (fv.getY() > 0){
+                generateOver(fv);
+            }
+            if (fv.getY() < dimensions -1){
+                generateUnder(fv);
+            }
+        }
+    }
+
     private void generateLeft(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()-1,fv.getY()));
-        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateRight(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()+1,fv.getY()));
-        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateOver(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()-1));
-        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateUnder(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()+1));
-        if (!neighbour.isStartPoint() && !neighbour.isEndPoint()) {
+        if (!neighbour.isStartPoint()) {
             fv.addToDomain(neighbour.getId());
         }
     }

@@ -37,7 +37,7 @@ public abstract class GACProblem implements Problem {
         //TODO: fix so it stops here
         if (s0.isContradictory()){
             //TODO: Return failure
-            System.out.println("Contradictory");
+            System.out.println("s0 is Contradictory");
         }else if (s0.isSolution()){
             return new Node(s0);
         }
