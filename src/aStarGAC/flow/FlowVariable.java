@@ -38,7 +38,7 @@ public class FlowVariable extends Variable{
         this.y = y;
         this.color = null;
         this.parent = -1;
-        child = -1;
+        this.child = -1;
     }
 
     private FlowVariable(int id, List<Object> domain, int y, int x, boolean endPoint, boolean startPoint, Color color, int parent, int child) {
@@ -115,12 +115,20 @@ public class FlowVariable extends Variable{
 
     public void setParent(FlowVariable parent) {
         this.parent = parent.getId();
+        if (parent.hasChild()){
+            System.out.println("setParent(): parent already has child, nothing happens");
+            return;
+        }
         if (parent.getColor() == null){
-            System.out.println("AHA");
+            System.out.println("setParent(): parent should have color");
         }
         setColor(parent.getColor());
         parent.setChild(this.id);
 
+    }
+
+    private boolean hasChild() {
+        return child != -1;
     }
 
     public int getChild() {

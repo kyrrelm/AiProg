@@ -40,15 +40,22 @@ public class FlowState extends GACState{
         boolean change = false;
         for (Variable v: variables){
             FlowVariable fl = (FlowVariable) v;
-            if (fl.hasParent() && fl.isDomainSingleton()){
-                FlowVariable neighbour = hashMap.get(fl.getDomain().get(0));
-                if (!neighbour.hasParent()){
-                    neighbour.setParent(fl);
-                    System.out.println("update path changes");
-                }
+            if (tryToSetChild(fl)){
                 change = true;
             }
         }
         return change;
+    }
+
+    public boolean tryToSetChild(FlowVariable fl) {
+        if (fl.hasParent() && fl.isDomainSingleton()) {
+            FlowVariable neighbour = hashMap.get(fl.getDomain().get(0));
+            if (!neighbour.hasParent()) {
+                neighbour.setParent(fl);
+                System.out.println("tryTOSetChild() has set child (and parent)");
+                return true;
+            }
+        }
+        return false;
     }
 }

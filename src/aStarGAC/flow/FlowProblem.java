@@ -139,14 +139,22 @@ public class FlowProblem extends GACProblem {
         if (!focal.isNeighbour(nonFocal)){
             return false;
         }
-        if (((FlowVariable)revise.getNonFocal()).hasParent() && !((FlowVariable)revise.getFocal()).hasParent()){
-            for (int i = 0; i < revise.getFocal().getDomain().size(); i++) {
-                if (revise.getFocal().getDomain().get(i).equals(revise.getNonFocal().getId())){
-                    System.out.println("revising");
-                    if (revise.getFocal().isDomainSingleton()){
-                        System.out.println("dont contradict man");
+        if (nonFocal.hasParent()){
+            for (int i = 0; i < focal.getDomain().size(); i++) {
+                if (focal.getDomain().get(i).equals(nonFocal.getId())){
+                    if (focal.isDomainSingleton()){
+                        System.out.println("removing singleton domain");
                     }
-                    revise.getFocal().getDomain().remove(i);
+                    focal.getDomain().remove(i);
+                    //TODO: Move to state
+                    state.tryToSetChild(focal);
+                    if (focal.hasParent() && focal.isDomainSingleton()){
+                        FlowVariable neighbour = (FlowVariable) state.getVariableById((Integer) focal.getDomain().get(0));
+                        if (!neighbour.hasParent()){
+                            System.out.println("revise has set parent");
+                            neighbour.setParent(focal);
+                        }
+                    }
                     return true;
                 }
             }
