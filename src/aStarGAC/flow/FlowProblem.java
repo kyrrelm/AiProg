@@ -81,15 +81,11 @@ public class FlowProblem extends GACProblem {
     protected void domainFilterLoop(GACState s){
         FlowState state = (FlowState) s;
         ((FlowState) s).updatePaths();
-        try {
-            System.out.println("done updating paths");
-            Thread.sleep(000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        System.out.println("---------------START OF LOOP-----------------");
         while (!queue.isEmpty()){
             Revise current = queue.poll();
             if(revise(current, (FlowState) s)){
+                System.out.println("----revise is true----");
                 for (Constraint c: constraints){
                     Variable[] vars = new Variable[2];
                     int pos = 0;
@@ -109,7 +105,7 @@ public class FlowProblem extends GACProblem {
         }
         try {
             System.out.println("done with domain filtering loop");
-            Thread.sleep(000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -118,7 +114,7 @@ public class FlowProblem extends GACProblem {
         FlowVariable focal = (FlowVariable) revise.getFocal();
         FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
 
-        if (!focal.isNeighbour(nonFocal) || focal.hasChild()){
+        if (!focal.isNeighbour(nonFocal) || focal.hasChild() || focal.isEndPoint()){
             return false;
         }
         if (nonFocal.hasParent()){
@@ -128,7 +124,6 @@ public class FlowProblem extends GACProblem {
                         System.out.println("removing singleton domain");
                     }
                     focal.getDomain().remove(i);
-                    //TODO: Move to state
                     if (state.tryToSetPath(focal)){
                         System.out.println("revise has set parent");
                     }
