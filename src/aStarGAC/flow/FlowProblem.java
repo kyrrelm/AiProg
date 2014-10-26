@@ -25,15 +25,15 @@ public class FlowProblem extends GACProblem {
 
         boolean change = true;
 
-        while (change) {
-            change = false;
-            for (FlowVariable v: flowVariables){
-                if (v.isDomainSingleton() && v.hasParent()){
-                    initVariablesAsHashMap.get(v.getDomain().get(0)).setParent(v);
-                    change = false;
-                }
-            }
-        }
+//        while (change) {
+//            change = false;
+//            for (FlowVariable v: flowVariables){
+//                if (v.isDomainSingleton() && v.hasParent()){
+//                    initVariablesAsHashMap.get(v.getDomain().get(0)).setParent(v);
+//                    change = false;
+//                }
+//            }
+//        }
     }
 
     private void generateDomains() {
@@ -53,7 +53,7 @@ public class FlowProblem extends GACProblem {
             }
         }
     }
-
+    private static int succCount = 0;
     @Override
     public ArrayList<Node> getSuccessors(Node n) {
         GACState state = (GACState) n.getState();
@@ -80,6 +80,7 @@ public class FlowProblem extends GACProblem {
                 newDomain.add(o);
                 child.getVariableById(assumed.getId()).setDomain(newDomain);
                 child.setAssumedVariable(child.getVariableById(assumed.getId()));
+                System.out.println("SuccCount " + succCount++);
                 reRun(child);
                 if (child.isContradictory()){
                     continue;
@@ -94,29 +95,18 @@ public class FlowProblem extends GACProblem {
         return  new ArrayList<Node>();
     }
     @Override
-    protected boolean revise(Revise revise) {
-        //TODO: move to init
-        if (((FlowVariable)revise.getNonFocal()).hasParent() && !((FlowVariable)revise.getFocal()).hasParent()){
-            for (int i = 0; i < revise.getFocal().getDomain().size(); i++) {
-                if (revise.getFocal().getDomain().get(i).equals(revise.getNonFocal().getId())){
-                    if (revise.getFocal().isDomainSingleton()){
-                        System.out.println("dont contradict man");
-                    }
-                    revise.getFocal().getDomain().remove(i);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
     protected void domainFilterLoop(GACState s){
         FlowState state = (FlowState) s;
+        ((FlowState) s).updatePaths();
+        try {
+            System.out.println("done updating paths");
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         while (!queue.isEmpty()){
             Revise current = queue.poll();
-            if(revise(current)){
-                state.updatePaths();
+            if(revise(current, (FlowState) s)){
                 for (Constraint c: constraints){
                     Variable[] vars = new Variable[2];
                     int pos = 0;
@@ -134,6 +124,34 @@ public class FlowProblem extends GACProblem {
                 }
             }
         }
+        try {
+            System.out.println("done with domain filtering loop");
+            Thread.sleep(000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected boolean revise(Revise revise, FlowState state) {
+        FlowVariable focal = (FlowVariable) revise.getFocal();
+        FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
+
+        if (!focal.isNeighbour(nonFocal)){
+            return false;
+        }
+        if (((FlowVariable)revise.getNonFocal()).hasParent() && !((FlowVariable)revise.getFocal()).hasParent()){
+            for (int i = 0; i < revise.getFocal().getDomain().size(); i++) {
+                if (revise.getFocal().getDomain().get(i).equals(revise.getNonFocal().getId())){
+                    System.out.println("revising");
+                    if (revise.getFocal().isDomainSingleton()){
+                        System.out.println("dont contradict man");
+                    }
+                    revise.getFocal().getDomain().remove(i);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     @Override
     protected GACState generateInitState() {

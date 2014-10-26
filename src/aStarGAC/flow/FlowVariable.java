@@ -134,4 +134,12 @@ public class FlowVariable extends Variable{
     public boolean hasParent() {
         return parent != -1;
     }
+
+    public boolean isNeighbour(FlowVariable v) {
+        int diff = Math.abs(this.x - v.getX()) + Math.abs(this.y - v.getY());
+        if (diff == 1){
+            return true;
+        }
+        return false;
+    }
 }

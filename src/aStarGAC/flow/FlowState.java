@@ -36,11 +36,16 @@ public class FlowState extends GACState{
     }
 
     public boolean updatePaths(){
+        System.out.println("In update path");
         boolean change = false;
         for (Variable v: variables){
             FlowVariable fl = (FlowVariable) v;
             if (fl.hasParent() && fl.isDomainSingleton()){
-                hashMap.get(fl.getDomain().get(0)).setParent(fl);
+                FlowVariable neighbour = hashMap.get(fl.getDomain().get(0));
+                if (!neighbour.hasParent()){
+                    neighbour.setParent(fl);
+                    System.out.println("update path changes");
+                }
                 change = true;
             }
         }
