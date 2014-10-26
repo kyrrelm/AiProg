@@ -170,7 +170,7 @@ public class Input {
         ArrayList<Constraint> constraints = new ArrayList<Constraint>(variables.size()*2);
         for (FlowVariable v0: variables){
             for (FlowVariable v1: variables){
-                if (!v0.equals(v1)){
+                if (!v0.equals(v1) && v0.isNeighbour(v1)){
                     HashSet<Integer> members = new HashSet<Integer>();
                     members.add(v0.getId());
                     members.add(v1.getId());

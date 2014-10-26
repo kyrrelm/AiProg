@@ -82,7 +82,9 @@ public class FlowProblem extends GACProblem {
         FlowState state = (FlowState) s;
         ((FlowState) s).updatePaths();
         System.out.println("---------------START OF LOOP-----------------");
+        //int loopcount = 0;
         while (!queue.isEmpty()){
+            //loopcount++;
             Revise current = queue.poll();
             if(revise(current, (FlowState) s)){
                 System.out.println("----revise is true----");
@@ -103,6 +105,7 @@ public class FlowProblem extends GACProblem {
                 }
             }
         }
+        //System.out.println("loopcount = " + loopcount);
         try {
             System.out.println("done with domain filtering loop");
             Thread.sleep(10000);
