@@ -124,9 +124,7 @@ public class FlowProblem extends GACProblem {
                         System.out.println("removing singleton domain");
                     }
                     focal.getDomain().remove(i);
-                    if (state.tryToSetPath(focal)){
-                        System.out.println("revise has set parent");
-                    }
+                    state.tryToSetPath(focal);
                     return true;
                 }
             }
