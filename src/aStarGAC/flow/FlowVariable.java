@@ -154,4 +154,10 @@ public class FlowVariable extends Variable{
 
     }
 
+    public boolean isEndPointOfDifferentColor(FlowVariable fl) {
+        if (this.isEndPoint() && fl.getColor() != this.getColor()){
+            return true;
+        }
+        return false;
+    }
 }

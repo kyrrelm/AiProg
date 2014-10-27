@@ -36,14 +36,9 @@ public class FlowState extends GACState{
     }
 
     public boolean updatePaths(){
-        System.out.println("In update path");
         boolean change = false;
         for (Variable v: variables){
             FlowVariable fl = (FlowVariable) v;
-            if (fl.isEndPoint() && fl.hasParent()){
-                System.out.println("Her må det gjøres noe");
-            }
-
             if (tryToSetPath(fl)){
                 change = true;
             }
@@ -55,11 +50,11 @@ public class FlowState extends GACState{
     }
 
     public boolean tryToSetPath(FlowVariable fl) {
+        //TODO: Ikke set path for endpoints
         if (fl.hasParent() && fl.isDomainSingleton()) {
             FlowVariable neighbour = hashMap.get(fl.getDomain().get(0));
-            if (!neighbour.hasParent()) {
+            if (!neighbour.hasParent() && !neighbour.isEndPointOfDifferentColor(fl)) {
                 neighbour.setParent(fl);
-                System.out.println("tryToSetPath() has set child (and parent)");
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {

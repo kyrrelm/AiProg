@@ -58,7 +58,8 @@ public class FlowProblem extends GACProblem {
 
             ArrayList<Node> successors = new ArrayList<Node>();
             for (Object o: assumed.getDomain()){
-                if(((FlowVariable)state.getVariableById((Integer) o)).hasParent()){
+                FlowVariable singleton = ((FlowVariable)state.getVariableById((Integer) o));
+                if(singleton.hasParent() || (singleton.isEndPoint() && ((FlowVariable)assumed).getColor() != null && singleton.getColor() != ((FlowVariable)assumed).getColor())){ //TODO: Skal hoppe over sinks av feil farge
                     continue;
                 }
                 FlowState child = state.deepCopy();
@@ -69,9 +70,9 @@ public class FlowProblem extends GACProblem {
                 System.out.println("SuccCount " + succCount++);
                 child.updatePaths();
                 reRun(child);
-                child.updatePaths();
+                //child.updatePaths();
                 if (child.isContradictory()){
-                    continue;
+                    //continue;
                 }
                 successors.add(new Node(child));
             }
@@ -87,7 +88,6 @@ public class FlowProblem extends GACProblem {
     protected void domainFilterLoop(GACState s){
         FlowState state = (FlowState) s;
         ((FlowState) s).updatePaths();
-        System.out.println("---------------START OF LOOP-----------------");
         //int loopcount = 0;
         while (!queue.isEmpty()){
             //loopcount++;
