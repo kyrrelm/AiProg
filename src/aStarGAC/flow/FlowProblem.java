@@ -67,13 +67,11 @@ public class FlowProblem extends GACProblem {
                     return successors;
                 }
                 if (child.isContradictory()){
-                    System.out.println("getSuccessors(): child state is Contradictory");
                     continue;
                 }
                 successors.add(new Node(child));
             }
             if(!successors.isEmpty()){
-                System.out.println("getSuccessors(): returning empty domain");
                 return successors;
             }
         }
@@ -112,9 +110,6 @@ public class FlowProblem extends GACProblem {
         if (nonFocal.hasParent() || nonFocal.isEndPointOfDifferentColor(focal)){
             for (int i = 0; i < focal.getDomain().size(); i++) {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
-                    if (focal.isDomainSingleton()){
-                        System.out.println("removing singleton domain");
-                    }
                     focal.getDomain().remove(i);
                     state.updatePaths();
                     return true;

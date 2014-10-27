@@ -120,7 +120,6 @@ public class FlowVariable extends Variable{
      */
     public void setParent(FlowVariable potential) {
         if (potential.hasChild()){
-            System.out.println("setParent(): potential already has child, nothing happens");
             return;
         }
         this.parent = potential.getId();
