@@ -71,6 +71,7 @@ public class FlowVariable extends Variable{
 
     public void setEndPoint(boolean endPoint) {
         this.endPoint = endPoint;
+        this.child = this.id;
     }
 
     public boolean isEndPoint() {

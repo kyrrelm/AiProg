@@ -55,9 +55,7 @@ public class FlowProblem extends GACProblem {
                 newDomain.add(o);
                 child.getVariableById(assumed.getId()).setDomain(newDomain);
                 child.setAssumedVariable(child.getVariableById(assumed.getId()));
-                child.updatePaths();
                 reRun(child);
-                //child.updatePaths();
 
                 if (child.isContradictory()){
                     //continue;
@@ -70,11 +68,11 @@ public class FlowProblem extends GACProblem {
         }
         return  new ArrayList<Node>();
     }
-    int test = 0;
+
     @Override
     protected void domainFilterLoop(GACState s){
         FlowState state = (FlowState) s;
-        ((FlowState) s).updatePaths();
+        state.updatePaths();
         while (!queue.isEmpty()){
             Revise current = queue.poll();
             if(revise(current, state)){
