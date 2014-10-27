@@ -105,24 +105,6 @@ public class FlowProblem extends GACProblem {
                 }
             }
         }
-
-        System.out.println("done with domain filtering loop");
-        if (test < 1){
-            System.out.println("test"+test);
-            test++;
-            this.init(state);
-            this.domainFilterLoop(state);
-        }
-        System.out.println("Variables after domainFiltering");
-        for (Variable v: s.getVariables()){
-            System.out.println(v);
-        }
-        //System.out.println("loopcount = " + loopcount);
-        try {
-            Thread.sleep(1000000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
     protected boolean revise(Revise revise, FlowState state) {
         FlowVariable focal = (FlowVariable) revise.getFocal();
