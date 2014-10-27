@@ -58,11 +58,13 @@ public class FlowProblem extends GACProblem {
                 reRun(child);
 
                 if (child.isContradictory()){
+                    System.out.println("getSuccessors(): child state is Contradictory");
                     //continue;
                 }
                 successors.add(new Node(child));
             }
             if(!successors.isEmpty()){
+                System.out.println("getSuccessors(): returning empty domain");
                 return successors;
             }
         }

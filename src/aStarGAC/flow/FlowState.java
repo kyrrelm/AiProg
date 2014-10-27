@@ -40,9 +40,6 @@ public class FlowState extends GACState{
 
     private String generateSubId(FlowVariable fv) {
         String subId = "";
-        if (fv == null){
-            System.out.println("wtf");
-        }
         if (!fv.isStartPoint()){
             subId += this.idGen + generateSubId((FlowVariable) getVariableById(fv.getParentId()));
         }else {
