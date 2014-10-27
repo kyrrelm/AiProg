@@ -44,6 +44,9 @@ public class FlowState extends GACState{
                 change = true;
             }
         }
+        if (change){
+            updatePaths();
+        }
         return change;
     }
 

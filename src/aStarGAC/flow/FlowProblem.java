@@ -154,9 +154,6 @@ public class FlowProblem extends GACProblem {
     private void generateDomains() {
         for (Variable v: variables){
             FlowVariable fv = (FlowVariable) v;
-            if (fv.getId() == 0){
-                System.out.println("dfg");
-            }
             if (fv.isEndPoint()){
                 fv.addToDomain(fv.getId());
                 continue;
@@ -179,24 +176,36 @@ public class FlowProblem extends GACProblem {
     private void generateLeft(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()-1,fv.getY()));
         if (!neighbour.isStartPoint()) {
+            if (fv.isStartPoint() && neighbour.isEndPoint() && fv.getColor() != neighbour.getColor()){
+                return;
+            }
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateRight(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()+1,fv.getY()));
         if (!neighbour.isStartPoint()) {
+            if (fv.isStartPoint() && neighbour.isEndPoint() && fv.getColor() != neighbour.getColor()){
+                return;
+            }
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateOver(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()-1));
         if (!neighbour.isStartPoint()) {
+            if (fv.isStartPoint() && neighbour.isEndPoint() && fv.getColor() != neighbour.getColor()){
+                return;
+            }
             fv.addToDomain(neighbour.getId());
         }
     }
     private void generateUnder(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX(),fv.getY()+1));
         if (!neighbour.isStartPoint()) {
+            if (fv.isStartPoint() && neighbour.isEndPoint() && fv.getColor() != neighbour.getColor()){
+                return;
+            }
             fv.addToDomain(neighbour.getId());
         }
     }
