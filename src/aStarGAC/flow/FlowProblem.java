@@ -2,6 +2,7 @@ package aStarGAC.flow;
 
 import aStar.core.Node;
 import aStarGAC.core.*;
+import aStarGAC.flow.gui.EmptyDomainException;
 
 import java.awt.*;
 import java.util.*;
@@ -80,7 +81,7 @@ public class FlowProblem extends GACProblem {
     }
 
     @Override
-    protected void domainFilterLoop(GACState s){
+    protected void domainFilterLoop(GACState s) throws EmptyDomainException {
         FlowState state = (FlowState) s;
         state.updatePaths();
         while (!queue.isEmpty()){
@@ -101,7 +102,7 @@ public class FlowProblem extends GACProblem {
             }
         }
     }
-    protected boolean revise(Revise revise, FlowState state) {
+    protected boolean revise(Revise revise, FlowState state) throws EmptyDomainException {
         FlowVariable focal = (FlowVariable) revise.getFocal();
         FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
 
@@ -113,6 +114,7 @@ public class FlowProblem extends GACProblem {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
                     if (focal.isDomainSingleton()){
                         System.out.println("removing singleton domain");
+                        throw new EmptyDomainException();
                     }
                     focal.getDomain().remove(i);
                     state.updatePaths();
@@ -129,11 +131,25 @@ public class FlowProblem extends GACProblem {
     }
     @Override
     public void calculateH(Node n) {
+        int h = 0;
         FlowState state = (FlowState) n.getState();
         for (Variable v: state.getVariables()){
             FlowVariable fv = (FlowVariable) v;
+
+            if (fv.getDomainSize() > 1){
+                h += fv.getDomainSize()-1;
+            }
+            if (fv.isHead()){
+                int endPointId = endPoints.get(fv.getColor());
+                int endX = FlowVariable.getXFromId(endPointId);
+                int endY = FlowVariable.getYFromId(endPointId);
+                int absX = Math.abs(endX - fv.getX());
+                int absY = Math.abs(endY - fv.getY());
+                h += absX + absY;
+            }
         }
-        n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
+        n.setH(h);
+        //n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
     }
 
     @Override

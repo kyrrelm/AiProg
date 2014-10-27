@@ -5,6 +5,7 @@ import aStar.core.ControllerListener;
 import aStar.core.Node;
 import aStar.core.Problem;
 import aStarGAC.flow.FlowVariable;
+import aStarGAC.flow.gui.EmptyDomainException;
 import aStarGAC.vertexColoring.VCState;
 import aStarGAC.vertexColoring.Vertex;
 
@@ -33,7 +34,12 @@ public abstract class GACProblem implements Problem {
     public Node run(){
         s0 = generateInitState();
         init(s0);
-        domainFilterLoop(s0);
+        try {
+            domainFilterLoop(s0);
+        } catch (EmptyDomainException e) {
+            System.out.println("run() domainFilteringLooop reduced domain to zero, what???");
+            e.printStackTrace();
+        }
         //TODO: fix so it stops here
         if (s0.isContradictory()){
             //TODO: Return failure
@@ -168,7 +174,7 @@ public abstract class GACProblem implements Problem {
         }
     }
 
-    protected void domainFilterLoop(GACState state){
+    protected void domainFilterLoop(GACState state) throws EmptyDomainException {
         while (!queue.isEmpty()){
             Revise current = queue.poll();
             if(revise(current)){
