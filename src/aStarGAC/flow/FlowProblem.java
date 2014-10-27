@@ -127,7 +127,7 @@ public class FlowProblem extends GACProblem {
 
     @Override
     public int getArcCost(Node n1, Node n2) {
-        return 1;
+        return 2;
     }
 
     private void generateDomains() {
