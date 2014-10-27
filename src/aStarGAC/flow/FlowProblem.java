@@ -81,7 +81,7 @@ public class FlowProblem extends GACProblem {
     }
 
     @Override
-    protected void domainFilterLoop(GACState s) throws EmptyDomainException {
+    protected void domainFilterLoop(GACState s) {
         FlowState state = (FlowState) s;
         state.updatePaths();
         while (!queue.isEmpty()){
@@ -102,7 +102,7 @@ public class FlowProblem extends GACProblem {
             }
         }
     }
-    protected boolean revise(Revise revise, FlowState state) throws EmptyDomainException {
+    protected boolean revise(Revise revise, FlowState state) {
         FlowVariable focal = (FlowVariable) revise.getFocal();
         FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
 
@@ -114,7 +114,6 @@ public class FlowProblem extends GACProblem {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
                     if (focal.isDomainSingleton()){
                         System.out.println("removing singleton domain");
-                        throw new EmptyDomainException();
                     }
                     focal.getDomain().remove(i);
                     state.updatePaths();
@@ -148,13 +147,13 @@ public class FlowProblem extends GACProblem {
                 h += absX + absY;
             }
         }
-        n.setH(h);
-        //n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
+        //n.setH(h);
+        n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
     }
 
     @Override
     public int getArcCost(Node n1, Node n2) {
-        return 1;
+        return 3;
     }
 
     private void generateDomains() {

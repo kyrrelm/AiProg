@@ -25,7 +25,7 @@ public class FlowState extends GACState{
     public boolean isSolution() {
         for (Variable v: variables){
             FlowVariable fv = (FlowVariable) v;
-            if(!fv.isDomainSingleton() || (fv.isEndPoint() && !fv.isHead())){
+            if(!fv.isDomainSingleton() || (fv.isEndPoint() && !fv.isHead()) || fv.getColor() == null){
                 return false;
             }
         }

@@ -34,12 +34,7 @@ public abstract class GACProblem implements Problem {
     public Node run(){
         s0 = generateInitState();
         init(s0);
-        try {
-            domainFilterLoop(s0);
-        } catch (EmptyDomainException e) {
-            System.out.println("run() domainFilteringLooop reduced domain to zero, what???");
-            e.printStackTrace();
-        }
+        domainFilterLoop(s0);
         //TODO: fix so it stops here
         if (s0.isContradictory()){
             //TODO: Return failure
@@ -131,7 +126,7 @@ public abstract class GACProblem implements Problem {
                 newDomain.add(o);
                 child.getVariableById(assumed.getId()).setDomain(newDomain);
                 child.setAssumedVariable(child.getVariableById(assumed.getId()));
-                reRun(child);
+                    reRun(child);
                 if (child.isContradictory()){
                     continue;
                 }
@@ -174,7 +169,7 @@ public abstract class GACProblem implements Problem {
         }
     }
 
-    protected void domainFilterLoop(GACState state) throws EmptyDomainException {
+    protected void domainFilterLoop(GACState state) {
         while (!queue.isEmpty()){
             Revise current = queue.poll();
             if(revise(current)){
@@ -197,7 +192,7 @@ public abstract class GACProblem implements Problem {
         }
     }
 
-    protected void reRun(GACState state){
+    protected void reRun(GACState state) {
         for (Constraint c: constraints){
             if (!c.contains(state.getAssumedVariable())){
                 continue;
