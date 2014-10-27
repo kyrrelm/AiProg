@@ -46,6 +46,10 @@ public class FlowState extends GACState{
         if (change){
             updatePaths();
         }
+        System.out.println("number of empty colors: "+countNumberOfEmptyColors());
+        if (countNumberOfEmptyColors() < 1){
+            System.out.println("Number of empty colors is less than one");
+        }
         return change;
     }
 
@@ -56,7 +60,7 @@ public class FlowState extends GACState{
             if (!neighbour.hasParent() && !neighbour.isEndPointOfDifferentColor(fl)) {
                 neighbour.setParent(fl);
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(0);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -64,5 +68,14 @@ public class FlowState extends GACState{
             }
         }
         return false;
+    }
+    public int countNumberOfEmptyColors(){
+        int counter = 0;
+        for (Variable v: variables){
+            if (((FlowVariable)v).getColor() == null){
+                counter++;
+            }
+        }
+        return counter;
     }
 }

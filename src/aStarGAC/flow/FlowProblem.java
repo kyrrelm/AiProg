@@ -140,13 +140,7 @@ public class FlowProblem extends GACProblem {
     @Override
     public void calculateH(Node n) {
         //TODO:Fix this
-        int counter = 0;
-        for (Variable v: variables){
-            if (((FlowVariable)v).getColor() == null){
-                counter++;
-            }
-        }
-        n.setH(counter);
+        n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
     }
 
     @Override
