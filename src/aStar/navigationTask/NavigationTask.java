@@ -101,7 +101,7 @@ public class NavigationTask implements Problem{
 
     @Override
     public boolean isSolution(Node n) {
-        if (n.getStateId() == endState.getId()){
+        if (n.getStateId().equals(endState.getId())){
             return true;
         }
         return false;

@@ -10,16 +10,16 @@ import java.io.Serializable;
  */
 public abstract class State{
 
-    protected long id;
+    protected String id;
     /**
      *
      * @param id should be calculated based on it's fields.
      */
-    protected State(long id) {
+    protected State(String id) {
         this.id = id;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 }

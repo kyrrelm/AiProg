@@ -120,7 +120,7 @@ public class ProblemGenerator {
             }
         }
         //Vertices
-        HashSet<Vertex> vertices = new HashSet<Vertex>();
+        ArrayList<Vertex> vertices = new ArrayList<Vertex>();
         for(int i=1; i<nv+1; i++) {
             Object[] values = getValues(input.get(i), true);
             vertices.add(new Vertex((Integer)values[0], (Double)values[1]+(negativeX*-1), (Double)values[2]+(negativeY*-1), generateDomain(domainSize)));

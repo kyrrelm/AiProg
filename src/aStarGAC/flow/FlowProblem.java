@@ -13,7 +13,7 @@ public class FlowProblem extends GACProblem {
     private final HashMap<Integer, FlowVariable> initVariablesAsHashMap;
     private final int dimensions;
 
-    public FlowProblem(List<? extends Constraint> constraints, HashSet<FlowVariable> flowVariables, int sleepTime, int dimensions) {
+    public FlowProblem(List<? extends Constraint> constraints, ArrayList<FlowVariable> flowVariables, int sleepTime, int dimensions) {
         super(constraints, flowVariables, sleepTime);
         initVariablesAsHashMap = new HashMap<Integer, FlowVariable>();
         this.dimensions = dimensions;

@@ -21,7 +21,7 @@ public class Astar {
     private final int sleepTime;
     Collection<Node> open;
     ArrayList<Node> closed;
-    HashMap<Long, Node> existingNodes;
+    HashMap<String, Node> existingNodes;
     private ArrayList<ControllerListener> controllerListeners;
 
 
@@ -34,7 +34,7 @@ public class Astar {
 
     public void reset() {
         closed = new ArrayList<Node>();
-        existingNodes = new HashMap<Long, Node>();
+        existingNodes = new HashMap<String, Node>();
     }
 
 

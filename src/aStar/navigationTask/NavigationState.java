@@ -15,7 +15,7 @@ public class NavigationState extends State {
     private boolean barrier;
 
     public NavigationState(int x, int y) {
-        super((x*1000000)+y);
+        super(String.valueOf((x*1000000)+y));
         this.x = x;
         this.y = y;
         barrier = false;

@@ -6,6 +6,7 @@ import aStarGAC.vertexColoring.VertexColoringProblem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -60,8 +61,8 @@ public class Graph extends JPanel{
 		g.clearRect(0, 0, getWidth(), getHeight());
 		
 		gr.setColor(Color.GRAY);
-		
-		HashSet<Vertex> vertss;
+
+        ArrayList<Vertex> vertss;
 		if(state == null)
 			vertss = problem.getVariables();
 		else

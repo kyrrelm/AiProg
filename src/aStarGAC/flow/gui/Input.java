@@ -27,12 +27,12 @@ public class Input {
         dimension = 0;
     }
 
-    public HashSet<FlowVariable> getInitVariables(){
+    public ArrayList<FlowVariable> getInitVariables(){
         LinkedList<String> list = getFileAsList();
         dimension = Integer.parseInt(list.pollFirst());
         int numberOfColors = Integer.parseInt(list.pollFirst());
         initFlowVariableGrid = new FlowVariable[dimension][dimension];
-        HashSet<FlowVariable> variables = new HashSet<FlowVariable>();
+        ArrayList<FlowVariable> variables = new ArrayList<FlowVariable>();
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 FlowVariable v = new FlowVariable(i,j);
@@ -166,7 +166,7 @@ public class Input {
         JFrame f = new JFrame();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Input input = new Input(f);
-        HashSet<FlowVariable> variables = input.getInitVariables();
+        ArrayList<FlowVariable> variables = input.getInitVariables();
         ArrayList<Constraint> constraints = new ArrayList<Constraint>(variables.size()*2);
         for (FlowVariable v0: variables){
             for (FlowVariable v1: variables){

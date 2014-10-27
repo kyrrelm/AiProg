@@ -14,11 +14,11 @@ import java.util.List;
  */
 public class VertexColoringProblem extends GACProblem {
 
-    private final HashSet<Vertex> vertexVariables;
+    private final ArrayList<Vertex> vertexVariables;
     public ArrayList<Edge> edges;
     public GUI gui;
 
-    public VertexColoringProblem(List<Constraint> constraints, HashSet<Vertex> variables, ArrayList<Edge> edges, GUI gui, int sleepTime) {
+    public VertexColoringProblem(List<Constraint> constraints, ArrayList<Vertex> variables, ArrayList<Edge> edges, GUI gui, int sleepTime) {
         super(constraints, variables, sleepTime);
         this.vertexVariables = variables;
         this.edges = edges;
@@ -46,7 +46,7 @@ public class VertexColoringProblem extends GACProblem {
     }
 
     @Override
-    public HashSet<Vertex> getVariables() {
-        return (HashSet<Vertex>) super.getVariables();
+    public ArrayList<Vertex> getVariables() {
+        return (ArrayList<Vertex>) super.getVariables();
     }
 }

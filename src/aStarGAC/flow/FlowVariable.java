@@ -18,6 +18,7 @@ public class FlowVariable extends Variable{
     private Color color;
     private int parent;
     private int child;
+    private boolean isHead;
 
     public static int idFunction(int x, int y){
         return (x*10000000)+y;
@@ -39,6 +40,7 @@ public class FlowVariable extends Variable{
         this.color = null;
         this.parent = -1;
         this.child = -1;
+        this.isHead = false;
     }
 
     private FlowVariable(int id, List<Object> domain, int x, int y, boolean endPoint, boolean startPoint, Color color, int parent, int child) {
@@ -66,6 +68,7 @@ public class FlowVariable extends Variable{
         this.startPoint = startPoint;
         if (startPoint){
             parent = this.id;
+            isHead = true;
         }
     }
 
@@ -110,6 +113,10 @@ public class FlowVariable extends Variable{
         return parent;
     }
 
+    /**
+     * Setts this as the head of the path.
+     * @param potential
+     */
     public void setParent(FlowVariable potential) {
         if (potential.hasChild()){
             System.out.println("setParent(): potential already has child, nothing happens");
@@ -118,7 +125,8 @@ public class FlowVariable extends Variable{
         this.parent = potential.getId();
         setColor(potential.getColor());
         potential.setChild(this.id);
-
+        this.isHead = true;
+        potential.isHead = false;
     }
 
     protected boolean hasChild() {
@@ -160,5 +168,9 @@ public class FlowVariable extends Variable{
             return true;
         }
         return false;
+    }
+
+    public boolean isHead() {
+        return isHead;
     }
 }

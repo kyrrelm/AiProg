@@ -3,6 +3,7 @@ package aStarGAC.vertexColoring;
 import aStarGAC.core.GACState;
 import aStarGAC.core.Variable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -12,18 +13,18 @@ public class VCState extends GACState {
     //TODO: not thread safe.
     private static long idGenerator = 0;
 
-    protected VCState(HashSet<Vertex> variables, Vertex assumedVariable, boolean solution) {
-        this(idGenerator,variables, assumedVariable, solution);
+    protected VCState(ArrayList<Vertex> variables, Vertex assumedVariable, boolean solution) {
+        this(String.valueOf(idGenerator),variables, assumedVariable, solution);
         idGenerator++;
     }
-    private VCState(long id, HashSet<Vertex> variables, Vertex assumedVariable, boolean solution) {
+    private VCState(String id, ArrayList<Vertex> variables, Vertex assumedVariable, boolean solution) {
         super(id, variables, assumedVariable, solution);
     }
 
     @Override
     //TODO: keep up to date.
     public VCState deepCopy() {
-        HashSet<Vertex> variablesCopy = new HashSet<Vertex>();
+        ArrayList<Vertex> variablesCopy = new ArrayList<Vertex>();
         for (Variable v: variables){
             variablesCopy.add((Vertex)v.deepCopy());
         }
@@ -35,12 +36,12 @@ public class VCState extends GACState {
     }
 
     @Override
-    public HashSet<Vertex> getVariables() {
-        return (HashSet<Vertex>) super.getVariables();
+    public ArrayList<Vertex> getVariables() {
+        return (ArrayList<Vertex>) super.getVariables();
     }
 
     public void updateColor() {
-        for (Vertex v: (HashSet<Vertex>)variables){
+        for (Vertex v: (ArrayList<Vertex>)variables){
             if (v.isDomainSingleton()){
                 v.color = (java.awt.Color) v.getDomain().get(0);
             }

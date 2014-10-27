@@ -37,7 +37,7 @@ public class Node implements Comparable<Node>{
 
     }
 
-    public long getStateId(){
+    public String getStateId(){
         return state.getId();
     }
 

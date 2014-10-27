@@ -3,28 +3,57 @@ package aStarGAC.flow;
 import aStarGAC.core.GACState;
 import aStarGAC.core.Variable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Created by Kyrre on 16.10.2014.
  */
 public class FlowState extends GACState{
-    private static long idGenerator = 0;
     private HashMap<Integer, FlowVariable> hashMap;
 
-    protected FlowState(HashSet<? extends Variable> variables, Variable assumedVariable, boolean solution) {
-        super(idGenerator, variables, assumedVariable, solution);
+    static int idGen = 0;
+    protected FlowState(ArrayList<? extends Variable> variables, Variable assumedVariable, boolean solution) {
+        super(String.valueOf(idGen), variables, assumedVariable, solution);
+        idGen++;
         hashMap = new HashMap<Integer, FlowVariable>();
         for (Variable v: variables){
             hashMap.put(v.getId(), (FlowVariable) v);
         }
-        idGenerator++;
+    }
+
+    @Override
+    public String getId() {
+        return super.getId();
+    }
+
+    private String idGenerator() {
+        String id = "";
+        for (Variable v: variables){
+            FlowVariable fv = (FlowVariable) v;
+            if (fv.isHead()){
+                id += generateSubId(fv);
+            }
+        }
+        return id;
+    }
+
+    private String generateSubId(FlowVariable fv) {
+        String subId = "";
+        if (fv == null){
+            System.out.println("wtf");
+        }
+        if (!fv.isStartPoint()){
+            subId += this.idGen + generateSubId((FlowVariable) getVariableById(fv.getParentId()));
+        }else {
+            subId += this.idGen;
+        }
+        return subId;
     }
 
     @Override
     public FlowState deepCopy() {
-        HashSet<FlowVariable> variablesCopy = new HashSet<FlowVariable>();
+        ArrayList<FlowVariable> variablesCopy = new ArrayList<FlowVariable>();
         for (Variable v: variables){
             variablesCopy.add((FlowVariable)v.deepCopy());
         }

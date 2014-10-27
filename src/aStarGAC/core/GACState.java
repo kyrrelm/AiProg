@@ -2,6 +2,7 @@ package aStarGAC.core;
 
 import aStar.core.State;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -11,22 +12,18 @@ public abstract class GACState extends State {
     /**
      * @param id should be calculated based on it's fields.
      */
-    protected HashSet<? extends Variable> variables;
+    protected ArrayList<? extends Variable> variables;
     protected Variable assumedVariable;
     protected boolean solution;
 
-    protected GACState(long id, HashSet<? extends Variable> variables, Variable assumedVariable, boolean solution) {
+    protected GACState(String id, ArrayList<? extends Variable> variables, Variable assumedVariable, boolean solution) {
         super(id);
         this.variables = variables;
         this.assumedVariable = assumedVariable;
         this.solution = solution;
     }
 
-    protected GACState(long id) {
-        super(id);
-    }
-
-    public HashSet<? extends Variable> getVariables() {
+    public ArrayList<? extends Variable> getVariables() {
         return variables;
     }
 

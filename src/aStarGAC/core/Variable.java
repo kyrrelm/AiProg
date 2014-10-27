@@ -45,4 +45,6 @@ public abstract class Variable implements Comparable<Variable>{
     public int compareTo(Variable o) {
         return this.getDomainSize() - o.getDomainSize();
     }
+
+
 }

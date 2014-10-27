@@ -19,12 +19,12 @@ public abstract class GACProblem implements Problem {
     private final int sleepTime;
     protected LinkedList<Revise> queue = new LinkedList<Revise>();
     protected final List<? extends Constraint> constraints;
-    protected final HashSet<? extends Variable> variables;
+    protected final ArrayList<? extends Variable> variables;
     GACState s0 = null;
     private HashSet<StateListener> stateListeners;
 
 
-    protected GACProblem(List<? extends Constraint> constraints, HashSet<? extends Variable> variables, int sleepTime) {
+    protected GACProblem(List<? extends Constraint> constraints, ArrayList<? extends Variable> variables, int sleepTime) {
         this.constraints = constraints;
         this.variables = variables;
         this.stateListeners = new HashSet<StateListener>();
@@ -53,13 +53,13 @@ public abstract class GACProblem implements Problem {
         Node goal = cont.search(Astar.SearchType.BEST_FIRST);
         //HashSet<? extends Variable> variables = ((GACState)goal.getState()).getVariables();
 
-        int countViolations = 0;
-        for (Constraint c: constraints){
-            if (doesViolate(c, ((GACState) goal.getState()))){
-                countViolations++;
-            }
-        }
-        System.out.println("Number of constraints violation: "+countViolations);
+//        int countViolations = 0;
+//        for (Constraint c: constraints){
+//            if (doesViolate(c, ((GACState) goal.getState()))){
+//                countViolations++;
+//            }
+//        }
+//        System.out.println("Number of constraints violation: "+countViolations);
         return goal;
     }
 
@@ -234,7 +234,7 @@ public abstract class GACProblem implements Problem {
         return false;
     }
 
-    public HashSet<? extends Variable> getVariables() {
+    public ArrayList<? extends Variable> getVariables() {
         return variables;
     }
 }
