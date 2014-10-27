@@ -37,7 +37,7 @@ public class FlowProblem extends GACProblem {
         }
         PriorityQueue<Variable> pq = new PriorityQueue<Variable>();
         for (Variable v: state.getVariables()){
-            if (v.getDomainSize() > 1 && ((FlowVariable)v).hasParent() && !((FlowVariable)v).hasChild()){
+            if (v.getDomainSize() > 1 && ((FlowVariable)v).isHead()){
                 pq.add(v);
             }
         }
@@ -47,7 +47,7 @@ public class FlowProblem extends GACProblem {
             ArrayList<Node> successors = new ArrayList<Node>();
             for (Object o: assumed.getDomain()){
                 FlowVariable singleton = ((FlowVariable)state.getVariableById((Integer) o));
-                if(singleton.hasParent() || (singleton.isEndPoint() && ((FlowVariable)assumed).getColor() != null && singleton.getColor() != ((FlowVariable)assumed).getColor())){ //TODO: Skal hoppe over sinks av feil farge
+                if(singleton.hasParent() || singleton.isEndPointOfDifferentColor((FlowVariable) assumed)){
                     continue;
                 }
                 FlowState child = state.deepCopy();
@@ -100,7 +100,7 @@ public class FlowProblem extends GACProblem {
         if (!focal.isNeighbour(nonFocal) || focal.hasChild() || focal.isEndPoint()){
             return false;
         }
-        if (nonFocal.hasParent() || (nonFocal.isEndPoint() && focal.getColor() != null && nonFocal.getColor() != focal.getColor())){
+        if (nonFocal.hasParent() || nonFocal.isEndPointOfDifferentColor(focal)){
             for (int i = 0; i < focal.getDomain().size(); i++) {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
                     if (focal.isDomainSingleton()){

@@ -43,7 +43,7 @@ public class FlowVariable extends Variable{
         this.isHead = false;
     }
 
-    private FlowVariable(int id, List<Object> domain, int x, int y, boolean endPoint, boolean startPoint, Color color, int parent, int child) {
+    private FlowVariable(int id, List<Object> domain, int x, int y, boolean endPoint, boolean startPoint, Color color, int parent, int child, boolean isHead) {
         super(id, domain);
         this.y = y;
         this.x = x;
@@ -52,6 +52,7 @@ public class FlowVariable extends Variable{
         this.color = color;
         this.parent = parent;
         this.child = child;
+        this.isHead = isHead;
         ModelHolder.notifyChange(this);
     }
 
@@ -61,7 +62,7 @@ public class FlowVariable extends Variable{
         for (Object o: domain){
             domainCopy.add(o);
         }
-        return new FlowVariable(id, domainCopy, x, y, endPoint, startPoint, color, parent, child);
+        return new FlowVariable(id, domainCopy, x, y, endPoint, startPoint, color, parent, child, isHead);
     }
 
     public void setStartPoint(boolean startPoint) {
@@ -164,6 +165,9 @@ public class FlowVariable extends Variable{
     }
 
     public boolean isEndPointOfDifferentColor(FlowVariable fl) {
+        if (this.isEndPoint() && fl.getColor() == null){
+            return false;
+        }
         if (this.isEndPoint() && fl.getColor() != this.getColor()){
             return true;
         }
