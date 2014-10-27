@@ -39,7 +39,7 @@ public class FlowProblem extends GACProblem {
     private static int succCount = 1;
     @Override
     public ArrayList<Node> getSuccessors(Node n) {
-        GACState state = (GACState) n.getState();
+        FlowState state = (FlowState) n.getState();
         if (state.isContradictory()){
             System.out.println("getSuccessors(): input state is Contradictory");
             return new ArrayList<Node>();
@@ -49,7 +49,7 @@ public class FlowProblem extends GACProblem {
         }
         PriorityQueue<Variable> pq = new PriorityQueue<Variable>();
         for (Variable v: state.getVariables()){
-            if (v.getDomainSize() > 1 && ((FlowVariable)v).hasParent()){
+            if (v.getDomainSize() > 1 && ((FlowVariable)v).hasParent() && !((FlowVariable)v).hasChild()){
                 pq.add(v);
             }
         }
@@ -58,13 +58,20 @@ public class FlowProblem extends GACProblem {
 
             ArrayList<Node> successors = new ArrayList<Node>();
             for (Object o: assumed.getDomain()){
-                GACState child = state.deepCopy();
+                if(((FlowVariable)state.getVariableById((Integer) o)).hasParent()){
+                    continue;
+                }
+                FlowState child = state.deepCopy();
                 ArrayList<Object> newDomain = new ArrayList<Object>();
                 newDomain.add(o);
                 child.getVariableById(assumed.getId()).setDomain(newDomain);
                 child.setAssumedVariable(child.getVariableById(assumed.getId()));
                 System.out.println("SuccCount " + succCount++);
+
+                //TODO: setParent?
+                child.updatePaths();
                 reRun(child);
+                child.updatePaths();
                 if (child.isContradictory()){
                     continue;
                 }

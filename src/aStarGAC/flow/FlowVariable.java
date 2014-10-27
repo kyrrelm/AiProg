@@ -41,7 +41,7 @@ public class FlowVariable extends Variable{
         this.child = -1;
     }
 
-    private FlowVariable(int id, List<Object> domain, int y, int x, boolean endPoint, boolean startPoint, Color color, int parent, int child) {
+    private FlowVariable(int id, List<Object> domain, int x, int y, boolean endPoint, boolean startPoint, Color color, int parent, int child) {
         super(id, domain);
         this.y = y;
         this.x = x;

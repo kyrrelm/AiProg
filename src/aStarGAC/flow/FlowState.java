@@ -57,7 +57,7 @@ public class FlowState extends GACState{
                 neighbour.setParent(fl);
                 System.out.println("tryToSetPath() has set child (and parent)");
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
