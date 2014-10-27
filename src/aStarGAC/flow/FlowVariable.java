@@ -80,11 +80,6 @@ public class FlowVariable extends Variable{
         return startPoint;
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + " x = "+x+" y = "+y+" startPoint = "+startPoint+" endPoint = "+endPoint+" domainSize = "+domain.size();
-    }
-
     public Color getColor() {
         return color;
     }
@@ -150,4 +145,15 @@ public class FlowVariable extends Variable{
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        String domainString = "";
+        for (Object i: domain){
+           domainString += "\n"+i;
+        }
+        return super.toString() + " x = "+x+" y = "+y+ " parent = "+parent+" domainSize = "+domain.size()+domainString;
+
+    }
+
 }

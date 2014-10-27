@@ -77,6 +77,7 @@ public class FlowProblem extends GACProblem {
         System.out.println("returning no children");
         return  new ArrayList<Node>();
     }
+    int test = 0;
     @Override
     protected void domainFilterLoop(GACState s){
         FlowState state = (FlowState) s;
@@ -86,8 +87,7 @@ public class FlowProblem extends GACProblem {
         while (!queue.isEmpty()){
             //loopcount++;
             Revise current = queue.poll();
-            if(revise(current, (FlowState) s)){
-                System.out.println("----revise is true----");
+            if(revise(current, state)){
                 for (Constraint c: constraints){
                     Variable[] vars = new Variable[2];
                     int pos = 0;
@@ -97,18 +97,29 @@ public class FlowProblem extends GACProblem {
                             pos++;
                         }
                     }
-                    if (vars[1].equals(current.getFocal())){
-                        queue.add(new Revise(vars[0],c,vars[1]));
-                    }else {
-                        queue.add(new Revise(vars[1],c,vars[0]));
-                    }
+                    queue.add(new Revise(vars[0],c,vars[1]));
+                    queue.add(new Revise(vars[1],c,vars[0]));
+//                    if (vars[1].equals(current.getFocal())){
+//                    }else {
+//                    }
                 }
             }
         }
+
+        System.out.println("done with domain filtering loop");
+        if (test < 1){
+            System.out.println("test"+test);
+            test++;
+            this.init(state);
+            this.domainFilterLoop(state);
+        }
+        System.out.println("Variables after domainFiltering");
+        for (Variable v: s.getVariables()){
+            System.out.println(v);
+        }
         //System.out.println("loopcount = " + loopcount);
         try {
-            System.out.println("done with domain filtering loop");
-            Thread.sleep(10000);
+            Thread.sleep(1000000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -127,7 +138,16 @@ public class FlowProblem extends GACProblem {
                         System.out.println("removing singleton domain");
                     }
                     focal.getDomain().remove(i);
-                    state.tryToSetPath(focal);
+//                    if (focal.getId() == 50000001 && focal.isDomainSingleton()){
+//                        System.out.println("got him");
+//                        System.out.println("focal = " + focal);
+//                        try {
+//                            Thread.sleep(500000);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+                    state.updatePaths();
                     return true;
                 }
             }
