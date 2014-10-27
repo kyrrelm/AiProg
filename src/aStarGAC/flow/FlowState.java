@@ -40,6 +40,10 @@ public class FlowState extends GACState{
         boolean change = false;
         for (Variable v: variables){
             FlowVariable fl = (FlowVariable) v;
+            if (fl.isEndPoint() && fl.hasParent()){
+                System.out.println("Her må det gjøres noe");
+            }
+
             if (tryToSetPath(fl)){
                 change = true;
             }
@@ -57,7 +61,7 @@ public class FlowState extends GACState{
                 neighbour.setParent(fl);
                 System.out.println("tryToSetPath() has set child (and parent)");
                 try {
-                    Thread.sleep(0);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -118,22 +118,13 @@ public class FlowProblem extends GACProblem {
         if (!focal.isNeighbour(nonFocal) || focal.hasChild() || focal.isEndPoint()){
             return false;
         }
-        if (nonFocal.hasParent()){
+        if (nonFocal.hasParent() || (nonFocal.isEndPoint() && focal.getColor() != null && nonFocal.getColor() != focal.getColor())){
             for (int i = 0; i < focal.getDomain().size(); i++) {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
                     if (focal.isDomainSingleton()){
                         System.out.println("removing singleton domain");
                     }
                     focal.getDomain().remove(i);
-//                    if (focal.getId() == 50000001 && focal.isDomainSingleton()){
-//                        System.out.println("got him");
-//                        System.out.println("focal = " + focal);
-//                        try {
-//                            Thread.sleep(500000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
                     state.updatePaths();
                     return true;
                 }
@@ -148,7 +139,14 @@ public class FlowProblem extends GACProblem {
     }
     @Override
     public void calculateH(Node n) {
-        n.setH(4); //TODO:Fix this
+        //TODO:Fix this
+        int counter = 0;
+        for (Variable v: variables){
+            if (((FlowVariable)v).getColor() == null){
+                counter++;
+            }
+        }
+        n.setH(counter);
     }
 
     @Override
