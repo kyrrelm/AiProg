@@ -50,6 +50,7 @@ public class FlowVariable extends Variable{
         this.color = color;
         this.parent = parent;
         this.child = child;
+        ModelHolder.notifyChange(this);
     }
 
     @Override
@@ -108,17 +109,14 @@ public class FlowVariable extends Variable{
         return parent;
     }
 
-    public void setParent(FlowVariable parent) {
-        this.parent = parent.getId();
-        if (parent.hasChild()){
-            System.out.println("setParent(): parent already has child, nothing happens");
+    public void setParent(FlowVariable potential) {
+        if (potential.hasChild()){
+            System.out.println("setParent(): potential already has child, nothing happens");
             return;
         }
-        if (parent.getColor() == null){
-            System.out.println("setParent(): parent should have color");
-        }
-        setColor(parent.getColor());
-        parent.setChild(this.id);
+        this.parent = potential.getId();
+        setColor(potential.getColor());
+        potential.setChild(this.id);
 
     }
 

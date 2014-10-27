@@ -67,8 +67,6 @@ public class FlowProblem extends GACProblem {
                 child.getVariableById(assumed.getId()).setDomain(newDomain);
                 child.setAssumedVariable(child.getVariableById(assumed.getId()));
                 System.out.println("SuccCount " + succCount++);
-
-                //TODO: setParent?
                 child.updatePaths();
                 reRun(child);
                 child.updatePaths();

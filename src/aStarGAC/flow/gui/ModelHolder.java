@@ -2,6 +2,7 @@ package aStarGAC.flow.gui;
 
 import aStarGAC.flow.FlowVariable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -9,15 +10,22 @@ import java.util.HashMap;
  */
 public class ModelHolder {
 
-    public static HashMap<Integer, FlowVariableListener> listeners = new HashMap<Integer, FlowVariableListener>();
+    public static HashMap<Integer, FlowVariableListener> listenersHash = new HashMap<Integer, FlowVariableListener>();
+    private static ArrayList<FlowVariableListener> listenersList = new ArrayList<FlowVariableListener>();
 
     public static void notifyChange(FlowVariable flowVariable) {
-        if (listeners.get(flowVariable.getId()) != null){
-            listeners.get(flowVariable.getId()).onFlowVariableChange(flowVariable);
+        if (listenersHash.get(flowVariable.getId()) != null){
+            listenersHash.get(flowVariable.getId()).onFlowVariableChange(flowVariable);
+        }
+    }
+    public static void notifyAllChange(){
+        for (FlowVariableListener ls: listenersList){
+
         }
     }
 
     public static void setFlowVariableListener(int flowVariableId, FlowVariableListener ls) {
-        listeners.put(flowVariableId, ls);
+        listenersHash.put(flowVariableId, ls);
+        listenersList.add(ls);
     }
 }
