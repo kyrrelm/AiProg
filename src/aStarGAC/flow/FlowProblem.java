@@ -3,7 +3,9 @@ package aStarGAC.flow;
 import aStar.core.Node;
 import aStarGAC.core.*;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by Kyrre on 17.10.2014.
@@ -12,14 +14,19 @@ public class FlowProblem extends GACProblem {
 
     private final HashMap<Integer, FlowVariable> initVariablesAsHashMap;
     private final int dimensions;
+    private final HashMap<Color, Integer> endPoints;
 
     public FlowProblem(List<? extends Constraint> constraints, ArrayList<FlowVariable> flowVariables, int sleepTime, int dimensions) {
         super(constraints, flowVariables, sleepTime);
         initVariablesAsHashMap = new HashMap<Integer, FlowVariable>();
+        endPoints = new HashMap<Color, Integer>();
         this.dimensions = dimensions;
 
         for (FlowVariable v: flowVariables){
             initVariablesAsHashMap.put(v.getId(), v);
+            if (v.isEndPoint()){
+                endPoints.put(v.getColor(), v.getId());
+            }
         }
         generateDomains();
     }
@@ -28,10 +35,7 @@ public class FlowProblem extends GACProblem {
     @Override
     public ArrayList<Node> getSuccessors(Node n) {
         FlowState state = (FlowState) n.getState();
-        if (state.isContradictory()){
-            System.out.println("getSuccessors(): input state is Contradictory");
-            return new ArrayList<Node>();
-        }
+
         if (state.isSolution()){
             return new ArrayList<Node>();
         }
@@ -125,13 +129,16 @@ public class FlowProblem extends GACProblem {
     }
     @Override
     public void calculateH(Node n) {
-        //TODO:Fix this
+        FlowState state = (FlowState) n.getState();
+        for (Variable v: state.getVariables()){
+            FlowVariable fv = (FlowVariable) v;
+        }
         n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
     }
 
     @Override
     public int getArcCost(Node n1, Node n2) {
-        return 0;
+        return 1;
     }
 
     private void generateDomains() {
