@@ -56,10 +56,14 @@ public class FlowProblem extends GACProblem {
                 child.getVariableById(assumed.getId()).setDomain(newDomain);
                 child.setAssumedVariable(child.getVariableById(assumed.getId()));
                 reRun(child);
-
+                if (child.isSolution()){
+                    successors = new ArrayList<Node>();
+                    successors.add(new Node(child));
+                    return successors;
+                }
                 if (child.isContradictory()){
                     System.out.println("getSuccessors(): child state is Contradictory");
-                    //continue;
+                    continue;
                 }
                 successors.add(new Node(child));
             }
@@ -127,7 +131,7 @@ public class FlowProblem extends GACProblem {
 
     @Override
     public int getArcCost(Node n1, Node n2) {
-        return 2;
+        return 0;
     }
 
     private void generateDomains() {

@@ -86,6 +86,7 @@ public class Astar {
             notifyCurrentListeners(current);
             closed.add(current);
             if (problem.isSolution(current)){
+                problem.isSolution(current);
                 System.out.println("======  SUCCESS  ======");
                 System.out.println("Length of the path from the root node to the solution node: "+loopCount);
                 System.out.println("Number of nodes in the search tree: "+treeCount);

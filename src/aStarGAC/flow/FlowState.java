@@ -21,10 +21,21 @@ public class FlowState extends GACState{
             hashMap.put(v.getId(), (FlowVariable) v);
         }
     }
+    @Override
+    public boolean isSolution() {
+        for (Variable v: variables){
+            FlowVariable fv = (FlowVariable) v;
+            if(!fv.isDomainSingleton() || (fv.isEndPoint() && !fv.isHead())){
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public String getId() {
-        return super.getId();
+        String s = idGenerator();
+        return s;
     }
 
     private String idGenerator() {
@@ -41,9 +52,9 @@ public class FlowState extends GACState{
     private String generateSubId(FlowVariable fv) {
         String subId = "";
         if (!fv.isStartPoint()){
-            subId += this.idGen + generateSubId((FlowVariable) getVariableById(fv.getParentId()));
+            subId += fv.getId() + generateSubId((FlowVariable) getVariableById(fv.getParentId()));
         }else {
-            subId += this.idGen;
+            subId += fv.getId();
         }
         return subId;
     }
