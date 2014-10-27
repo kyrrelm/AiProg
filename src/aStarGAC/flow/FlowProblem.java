@@ -22,18 +22,6 @@ public class FlowProblem extends GACProblem {
             initVariablesAsHashMap.put(v.getId(), v);
         }
         generateDomains();
-
-        boolean change = true;
-
-//        while (change) {
-//            change = false;
-//            for (FlowVariable v: flowVariables){
-//                if (v.isDomainSingleton() && v.hasParent()){
-//                    initVariablesAsHashMap.get(v.getDomain().get(0)).setParent(v);
-//                    change = false;
-//                }
-//            }
-//        }
     }
 
     private static int succCount = 1;
@@ -67,10 +55,10 @@ public class FlowProblem extends GACProblem {
                 newDomain.add(o);
                 child.getVariableById(assumed.getId()).setDomain(newDomain);
                 child.setAssumedVariable(child.getVariableById(assumed.getId()));
-                System.out.println("SuccCount " + succCount++);
                 child.updatePaths();
                 reRun(child);
                 //child.updatePaths();
+
                 if (child.isContradictory()){
                     //continue;
                 }
@@ -80,7 +68,6 @@ public class FlowProblem extends GACProblem {
                 return successors;
             }
         }
-        System.out.println("returning no children");
         return  new ArrayList<Node>();
     }
     int test = 0;
@@ -88,9 +75,7 @@ public class FlowProblem extends GACProblem {
     protected void domainFilterLoop(GACState s){
         FlowState state = (FlowState) s;
         ((FlowState) s).updatePaths();
-        //int loopcount = 0;
         while (!queue.isEmpty()){
-            //loopcount++;
             Revise current = queue.poll();
             if(revise(current, state)){
                 for (Constraint c: constraints){
@@ -104,9 +89,6 @@ public class FlowProblem extends GACProblem {
                     }
                     queue.add(new Revise(vars[0],c,vars[1]));
                     queue.add(new Revise(vars[1],c,vars[0]));
-//                    if (vars[1].equals(current.getFocal())){
-//                    }else {
-//                    }
                 }
             }
         }
