@@ -36,46 +36,47 @@ public class FlowProblem extends GACProblem {
     @Override
     public ArrayList<Node> getSuccessors(Node n) {
         FlowState state = (FlowState) n.getState();
-
         if (state.isSolution()){
             return new ArrayList<Node>();
         }
-        PriorityQueue<Variable> pq = new PriorityQueue<Variable>();
+        int smallest = 99999999;
+        FlowVariable assumed = null;
         for (Variable v: state.getVariables()){
-            if (v.getDomainSize() > 1 && ((FlowVariable)v).isHead()){
-                pq.add(v);
+            FlowVariable fv = (FlowVariable) v;
+            if (v.getDomainSize() > 1 && fv.isHead()){
+                if (assumed == null){
+                    assumed = fv;
+                }
+                int mDistance = getManhattanDistance(fv, (FlowVariable) state.getVariableById(endPoints.get(fv.getColor())));
+                if (mDistance <= smallest && fv.getDomainSize() <= assumed.getDomainSize()){
+                    assumed = fv;
+                    smallest = mDistance;
+                }
             }
         }
-        while(!pq.isEmpty()){
-            Variable assumed = pq.poll();
-
-            ArrayList<Node> successors = new ArrayList<Node>();
-            for (Object o: assumed.getDomain()){
-                FlowVariable singleton = ((FlowVariable)state.getVariableById((Integer) o));
-                if(singleton.hasParent() || singleton.isEndPointOfDifferentColor((FlowVariable) assumed)){
-                    continue;
-                }
-                FlowState child = state.deepCopy();
-                ArrayList<Object> newDomain = new ArrayList<Object>();
-                newDomain.add(o);
-                child.getVariableById(assumed.getId()).setDomain(newDomain);
-                child.setAssumedVariable(child.getVariableById(assumed.getId()));
-                reRun(child);
-                if (child.isSolution()){
-                    successors = new ArrayList<Node>();
-                    successors.add(new Node(child));
-                    return successors;
-                }
-                if (child.isContradictory()){
-                    continue;
-                }
-                successors.add(new Node(child));
+        ArrayList<Node> successors = new ArrayList<Node>();
+        for (Object o: assumed.getDomain()){
+            FlowVariable singleton = ((FlowVariable)state.getVariableById((Integer) o));
+            if(singleton.hasParent() || singleton.isEndPointOfDifferentColor((FlowVariable) assumed)){
+                continue;
             }
-            if(!successors.isEmpty()){
+            FlowState child = state.deepCopy();
+            ArrayList<Object> newDomain = new ArrayList<Object>();
+            newDomain.add(o);
+            child.getVariableById(assumed.getId()).setDomain(newDomain);
+            child.setAssumedVariable(child.getVariableById(assumed.getId()));
+            reRun(child);
+            if (child.isSolution()){
+                successors = new ArrayList<Node>();
+                successors.add(new Node(child));
                 return successors;
             }
+            if (child.isContradictory()){
+                continue;
+            }
+            successors.add(new Node(child));
         }
-        return  new ArrayList<Node>();
+        return successors;
     }
 
     @Override
@@ -103,7 +104,9 @@ public class FlowProblem extends GACProblem {
     protected boolean revise(Revise revise, FlowState state) {
         FlowVariable focal = (FlowVariable) revise.getFocal();
         FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
-
+//        if (!focal.isEndPoint()){
+//            return false;
+//        }
         if (!focal.isNeighbour(nonFocal) || focal.hasChild() || focal.isEndPoint()){
             return false;
         }
@@ -134,16 +137,17 @@ public class FlowProblem extends GACProblem {
                 h += fv.getDomainSize()-1;
             }
             if (fv.isHead()){
-                int endPointId = endPoints.get(fv.getColor());
-                int endX = FlowVariable.getXFromId(endPointId);
-                int endY = FlowVariable.getYFromId(endPointId);
-                int absX = Math.abs(endX - fv.getX());
-                int absY = Math.abs(endY - fv.getY());
-                h += absX + absY;
+                h += getManhattanDistance(fv, (FlowVariable) state.getVariableById(endPoints.get(fv.getColor())));
             }
         }
         //n.setH(h);
         n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
+    }
+
+    private int getManhattanDistance(FlowVariable first, FlowVariable second ){
+        int absX = Math.abs(second.getX() - first.getX());
+        int absY = Math.abs(second.getY() - first.getY());
+        return absX + absY;
     }
 
     @Override

@@ -180,4 +180,5 @@ public class FlowVariable extends Variable{
     public boolean isHead() {
         return isHead;
     }
+
 }
