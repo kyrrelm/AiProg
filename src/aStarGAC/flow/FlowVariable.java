@@ -130,6 +130,7 @@ public class FlowVariable extends Variable{
         this.parent = newHead.getId();
         newHead.setColor(this.getColor());
         newHead.setChild(this.id);
+        //newHead.addToDomain(newHead.getId());
     }
 
     protected boolean hasChild() {
