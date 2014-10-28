@@ -54,6 +54,7 @@ public class Input {
                 } else if (v.getX() == endX && v.getY() == endY){
                     v.setColor(getColor(counter));
                     v.setEndPoint(true);
+                    v.setChild(v.getId());
                 }
             }
             counter++;

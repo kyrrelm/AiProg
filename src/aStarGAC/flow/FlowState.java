@@ -137,11 +137,16 @@ public class FlowState extends GACState{
     }
     public boolean tryToSetPath(FlowVariable fl) {
         //TODO: Ikke set path for endpoints
-        if (fl.hasParent() && fl.isDomainSingleton()) {
+        if (fl.isDomainSingleton() && !fl.isEndPoint()) {
             FlowVariable neighbour = hashMap.get(fl.getDomain().get(0));
             if (!neighbour.hasParent() && !neighbour.isEndPointOfDifferentColor(fl)) {
-                neighbour.setParent(fl);
-                return true;
+                if (fl.hasParent()){
+                    neighbour.setParent(fl);
+                    return true;
+                }
+                if (neighbour.isEndPoint()){
+                    neighbour.moveHead(fl);
+                }
             }
         }
         return false;

@@ -75,7 +75,6 @@ public class FlowVariable extends Variable{
 
     public void setEndPoint(boolean endPoint) {
         this.endPoint = endPoint;
-        this.child = this.id;
     }
 
     public boolean isEndPoint() {
@@ -119,14 +118,18 @@ public class FlowVariable extends Variable{
      * @param potential
      */
     public void setParent(FlowVariable potential) {
-        if (potential.hasChild()){
-            return;
-        }
         this.parent = potential.getId();
         setColor(potential.getColor());
         potential.setChild(this.id);
         this.isHead = true;
         potential.isHead = false;
+    }
+    public void moveHead(FlowVariable newHead) {
+        this.endPoint = false;
+        newHead.setEndPoint(true);
+        this.parent = newHead.getId();
+        newHead.setColor(this.getColor());
+        newHead.setChild(this.id);
     }
 
     protected boolean hasChild() {
@@ -137,7 +140,7 @@ public class FlowVariable extends Variable{
         return child;
     }
 
-    private void setChild(int child) {
+    public void setChild(int child) {
         this.child = child;
     }
 
