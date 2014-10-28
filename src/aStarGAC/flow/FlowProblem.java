@@ -46,12 +46,13 @@ public class FlowProblem extends GACProblem {
                     assumed = fv;
                 }
                 int mDistance = getManhattanDistance(fv, (FlowVariable) state.getVariableById(endPoints.get(fv.getColor())));
-                if (mDistance < smallest) {
+                if (fv.getDomainSize() < assumed.getDomainSize()) {
                     assumed = fv;
                     smallest = mDistance;
                 }
-                if (mDistance == smallest && fv.getDomainSize() < assumed.getDomainSize()){
+                if (fv.getDomainSize() == assumed.getDomainSize() && mDistance < smallest){
                     assumed = fv;
+                    smallest = mDistance;
                 }
             }
         }
