@@ -22,4 +22,8 @@ public abstract class State{
     public String getId() {
         return id;
     }
+
+    public int getDepth(){
+        return 0;
+    }
 }

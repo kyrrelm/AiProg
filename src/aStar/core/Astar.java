@@ -16,7 +16,7 @@ public class Astar {
         BREADTH_FIRST
     }
     private int treeCount = 0;
-    private int expCount = 0;
+    private int length = 0;
     private final Problem problem;
     private final int sleepTime;
     Collection<Node> open;
@@ -91,9 +91,9 @@ public class Astar {
             if (problem.isSolution(current)){
                 if (statistics){
                     System.out.println("======  SUCCESS  ======");
-                    System.out.println("Length of the path from the root node to the solution node: "+loopCount);
+                    System.out.println("Length of the path from the root node to the solution node: " + current.getState().getDepth());
                     System.out.println("Number of nodes in the search tree: "+treeCount);
-                    System.out.println("Number of nodes that were popped from the agenda and expanded: "+expCount);
+                    System.out.println("Number of nodes that were popped from the agenda and expanded: "+loopCount);
                 }
                 return(current);
             }
@@ -101,7 +101,6 @@ public class Astar {
             if (succ == null){
                 continue;
             }
-            expCount++;
             for(Node s: succ){
                 String idString = s.getStateId();
                 if (existingNodes.containsKey(s.getStateId())){
@@ -125,7 +124,8 @@ public class Astar {
         }
         if (statistics){
             System.out.println("======  FAILED  ======");
-            System.out.println("Length of the path from the root node to the solution node: "+loopCount);
+            System.out.println("Number of nodes in the search tree: "+treeCount);
+            System.out.println("Number of nodes that were popped from the agenda and expanded: "+loopCount);
         }
         return null;
     }

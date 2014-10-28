@@ -31,8 +31,6 @@ public class FlowProblem extends GACProblem {
         }
         generateDomains();
     }
-
-    private static int succCount = 1;
     @Override
     public ArrayList<Node> getSuccessors(Node n) {
         FlowState state = (FlowState) n.getState();
@@ -107,6 +105,7 @@ public class FlowProblem extends GACProblem {
             }
         }
     }
+
     protected boolean revise(Revise revise, FlowState state) {
         FlowVariable focal = (FlowVariable) revise.getFocal();
         FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
@@ -123,18 +122,20 @@ public class FlowProblem extends GACProblem {
             for (int i = 0; i < focal.getDomain().size(); i++) {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
                     focal.getDomain().remove(i);
-                    state.tryToSetPath(focal);
+                    if (state.tryToSetPath(focal)){
+                        state.tryToSetPath(focal);
+                    }
                     return true;
                 }
             }
         }
         return false;
     }
-
     @Override
     protected GACState generateInitState() {
-        return new FlowState(this.variables, null, false, endPoints, dimensions);
+        return new FlowState(this.variables, null, false, endPoints, dimensions, 0);
     }
+
     @Override
     public void calculateH(Node n) {
         int h = 0;
@@ -150,7 +151,6 @@ public class FlowProblem extends GACProblem {
         }
         n.setH(h);
     }
-
     private int getManhattanDistance(FlowVariable first, FlowVariable second ){
         int absX = Math.abs(second.getX() - first.getX());
         int absY = Math.abs(second.getY() - first.getY());
@@ -193,6 +193,7 @@ public class FlowProblem extends GACProblem {
             fv.addToDomain(neighbour.getId());
         }
     }
+
     private void generateRight(FlowVariable fv) {
         FlowVariable neighbour = initVariablesAsHashMap.get(FlowVariable.idFunction(fv.getX()+1,fv.getY()));
         if (!neighbour.isStartPoint()) {

@@ -13,20 +13,27 @@ import java.util.List;
  * Created by Kyrre on 16.10.2014.
  */
 public class FlowState extends GACState{
+    private int depth;
     private int dimensions;
     private HashMap<Color, Integer> endPoints;
     private HashMap<Integer, FlowVariable> hashMap;
 
     static int idGen = 0;
-    protected FlowState(ArrayList<? extends Variable> variables, Variable assumedVariable, boolean solution, HashMap<Color, Integer> endPoints,int dimensions) {
+    protected FlowState(ArrayList<? extends Variable> variables, Variable assumedVariable, boolean solution, HashMap<Color, Integer> endPoints,int dimensions, int depth) {
         super(null, variables, assumedVariable, solution);
         this.endPoints = endPoints;
         this.dimensions = dimensions;
+        this.depth = depth;
         idGen++;
         hashMap = new HashMap<Integer, FlowVariable>();
         for (Variable v: variables){
             hashMap.put(v.getId(), (FlowVariable) v);
         }
+    }
+
+    @Override
+    public int getDepth() {
+        return depth;
     }
 
     @Override
@@ -119,7 +126,7 @@ public class FlowState extends GACState{
         if (assumedVariable != null){
             assumedVariableCopy = (FlowVariable)assumedVariable.deepCopy();
         }
-        return new FlowState(variablesCopy, assumedVariableCopy, solution, endPoints, dimensions);
+        return new FlowState(variablesCopy, assumedVariableCopy, solution, endPoints, dimensions, depth++);
     }
 
     public boolean updatePaths(){
@@ -136,7 +143,6 @@ public class FlowState extends GACState{
         return change;
     }
     public boolean tryToSetPath(FlowVariable fl) {
-        //TODO: Ikke set path for endpoints
         if (fl.isDomainSingleton()) {
             FlowVariable neighbour = hashMap.get(fl.getDomain().get(0));
             if (fl.getId() == neighbour.getId()){
@@ -147,9 +153,10 @@ public class FlowState extends GACState{
                     neighbour.setParent(fl);
                     return true;
                 }
-                if (neighbour.isEndPoint()){
-                    //neighbour.moveHead(fl);
-                }
+//                if (fl.isEndPoint()){
+//                    System.out.println("Hur dur");
+//                    //neighbour.moveHead(fl);
+//                }
             }
         }
         return false;
