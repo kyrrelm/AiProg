@@ -50,7 +50,7 @@ public class FlowState extends GACState{
                     FlowVariable.getXFromId(endPointId),FlowVariable.getYFromId(endPointId), getBarriers(head.getId(), endPointId));
 
             Astar astar = new Astar(task,0);
-            if (astar.search(Astar.SearchType.BEST_FIRST) == null){
+            if (astar.search(Astar.SearchType.BEST_FIRST, false) == null){
                 return true;
             }
         }

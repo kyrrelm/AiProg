@@ -37,6 +37,9 @@ public class Astar {
         existingNodes = new HashMap<String, Node>();
     }
 
+    public Node search(SearchType type){
+        return search(type, true);
+    }
 
     /**
      * This is the main search algorithm. It can run
@@ -48,7 +51,7 @@ public class Astar {
      * @param type
      * @return
      */
-    public Node search(SearchType type){
+    public Node search(SearchType type, boolean statistics){
         if (type == SearchType.BEST_FIRST){
             open = new PriorityQueue<Node>();
         }else if(type == SearchType.DEPTH_FIRST){
@@ -66,7 +69,7 @@ public class Astar {
         int loopCount = 0;
         while (!open.isEmpty()){
             loopCount++;
-            if (loopCount%100 == 0){
+            if (loopCount%100 == 0 && statistics){
                 System.out.println("Loop iterations: "+loopCount);
             }
             try {
@@ -86,10 +89,12 @@ public class Astar {
             notifyCurrentListeners(current);
             closed.add(current);
             if (problem.isSolution(current)){
-                System.out.println("======  SUCCESS  ======");
-                System.out.println("Length of the path from the root node to the solution node: "+loopCount);
-                System.out.println("Number of nodes in the search tree: "+treeCount);
-                System.out.println("Number of nodes that were popped from the agenda and expanded: "+expCount);
+                if (statistics){
+                    System.out.println("======  SUCCESS  ======");
+                    System.out.println("Length of the path from the root node to the solution node: "+loopCount);
+                    System.out.println("Number of nodes in the search tree: "+treeCount);
+                    System.out.println("Number of nodes that were popped from the agenda and expanded: "+expCount);
+                }
                 return(current);
             }
             ArrayList<Node> succ = problem.getSuccessors(current);
@@ -118,8 +123,10 @@ public class Astar {
             }
 
         }
-        System.out.println("======  FAILED  ======");
-        System.out.println("Length of the path from the root node to the solution node: "+loopCount);
+        if (statistics){
+            System.out.println("======  FAILED  ======");
+            System.out.println("Length of the path from the root node to the solution node: "+loopCount);
+        }
         return null;
     }
 
