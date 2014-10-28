@@ -48,9 +48,12 @@ public class FlowProblem extends GACProblem {
                     assumed = fv;
                 }
                 int mDistance = getManhattanDistance(fv, (FlowVariable) state.getVariableById(endPoints.get(fv.getColor())));
-                if (mDistance <= smallest && fv.getDomainSize() <= assumed.getDomainSize()){
+                if (mDistance < smallest) {
                     assumed = fv;
                     smallest = mDistance;
+                }
+                if (mDistance == smallest && fv.getDomainSize() < assumed.getDomainSize()){
+                    assumed = fv;
                 }
             }
         }
@@ -138,12 +141,8 @@ public class FlowProblem extends GACProblem {
         FlowState state = (FlowState) n.getState();
         for (Variable v: state.getVariables()){
             FlowVariable fv = (FlowVariable) v;
-
-//            if (fv.getDomainSize() > 1){
-//                h += fv.getDomainSize()-1;
-//            }
             if (fv.getColor() == null){
-                h++;
+                //h++;
             }
             if (fv.isHead()){
                 h += getManhattanDistance(fv, (FlowVariable) state.getVariableById(endPoints.get(fv.getColor())));

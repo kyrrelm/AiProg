@@ -53,7 +53,7 @@ public class FlowVariable extends Variable{
         this.parent = parent;
         this.child = child;
         this.isHead = isHead;
-        ModelHolder.notifyChange(this);
+        //ModelHolder.notifyChange(this);
     }
 
     @Override
