@@ -1,23 +1,27 @@
 package aStarGAC.flow;
 
+import aStar.core.Astar;
+import aStar.navigationTask.NavigationTask;
 import aStarGAC.core.GACState;
 import aStarGAC.core.Variable;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by Kyrre on 16.10.2014.
  */
 public class FlowState extends GACState{
+    private int dimensions;
     private HashMap<Color, Integer> endPoints;
     private HashMap<Integer, FlowVariable> hashMap;
 
     static int idGen = 0;
-    protected FlowState(ArrayList<? extends Variable> variables, Variable assumedVariable, boolean solution, HashMap<Color, Integer> endPoints) {
+    protected FlowState(ArrayList<? extends Variable> variables, Variable assumedVariable, boolean solution, HashMap<Color, Integer> endPoints,int dimensions) {
         super(null, variables, assumedVariable, solution);
         this.endPoints = endPoints;
+        this.dimensions = dimensions;
         idGen++;
         hashMap = new HashMap<Integer, FlowVariable>();
         for (Variable v: variables){
@@ -36,11 +40,33 @@ public class FlowState extends GACState{
                 heads.add((FlowVariable) v);
             }
         }
-        return isValidNavigationCheck(heads);
+        return isContradictoryNavigationCheck(heads);
     }
 
-    private boolean isValidNavigationCheck(ArrayList<FlowVariable> heads) {
+    private boolean isContradictoryNavigationCheck(ArrayList<FlowVariable> heads) {
+        for (FlowVariable head: heads){
+            int endPointId = endPoints.get(head.getColor());
+            NavigationTask task = new NavigationTask(dimensions, dimensions, head.getX(),head.getY(),
+                    FlowVariable.getXFromId(endPointId),FlowVariable.getYFromId(endPointId), getBarriers(head.getId(), endPointId));
+
+            Astar astar = new Astar(task,0);
+            if (astar.search(Astar.SearchType.BEST_FIRST) == null){
+                return true;
+            }
+        }
         return false;
+
+    }
+
+    public List<int[]> getBarriers(int headId, int endPointId) {
+        ArrayList<int[]> barriers = new ArrayList<int[]>();
+        for (Variable v: variables){
+            FlowVariable fv = (FlowVariable) v;
+            if (fv.getColor() != null && fv.getId() != headId && fv.getId() != endPointId){
+                barriers.add(new int[]{fv.getX(),fv.getY(),1,1});
+            }
+        }
+        return  barriers;
     }
 
     @Override
@@ -93,7 +119,7 @@ public class FlowState extends GACState{
         if (assumedVariable != null){
             assumedVariableCopy = (FlowVariable)assumedVariable.deepCopy();
         }
-        return new FlowState(variablesCopy, assumedVariableCopy, solution, endPoints);
+        return new FlowState(variablesCopy, assumedVariableCopy, solution, endPoints, dimensions);
     }
 
     public boolean updatePaths(){
@@ -109,7 +135,6 @@ public class FlowState extends GACState{
         }
         return change;
     }
-
     public boolean tryToSetPath(FlowVariable fl) {
         //TODO: Ikke set path for endpoints
         if (fl.hasParent() && fl.isDomainSingleton()) {
@@ -121,6 +146,7 @@ public class FlowState extends GACState{
         }
         return false;
     }
+
     public int countNumberOfEmptyColors(){
         int counter = 0;
         for (Variable v: variables){
