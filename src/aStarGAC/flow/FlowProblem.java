@@ -140,8 +140,8 @@ public class FlowProblem extends GACProblem {
                 h += getManhattanDistance(fv, (FlowVariable) state.getVariableById(endPoints.get(fv.getColor())));
             }
         }
-        //n.setH(h);
-        n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
+        n.setH(h);
+        //n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
     }
 
     private int getManhattanDistance(FlowVariable first, FlowVariable second ){
@@ -152,7 +152,7 @@ public class FlowProblem extends GACProblem {
 
     @Override
     public int getArcCost(Node n1, Node n2) {
-        return 3;
+        return 1;
     }
 
     private void generateDomains() {

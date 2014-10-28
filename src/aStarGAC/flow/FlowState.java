@@ -148,7 +148,7 @@ public class FlowState extends GACState{
                     return true;
                 }
                 if (neighbour.isEndPoint()){
-                    neighbour.moveHead(fl);
+                    //neighbour.moveHead(fl);
                 }
             }
         }
