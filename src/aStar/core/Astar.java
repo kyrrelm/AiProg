@@ -98,6 +98,7 @@ public class Astar {
             }
             expCount++;
             for(Node s: succ){
+                String idString = s.getStateId();
                 if (existingNodes.containsKey(s.getStateId())){
                     s = existingNodes.get(s.getStateId());
                 }else {

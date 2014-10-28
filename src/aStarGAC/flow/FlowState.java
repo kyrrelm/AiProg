@@ -54,7 +54,7 @@ public class FlowState extends GACState{
         if (!fv.isStartPoint()){
             subId += fv.getId() + generateSubId((FlowVariable) getVariableById(fv.getParentId()));
         }else {
-            subId += fv.getId();
+            subId +=fv.getId();
         }
         return subId;
     }
