@@ -163,7 +163,7 @@ public class FlowVariable extends Variable{
         for (Object i: domain){
            domainString += "\n"+i;
         }
-        return super.toString() + " x = "+x+" y = "+y+ " parent = "+parent+" domainSize = "+domain.size()+domainString;
+        return " head: " + isHead + "x: "+x+" y: "+y+ " parent: "+parent+" domainSize: "+domain.size();
 
     }
 

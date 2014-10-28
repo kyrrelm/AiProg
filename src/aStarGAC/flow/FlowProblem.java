@@ -55,6 +55,9 @@ public class FlowProblem extends GACProblem {
             }
         }
         ArrayList<Node> successors = new ArrayList<Node>();
+        if (assumed == null){
+           return successors;
+        }
         for (Object o: assumed.getDomain()){
             FlowVariable singleton = ((FlowVariable)state.getVariableById((Integer) o));
             if(singleton.hasParent() || singleton.isEndPointOfDifferentColor((FlowVariable) assumed)){
