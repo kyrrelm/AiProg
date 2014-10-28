@@ -107,13 +107,16 @@ public class FlowProblem extends GACProblem {
     protected boolean revise(Revise revise, FlowState state) {
         FlowVariable focal = (FlowVariable) revise.getFocal();
         FlowVariable nonFocal = (FlowVariable) revise.getNonFocal();
-//        if (!focal.isEndPoint()){
-//            return false;
-//        }
-        if (!focal.isNeighbour(nonFocal) || focal.hasChild() || focal.isEndPoint()){
+        if (!focal.isHead()){
             return false;
         }
-        if (nonFocal.hasParent() || nonFocal.isEndPointOfDifferentColor(focal)){
+        if (!focal.isNeighbour(nonFocal)){
+            return false;
+        }
+        if (nonFocal.isEndPoint() && focal.getColor() == nonFocal.getColor()){
+            return false;
+        }
+        if (nonFocal.getColor() != null){
             for (int i = 0; i < focal.getDomain().size(); i++) {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
                     focal.getDomain().remove(i);
@@ -136,15 +139,17 @@ public class FlowProblem extends GACProblem {
         for (Variable v: state.getVariables()){
             FlowVariable fv = (FlowVariable) v;
 
-            if (fv.getDomainSize() > 1){
-                h += fv.getDomainSize()-1;
+//            if (fv.getDomainSize() > 1){
+//                h += fv.getDomainSize()-1;
+//            }
+            if (fv.getColor() == null){
+                h++;
             }
             if (fv.isHead()){
                 h += getManhattanDistance(fv, (FlowVariable) state.getVariableById(endPoints.get(fv.getColor())));
             }
         }
         n.setH(h);
-        //n.setH(((FlowState)n.getState()).countNumberOfEmptyColors());
     }
 
     private int getManhattanDistance(FlowVariable first, FlowVariable second ){
