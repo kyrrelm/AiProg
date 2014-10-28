@@ -121,7 +121,7 @@ public class FlowProblem extends GACProblem {
 
     @Override
     protected GACState generateInitState() {
-        return new FlowState(this.variables, null, false);
+        return new FlowState(this.variables, null, false, endPoints);
     }
     @Override
     public void calculateH(Node n) {
