@@ -120,7 +120,7 @@ public class FlowProblem extends GACProblem {
             for (int i = 0; i < focal.getDomain().size(); i++) {
                 if (focal.getDomain().get(i).equals(nonFocal.getId())){
                     focal.getDomain().remove(i);
-                    state.updatePaths();
+                    state.tryToSetPath(focal);
                     return true;
                 }
             }
