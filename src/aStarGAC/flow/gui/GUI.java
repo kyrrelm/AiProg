@@ -45,14 +45,14 @@ public class GUI extends JFrame{
         setAlwaysOnTop(true);
         setAlwaysOnTop(false);
 
-        flowProblem.addStateListener(new StateListener() {
-            @Override
-            public void onStateChanged(State newState) {
-                for (Variable v: ((FlowState)newState).getVariables()){
-                    ModelHolder.notifyChange((FlowVariable) v);
-                }
-            }
-        });
+//        flowProblem.addStateListener(new StateListener() {
+//            @Override
+//            public void onStateChanged(State newState) {
+//                for (Variable v: ((FlowState)newState).getVariables()){
+//                    ModelHolder.notifyChange((FlowVariable) v);
+//                }
+//            }
+//        });
     }
 
 }

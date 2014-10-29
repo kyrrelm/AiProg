@@ -3,6 +3,7 @@ package aStarGAC.flow;
 import aStar.core.Node;
 import aStarGAC.core.*;
 import aStarGAC.flow.gui.EmptyDomainException;
+import aStarGAC.flow.gui.ModelHolder;
 
 import java.awt.*;
 import java.util.*;
@@ -72,6 +73,9 @@ public class FlowProblem extends GACProblem {
             child.setAssumedVariable(child.getVariableById(assumed.getId()));
             reRun(child);
             if (child.isSolution()){
+                for (Variable v: child.getVariables()){
+                    ModelHolder.notifyChange((FlowVariable) v);
+                }
                 successors = new ArrayList<Node>();
                 successors.add(new Node(child));
                 return successors;

@@ -91,7 +91,7 @@ public class FlowVariable extends Variable{
 
     public void setColor(Color color) {
         this.color = color;
-        ModelHolder.notifyChange(this);
+        //ModelHolder.notifyChange(this);
     }
 
     public int getX() {

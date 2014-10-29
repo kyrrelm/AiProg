@@ -162,13 +162,8 @@ public class FlowState extends GACState{
         return false;
     }
 
-    public int countNumberOfEmptyColors(){
-        int counter = 0;
-        for (Variable v: variables){
-            if (((FlowVariable)v).getColor() == null){
-                counter++;
-            }
-        }
-        return counter;
+    @Override
+    public Variable getVariableById(int id) {
+        return hashMap.get(id);
     }
 }
