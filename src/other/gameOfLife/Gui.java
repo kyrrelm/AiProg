@@ -15,6 +15,7 @@ public class Gui extends JFrame {
     private JPanel p = new JPanel();
     public Gui(int size) {
         super("Game of Life");
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
         dim = (int) (screenDim.getHeight()-100);
         setSize(dim, dim);
@@ -29,6 +30,9 @@ public class Gui extends JFrame {
             }
         }
         add(p, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2));
         final JButton start = new JButton("Start");
         start.addActionListener(new ActionListener() {
             @Override
@@ -37,18 +41,20 @@ public class Gui extends JFrame {
                 world.toggleRun();
             }
         });
-        add(start, BorderLayout.PAGE_START);
+
         final JButton reset = new JButton("Reset");
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                world.toggleRun();
-                start.setText(start.getText() == "Start" ? "Stop" : "Start");
+                start.setText("Start");
                 world.reset();
 
             }
         });
-        add(reset, BorderLayout.PAGE_END);
+        buttonPanel.add(start);
+        buttonPanel.add(reset);
+        add(buttonPanel, BorderLayout.PAGE_END);
+
         setVisible(true);
         setAlwaysOnTop(true);
         setAlwaysOnTop(false);

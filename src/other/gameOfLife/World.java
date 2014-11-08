@@ -17,6 +17,7 @@ public class World {
 
     public World(int size) {
         this.size = size;
+        this.timer = new Timer();
         boardMap = new HashMap<String, Cube>();
         board = new Cube[size][size];
         running = false;
@@ -30,10 +31,12 @@ public class World {
     }
 
     public void pause() {
+        running = false;
         this.timer.cancel();
     }
 
     public void resume() {
+        running = true;
         this.timer = new Timer();
         this.timer.schedule( new TimerTask() {
             @Override
@@ -45,7 +48,6 @@ public class World {
     }
 
     private void tick() {
-        System.out.println("tick");
         for (Cube c: boardMap.values()){
             c.precise(this);
         }
@@ -60,10 +62,8 @@ public class World {
 
     public void toggleRun() {
         if (!running){
-          running = true;
           resume();
         }else{
-            running = false;
             pause();
         }
     }
@@ -73,6 +73,7 @@ public class World {
     }
 
     public void reset() {
+        pause();
         for (Cube c: boardMap.values()){
             c.setAlive(false);
         }
