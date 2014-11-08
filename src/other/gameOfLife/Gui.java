@@ -11,8 +11,8 @@ import java.awt.event.ActionListener;
 public class Gui extends JFrame {
 
     private final int dim;
-    private final World world;
-    private JPanel p = new JPanel();
+    private World world;
+    private JPanel p;
     public Gui(int size) {
         super("Game of Life");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -21,7 +21,14 @@ public class Gui extends JFrame {
         setSize(dim, dim);
         setLocation((int) (screenDim.getWidth()-dim-100),0);
         setResizable(true);
+        init(size);
+        setVisible(true);
+        setAlwaysOnTop(true);
+        setAlwaysOnTop(false);
+    }
 
+    private void init(int size){
+        p = new JPanel();
         world = new World(size);
         p.setLayout(new GridLayout(size, size));
         for (int x = 0; x < size; x++){
@@ -29,7 +36,6 @@ public class Gui extends JFrame {
                 p.add(new CubeView(world.getCube(x, y)));
             }
         }
-        add(p, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 2));
@@ -51,14 +57,42 @@ public class Gui extends JFrame {
 
             }
         });
+
+        final JButton settings = new JButton("Settings");
+        settings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showSettings();
+            }
+        });
+
         buttonPanel.add(start);
         buttonPanel.add(reset);
-        add(buttonPanel, BorderLayout.PAGE_END);
+        buttonPanel.add(settings);
+        getContentPane().removeAll();
+        getContentPane().add(p, BorderLayout.CENTER);
+        getContentPane().add(buttonPanel, BorderLayout.PAGE_END);
+        //add(p, BorderLayout.CENTER);
+        //add(buttonPanel, BorderLayout.PAGE_END);
+        revalidate();
+    }
 
-        setVisible(true);
-        setAlwaysOnTop(true);
-        setAlwaysOnTop(false);
+    public void showSettings() {
+        JOptionPane pane = new JOptionPane();
+        String d;
+        while(!isInteger(d = pane.showInputDialog("Board size dimensions:"))) {
+            JOptionPane.showMessageDialog(null, "Input not a number, try again");
+        }
+        init(Integer.parseInt(d));
+    }
 
+    private boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) {
