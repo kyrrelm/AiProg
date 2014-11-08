@@ -51,7 +51,7 @@ public class CubeView extends JButton {
 
     protected void change() {
         if (cube.isAlive()){
-            setBackground(Color.YELLOW);
+            setBackground(Color.BLUE);
         }else {
             setBackground(Color.WHITE);
         }
