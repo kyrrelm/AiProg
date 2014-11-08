@@ -1,7 +1,6 @@
 package other.gameOfLife;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,12 +9,14 @@ import java.util.TimerTask;
  */
 public class World {
 
+    private final int size;
     HashMap<String, Cube> boardMap;
     Cube[][] board;
     boolean running;
     private Timer timer;
 
     public World(int size) {
+        this.size = size;
         boardMap = new HashMap<String, Cube>();
         board = new Cube[size][size];
         running = false;
@@ -39,15 +40,18 @@ public class World {
             public void run() {
                 tick();
             }
-        }, 1000 );
+        },0 ,500
+        );
     }
 
     private void tick() {
-    }
-
-
-    public List<Cube> findNeighbours(Cube focal){
-        return null;
+        System.out.println("tick");
+        for (Cube c: boardMap.values()){
+            c.precise(this);
+        }
+        for (Cube c: boardMap.values()){
+            c.act();
+        }
     }
 
     public Cube getCube(int x, int y) {
@@ -62,5 +66,9 @@ public class World {
             running = false;
             pause();
         }
+    }
+
+    public int getSize() {
+        return size;
     }
 }
