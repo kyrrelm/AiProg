@@ -37,7 +37,18 @@ public class Gui extends JFrame {
                 world.toggleRun();
             }
         });
-        add(start, BorderLayout.PAGE_END);
+        add(start, BorderLayout.PAGE_START);
+        final JButton reset = new JButton("Reset");
+        reset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                world.toggleRun();
+                start.setText(start.getText() == "Start" ? "Stop" : "Start");
+                world.reset();
+
+            }
+        });
+        add(reset, BorderLayout.PAGE_END);
         setVisible(true);
         setAlwaysOnTop(true);
         setAlwaysOnTop(false);
@@ -45,6 +56,6 @@ public class Gui extends JFrame {
     }
 
     public static void main(String[] args) {
-        new Gui(20);
+        new Gui(30);
     }
 }

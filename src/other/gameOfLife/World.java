@@ -71,4 +71,10 @@ public class World {
     public int getSize() {
         return size;
     }
+
+    public void reset() {
+        for (Cube c: boardMap.values()){
+            c.setAlive(false);
+        }
+    }
 }
