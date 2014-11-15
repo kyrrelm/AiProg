@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AStarGAC/AStarGAC.iml" filepath="$PROJECT_DIR$/AStarGAC/AStarGAC.iml" />
       <module fileurl="file://$PROJECT_DIR$/AiProg.iml" filepath="$PROJECT_DIR$/AiProg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GameOfLife/GameOfLife.iml" filepath="$PROJECT_DIR$/GameOfLife/GameOfLife.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fx2048/fx2048.iml" filepath="$PROJECT_DIR$/fx2048/fx2048.iml" />
     </modules>
   </component>
 </project>
