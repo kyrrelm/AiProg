@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import game2048.expectimax.Expectimax;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -139,6 +141,7 @@ public class GameManager extends Group {
      * @param direction is the selected direction to move the tiles
      */
     private void moveTiles(Direction direction) {
+        Expectimax.getHeuristic(gameGrid);
         synchronized (gameGrid) {
             if (movingTiles) {
                 return;
