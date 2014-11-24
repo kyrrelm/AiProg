@@ -66,6 +66,11 @@ public class Expectimax {
     }
 
     private void move(Direction d, int[][] grid) {
+        moveRight(grid);
+    }
+
+
+    private void moveLeft(int[][] grid){
         for (int y = 0; y < grid.length; y++){
             int current = 0;
             int currentPos = 0;
@@ -81,9 +86,15 @@ public class Expectimax {
                     grid[x][y] = 0;
                     current = 0;
                     currentPos = x;
+                    continue;
                 }
+                if (grid[x][y] != 0){
+                    current = grid[x][y];
+                    currentPos = x;
+                }
+
             }
-            //move up
+            //move
             int oldZero = -1;
             for (int x = 0; x < grid[0].length; x++){
                 if (grid[x][y] == 0 && oldZero == -1){
@@ -93,11 +104,55 @@ public class Expectimax {
                 if (oldZero != -1 && grid[x][y] != 0){
                     grid[oldZero][y] = grid[x][y];
                     grid[x][y] = 0;
-                    oldZero = x;
+                    oldZero++;
+
                 }
             }
         }
     }
+
+    private void moveRight(int[][] grid){
+        for (int y = 0; y < grid.length; y++){
+            int current = 0;
+            int currentPos = 3;
+            //add up
+            for (int x = 3; x >= 0; x--){
+                if (current == 0){
+                    current = grid[x][y];
+                    currentPos = x;
+                    continue;
+                }
+                if (grid[x][y] == current){
+                    grid[currentPos][y] = current*2;
+                    grid[x][y] = 0;
+                    current = 0;
+                    currentPos = x;
+                    continue;
+                }
+                if (grid[x][y] != 0){
+                    current = grid[x][y];
+                    currentPos = x;
+                }
+
+            }
+            //move
+            int oldZero = -1;
+            for (int x = 3; x >= 0; x--){
+                if (grid[x][y] == 0 && oldZero == -1){
+                    oldZero = x;
+                    continue;
+                }
+                if (oldZero != -1 && grid[x][y] != 0){
+                    grid[oldZero][y] = grid[x][y];
+                    grid[x][y] = 0;
+                    oldZero--;
+                }
+            }
+        }
+    }
+
+
+
 
     private void randDerp() {
         while (true){
@@ -155,6 +210,6 @@ public class Expectimax {
                 System.out.print(grid[x][y] + " ");
             }
         }
-        System.out.println("---------------------------------------");
+        System.out.println("\n---------------------------------------");
     }
 }
