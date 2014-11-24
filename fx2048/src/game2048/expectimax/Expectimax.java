@@ -66,7 +66,7 @@ public class Expectimax {
     }
 
     private void move(Direction d, int[][] grid) {
-        moveRight(grid);
+        moveDown(grid);
     }
 
 
@@ -146,6 +146,87 @@ public class Expectimax {
                     grid[oldZero][y] = grid[x][y];
                     grid[x][y] = 0;
                     oldZero--;
+                }
+            }
+        }
+    }
+
+    private void moveDown(int[][] grid){
+        for (int x = 0; x < grid.length; x++){
+            int current = 0;
+            int currentPos = 3;
+            //add up
+            for (int y = 3; y >= 0; y--){
+                if (current == 0){
+                    current = grid[x][y];
+                    currentPos = y;
+                    continue;
+                }
+                if (grid[x][y] == current){
+                    grid[x][currentPos] = current*2;
+                    grid[x][y] = 0;
+                    current = 0;
+                    currentPos = y;
+                    continue;
+                }
+                if (grid[x][y] != 0){
+                    current = grid[x][y];
+                    currentPos = y;
+                }
+
+            }
+            //move
+            int oldZero = -1;
+            for (int y = 3; y >= 0; y--){
+                if (grid[x][y] == 0 && oldZero == -1){
+                    oldZero = y;
+                    continue;
+                }
+                if (oldZero != -1 && grid[x][y] != 0){
+                    grid[x][oldZero] = grid[x][y];
+                    grid[x][y] = 0;
+                    oldZero--;
+                }
+            }
+        }
+    }
+
+    private void moveUp(int[][] grid){
+        for (int x = 0; x < grid.length; x++){
+            int current = 0;
+            int currentPos = 0;
+            //add up
+            for (int y = 0; y < grid[0].length; y++){
+                if (current == 0){
+                    current = grid[x][y];
+                    currentPos = y;
+                    continue;
+                }
+                if (grid[x][y] == current){
+                    grid[x][currentPos] = current*2;
+                    grid[x][y] = 0;
+                    current = 0;
+                    currentPos = y;
+                    continue;
+                }
+                if (grid[x][y] != 0){
+                    current = grid[x][y];
+                    currentPos = y;
+                }
+
+            }
+            //move
+            int oldZero = -1;
+            for (int y = 0; y < grid[0].length; y++){
+                if (grid[x][y] == 0 && oldZero == -1){
+                    oldZero = y;
+                    continue;
+                }
+                if (oldZero != -1 && grid[x][y] != 0){
+                    grid[x][oldZero] = grid[x][y];
+                    grid[x][y] = 0;
+                    oldZero++;
+
                 }
             }
         }
