@@ -1,5 +1,6 @@
 package game2048;
 
+import game2048.expectimax.Expectimax;
 import javafx.application.Application;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
@@ -95,6 +96,16 @@ public class Game2048 extends Application {
                 gameManager.quitGame();
                 return;
             }
+            if (keyCode.equals(KeyCode.A)) {
+                Expectimax ai = new Expectimax(gameManager);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ai.play();
+                    }
+                }).start();
+                return;
+            }
             if (keyCode.isArrowKey()) {
                 Direction direction = Direction.valueFor(keyCode);
                 gameManager.move(direction);
@@ -119,6 +130,11 @@ public class Game2048 extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void playAI() {
+        Expectimax ai = new Expectimax(gameManager);
+        System.out.println("here here");
     }
 
 }

@@ -141,7 +141,6 @@ public class GameManager extends Group {
      * @param direction is the selected direction to move the tiles
      */
     private void moveTiles(Direction direction) {
-        Expectimax.getHeuristic(gameGrid);
         synchronized (gameGrid) {
             if (movingTiles) {
                 return;
@@ -381,6 +380,7 @@ public class GameManager extends Group {
         if (!board.isLayerOn().get()) {
             moveTiles(direction);
         }
+        //Expectimax.getHeuristic(gameGrid);
     }
     
     /**
