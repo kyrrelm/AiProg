@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by Kyrre on 15.11.2014.
  */
 public class Expectimax {
-    private final GameManager gameManager;
+    private GameManager gameManager;
 
     public Expectimax(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -40,19 +40,63 @@ public class Expectimax {
     }
 
     public void play() {
+        expectiMax(gameManager.getGameGrid());
+        //randDerp();
+    }
 
-        randDerp();
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                gameManager.move(Direction.DOWN);
-//            }
-//        });
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+    void expectiMax(Map<Location, Tile> gameGrid){
+        int[][] grid = new int[4][4];
+        for (Location l: gameGrid.keySet()){
+            if (gameGrid.get(l) == null){
+                grid[l.getX()][l.getY()] = 0;
+            }else {
+                grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
+            }
+        }
+        printGrid(grid);
+        playerBestScore(grid,4);
+        printGrid(grid);
+    }
+
+    private int playerBestScore(int[][] grid, int i) {
+        move(Direction.DOWN, grid);
+        //for (Direction d: Direction.values()){
+          // }
+        return -1;
+    }
+
+    private void move(Direction d, int[][] grid) {
+        for (int y = 0; y < grid.length; y++){
+            int current = 0;
+            int currentPos = 0;
+            //add up
+            for (int x = 0; x < grid[0].length; x++){
+                if (current == 0){
+                    current = grid[x][y];
+                    currentPos = x;
+                    continue;
+                }
+                if (grid[x][y] == current){
+                    grid[currentPos][y] = current*2;
+                    grid[x][y] = 0;
+                    current = 0;
+                    currentPos = x;
+                }
+            }
+            //move up
+            int oldZero = -1;
+            for (int x = 0; x < grid[0].length; x++){
+                if (grid[x][y] == 0 && oldZero == -1){
+                    oldZero = x;
+                    continue;
+                }
+                if (oldZero != -1 && grid[x][y] != 0){
+                    grid[oldZero][y] = grid[x][y];
+                    grid[x][y] = 0;
+                    oldZero = x;
+                }
+            }
+        }
     }
 
     private void randDerp() {
@@ -95,11 +139,22 @@ public class Expectimax {
                     });
                 }
             }
+
             try {
-                Thread.sleep(200);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void printGrid(int[][] grid) {
+        for (int y = 0; y < grid.length; y++){
+            System.out.println();
+            for (int x = 0; x < grid.length; x++){
+                System.out.print(grid[x][y] + " ");
+            }
+        }
+        System.out.println("---------------------------------------");
     }
 }

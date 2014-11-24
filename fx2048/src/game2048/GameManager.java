@@ -437,4 +437,7 @@ public class GameManager extends Group {
         board.saveRecord();
     }
 
+    public Map<Location, Tile> getGameGrid() {
+        return gameGrid;
+    }
 }
