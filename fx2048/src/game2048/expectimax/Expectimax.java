@@ -59,22 +59,30 @@ public class Expectimax {
         double bestScore = 0;
         Direction bestDir = null;
 
-        int[][] up = deepCopyGrid(grid);
-        if (moveUp(up)){
-            double upScore = computerAverageScore(up, depth-1);
-            if (upScore > bestScore){
-                bestDir = Direction.UP;
-                bestScore = upScore;
-            }
-
-        }
-
         int[][] down = deepCopyGrid(grid);
         if (moveDown(down)){
             double downScore = computerAverageScore(down, depth-1);
             if(downScore > bestScore){
                 bestDir = Direction.DOWN;
                 bestScore = downScore;
+            }
+        }
+
+        int[][] right = deepCopyGrid(grid);
+        if(moveRight(right)){
+            double rightScore = computerAverageScore(right, depth-1);
+            if (rightScore > bestScore){
+                bestDir = Direction.RIGHT;
+                bestScore = rightScore;
+            }
+        }
+
+        int[][] up = deepCopyGrid(grid);
+        if (moveUp(up)){
+            double upScore = computerAverageScore(up, depth-1);
+            if (upScore > bestScore){
+                bestDir = Direction.UP;
+                bestScore = upScore;
             }
         }
 
@@ -87,14 +95,6 @@ public class Expectimax {
             }
         }
 
-        int[][] right = deepCopyGrid(grid);
-        if(moveRight(right)){
-            double rightScore = computerAverageScore(right, depth-1);
-            if (rightScore > bestScore){
-                bestDir = Direction.RIGHT;
-                bestScore = rightScore;
-            }
-        }
         return new ScoreDirection(bestDir, bestScore);
     }
 
@@ -126,17 +126,12 @@ public class Expectimax {
     private ScoreDirection gradient(int[][] grid) {
         int grad0 = 0, grad1 = 0, grad2 = 0, grad3 =0;
         for (int y = 0; y < grid.length; y++) {
-            System.out.println();
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
                 //grad0 += (3-(x+y))*value;
-                //grad1 += ((3-(x+y))*-1)*value;
+                grad1 += ((3-(x+y))*-1)*value;
                 //grad2 += (3-(3-x+y))*value;
-                System.out.print(" "+((3 - (3 - x + y)) * -1));
-                System.out.print(" "+value);
-                System.out.print(" "+((3 - (3 - x + y)) * -1)*value);
-                System.out.print(" |");
-                grad3 += ((3-(3-x+y))*-1)*value;
+                //grad3 += ((3-(3-x+y))*-1)*value;
             }
         }
         int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
