@@ -67,7 +67,7 @@ public class Expectimax {
                 }
             }
             Direction bestMove;
-            if (maxTile >= 4096 && emptyTiles < 5){
+            if (maxTile >= 2048 && emptyTiles < 3){
                 bestMove = bestMove(grid,DEPTH+2);
             }else {
                 bestMove = bestMove(grid,DEPTH);
