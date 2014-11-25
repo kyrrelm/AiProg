@@ -50,13 +50,13 @@ public class Expectimax {
         if (depth == 0){
             int[][] copy = deepCopyGrid(grid);
             //TODO: If tile is zero, return true
-            if (!moveDown(copy) && !moveUp(copy) && !moveLeft(copy) && !moveRight(copy)){
-                return new ScoreDirection(null,0);
+            if (!hasMove(grid)){
+                return new ScoreDirection(null,-100000);
             }
             return gradient(grid);
         }
 
-        double bestScore = 0;
+        double bestScore = -1;
         Direction bestDir = null;
 
         int[][] down = deepCopyGrid(grid);
@@ -76,7 +76,6 @@ public class Expectimax {
                 bestScore = rightScore;
             }
         }
-
         int[][] up = deepCopyGrid(grid);
         if (moveUp(up)){
             double upScore = computerAverageScore(up, depth-1);
@@ -128,10 +127,10 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
-                //grad0 += (3-(x+y))*value;
-                grad1 += ((3-(x+y))*-1)*value;
-                //grad2 += (3-(3-x+y))*value;
-                //grad3 += ((3-(3-x+y))*-1)*value;
+                grad0 += gradGrid0[x][y]*value*value;
+                grad1 += gradGrid1[x][y]*value*value;
+                grad2 += gradGrid2[x][y]*value*value;
+                grad3 += gradGrid3[x][y]*value*value;
             }
         }
         int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
@@ -336,5 +335,45 @@ public class Expectimax {
            }
         }
         return copy;
+    }
+
+    private final int[][]gradGrid0 = new int[][]{
+            {3,2,1,0},
+            {2,1,0,-1},
+            {1,0,-1,-2},
+            {0,-1,-2,-3}
+    };
+
+    private final int[][]gradGrid1 = new int[][]{
+            {-3,-2,-1,0},
+            {-2,-1,0,-1},
+            {-1,0,1,2},
+            {0,1,2,3}
+    };
+    private final int[][]gradGrid2 = new int[][]{
+            {0,1,2,3},
+            {-1,0,1,2},
+            {-2,-1,0,1},
+            {-3,-2,-1,0}
+    };
+    private final int[][]gradGrid3 = new int[][]{
+            {0,1,2,3},
+            {-1,0,1,2},
+            {-2,-1,0,1},
+            {-3,-2,-1,0}
+    };
+    private boolean hasMove(int[][] grid) {
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid.length; x++) {
+                if (grid[x][y] == 0){
+                    return true;
+                }
+            }
+        }
+        int[][] copy = deepCopyGrid(grid);
+        if (!moveDown(copy) && !moveUp(copy) && !moveLeft(copy) && !moveRight(copy)){
+            return false;
+        }
+        return true;
     }
 }
