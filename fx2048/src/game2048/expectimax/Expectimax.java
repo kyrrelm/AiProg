@@ -72,8 +72,7 @@ public class Expectimax {
     private ScoreDirection playerBestScore(int[][] grid, int depth) {
         //TODO: Should check moves before returning?
         if (depth == 0){
-            int[][] copy = deepCopyGrid(grid);
-            //TODO: If tile is zero, return true
+            //TODO: Move out of if
             if (!hasMove(grid)){
                 return new ScoreDirection(null,-100000);
             }
@@ -83,42 +82,27 @@ public class Expectimax {
         double bestScore = -1;
         Direction bestDir = null;
 
-        int[][] down = deepCopyGrid(grid);
-        if (moveDown(down)){
-            double downScore = computerAverageScore(down, depth-1);
-            if(downScore > bestScore){
-                bestDir = Direction.DOWN;
-                bestScore = downScore;
+        for (Direction d: Direction.values()){
+            int[][] copy = deepCopyGrid(grid);
+            if (move(d, copy)){
+                double score = computerAverageScore(copy, depth-1);
+                if (score > bestScore){
+                    bestScore = score;
+                    bestDir = d;
+                }
             }
         }
-
-        int[][] right = deepCopyGrid(grid);
-        if(moveRight(right)){
-            double rightScore = computerAverageScore(right, depth-1);
-            if (rightScore > bestScore){
-                bestDir = Direction.RIGHT;
-                bestScore = rightScore;
-            }
-        }
-        int[][] up = deepCopyGrid(grid);
-        if (moveUp(up)){
-            double upScore = computerAverageScore(up, depth-1);
-            if (upScore > bestScore){
-                bestDir = Direction.UP;
-                bestScore = upScore;
-            }
-        }
-
-        int[][] left = deepCopyGrid(grid);
-        if (moveLeft(left)){
-            double leftScore = computerAverageScore(left, depth-1);
-            if (leftScore > bestScore){
-                bestDir = Direction.LEFT;
-                bestScore = leftScore;
-            }
-        }
-
         return new ScoreDirection(bestDir, bestScore);
+    }
+
+    private boolean move(Direction d, int[][] grid){
+        if (d == Direction.DOWN)
+            return moveDown(grid);
+        if (d == Direction.UP)
+            return moveUp(grid);
+        if (d == Direction.LEFT)
+            return moveLeft(grid);
+        return moveRight(grid);
     }
 
     private double computerAverageScore(int[][] grid, int depth) {
