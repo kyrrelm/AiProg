@@ -91,25 +91,19 @@ public class Expectimax {
         return bestDir;
     }
     private double playerBestScore(int[][] grid, int depth) {
-        //TODO: Should check moves before returning?
+        double bestScore = -1;
         if (depth == 0){
-            //TODO: Move out of if
             if (!hasMove(grid)){
-                return -1;
+                return bestScore;
             }
             return gradient(grid);
         }
-
-        double bestScore = -1;
-        Direction bestDir = null;
-
         for (Direction d: Direction.values()){
             int[][] copy = deepCopyGrid(grid);
             if (move(d, copy)){
                 double score = computerAverageScore(copy, depth-1);
                 if (score > bestScore){
                     bestScore = score;
-                    bestDir = d;
                 }
             }
         }
