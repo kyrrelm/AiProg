@@ -74,7 +74,7 @@ public class Expectimax {
         if (depth == 0){
             //TODO: Move out of if
             if (!hasMove(grid)){
-                return new ScoreDirection(null,-100000);
+                return new ScoreDirection(null,-1);
             }
             return gradient(grid);
         }
@@ -135,10 +135,10 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
-                grad0 += gradGrid0[x][y]*value*value;
-                grad1 += gradGrid1[x][y]*value*value;
-                grad2 += gradGrid2[x][y]*value*value;
-                grad3 += gradGrid3[x][y]*value*value;
+                grad0 += gradGrid0[x][y]*value;
+                grad1 += gradGrid1[x][y]*value;
+                grad2 += gradGrid2[x][y]*value;
+                grad3 += gradGrid3[x][y]*value;
             }
         }
         int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
