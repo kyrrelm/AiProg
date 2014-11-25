@@ -39,9 +39,24 @@ public class Expectimax {
         return grad;
     }
 
+    private ScoreDirection gradient(int[][] grid) {
+        int grad0 = 0, grad1 = 0, grad2 = 0, grad3 =0;
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid.length; x++) {
+                int value = grid[x][y];
+                grad0 += (3-(x+y))*value;
+                grad1 += ((3-(x+y))*-1)*value;
+                grad2 += (3-(3-x+y))*value;
+                grad3 += ((3-(3-x+y))*-1)*value;
+            }
+        }
+        int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
+        System.out.println(grad);
+        return new ScoreDirection(null,grad);
+    }
+
     public void play() {
         expectiMax(gameManager.getGameGrid());
-        //randDerp();
     }
 
     void expectiMax(Map<Location, Tile> gameGrid){
@@ -53,22 +68,78 @@ public class Expectimax {
                 grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
             }
         }
-        printGrid(grid);
-        playerBestScore(grid,4);
-        printGrid(grid);
+        Direction bestMove = playerBestScore(grid,4).direction;
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gameManager.move(bestMove);
+            }
+        });
     }
 
-    private int playerBestScore(int[][] grid, int i) {
-        move(Direction.DOWN, grid);
-        //for (Direction d: Direction.values()){
-          // }
-        return -1;
+    private ScoreDirection playerBestScore(int[][] grid, int depth) {
+        if (depth == 0){
+            //TODO: check if a move can be done.
+            return gradient(grid);
+        }
+
+        int[][] up = deepCopyGrid(grid);
+        moveUp(up);
+        int bestScore = computerAverageScore(up, --depth);
+        Direction bestDir = Direction.UP;
+
+        int[][] down = deepCopyGrid(grid);
+        moveDown(down);
+        int downScore = computerAverageScore(down, --depth);
+        if(downScore > bestScore){
+            bestDir = Direction.DOWN;
+            bestScore = downScore;
+        }
+
+        int[][] left = deepCopyGrid(grid);
+        moveLeft(left);
+        int leftScore = computerAverageScore(left, --depth);
+        if (leftScore > bestScore){
+            bestDir = Direction.LEFT;
+            bestScore = leftScore;
+        }
+
+        int[][] right = deepCopyGrid(grid);
+        moveRight(right);
+        int rightScore = computerAverageScore(right, --depth);
+        if (rightScore > bestScore){
+            bestDir = Direction.RIGHT;
+            bestScore = rightScore;
+        }
+        return new ScoreDirection(bestDir, bestScore);
     }
 
-    private void move(Direction d, int[][] grid) {
-        moveDown(grid);
-    }
+    private int computerAverageScore(int[][] grid, int depth) {
+        System.out.println("depth: "+depth);
+        int totalScore = 0;
+        int totalWeight = 0;
+        for (int y = 0; y < grid.length; y++){
+            for (int x = 0; x < grid.length; x++){
+                if (grid[y][x] == 0){
+                    int[][] two = deepCopyGrid(grid);
+                    int[][] four = deepCopyGrid(grid);
 
+                    two[y][x] = 2;
+                    four[y][x] = 4;
+
+                    int score = playerBestScore(two, --depth).score;
+                    totalScore += score * 0.9;
+                    totalWeight += 0.9;
+
+                    score = playerBestScore(four, --depth).score;
+                    totalScore += score * 0.1;
+                    totalWeight += 0.1;
+                }
+            }
+        }
+        System.out.println("Works sometimes");
+        return totalScore / totalWeight;
+    }
 
     private void moveLeft(int[][] grid){
         for (int y = 0; y < grid.length; y++){
@@ -232,9 +303,6 @@ public class Expectimax {
         }
     }
 
-
-
-
     private void randDerp() {
         while (true){
             int rand = (int) (Math.random()*4);
@@ -284,6 +352,9 @@ public class Expectimax {
         }
     }
 
+
+
+
     private void printGrid(int[][] grid) {
         for (int y = 0; y < grid.length; y++){
             System.out.println();
@@ -292,5 +363,15 @@ public class Expectimax {
             }
         }
         System.out.println("\n---------------------------------------");
+    }
+
+    private int[][] deepCopyGrid(int[][] grid) {
+        int[][] copy = new int[grid.length][grid.length];
+        for (int y = 0; y < copy.length; y++){
+           for (int x = 0; x < copy.length; x++){
+               copy[y][x] = grid[y][x];
+           }
+        }
+        return copy;
     }
 }
