@@ -370,7 +370,8 @@ public class Expectimax {
             {-2,-1,0,1},
             {-3,-2,-1,0}
     };
-    private boolean hasMove(int[][] grid) {
+
+    private boolean hasCheapMove(int[][] grid){
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 if (grid[x][y] == 0){
@@ -378,7 +379,14 @@ public class Expectimax {
                 }
             }
         }
+        return false;
+    }
+    private boolean hasMove(int[][] grid) {
+        if (hasCheapMove(grid)){
+            return true;
+        }
         int[][] copy = deepCopyGrid(grid);
+        //TODO: try to change this.
         if (!moveDown(copy) && !moveUp(copy) && !moveLeft(copy) && !moveRight(copy)){
             return false;
         }
