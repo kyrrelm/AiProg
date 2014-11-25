@@ -135,10 +135,10 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
-                grad0 += gradGrid0[x][y]*value;
-                grad1 += gradGrid1[x][y]*value;
-                grad2 += gradGrid2[x][y]*value;
-                grad3 += gradGrid3[x][y]*value;
+                grad0 += gradGrid0[x][y]*2*value;
+                grad1 += gradGrid1[x][y]*2*value;
+                grad2 += gradGrid2[x][y]*2*value;
+                grad3 += gradGrid3[x][y]*2*value;
             }
         }
         int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
