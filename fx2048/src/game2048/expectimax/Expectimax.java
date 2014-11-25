@@ -32,7 +32,7 @@ public class Expectimax {
                 grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
             }
         }
-        Direction bestMove = playerBestScore(grid,4).direction;
+        Direction bestMove = playerBestScore(grid,6).direction;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -43,7 +43,9 @@ public class Expectimax {
 
     private ScoreDirection playerBestScore(int[][] grid, int depth) {
         if (depth == 0){
-            //TODO: check if a move can be done.
+            if (!moveDown(deepCopyGrid(grid)) && !moveUp(deepCopyGrid(grid)) && !moveLeft(deepCopyGrid(grid)) && !moveRight(deepCopyGrid(grid))){
+                return new ScoreDirection(null,0);
+            }
             return gradient(grid);
         }
 
