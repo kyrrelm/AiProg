@@ -210,10 +210,10 @@ public class Expectimax {
     }
 
     private final int[][]customGradGrid = new int[][]{
-            {-3,-2,-1,0},
-            {-1,0,0,1},
-            {1,2,3,4},
-            {5,6,7,12}
+            {-4,-5,-6,-7},
+            {-3,-2,-2,-1},
+            {3,2,2,1},
+            {6,7,8,12}
     };
 
     private final int[][]gradGrid0 = new int[][]{
