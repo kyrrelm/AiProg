@@ -53,7 +53,25 @@ public class Expectimax {
                     done = true;
                 }
             }
-            Direction bestMove = bestMove(grid,DEPTH);
+            int maxTile = 0;
+            int emptyTiles = 0;
+            for (int y = 0; y < grid.length; y++) {
+                for (int x = 0; x < grid.length; x++) {
+                    if (grid[x][y] > maxTile){
+                        maxTile = grid[x][y];
+                        continue;
+                    }
+                    if (grid[x][y] == 0){
+                        emptyTiles++;
+                    }
+                }
+            }
+            Direction bestMove;
+            if (maxTile >= 4096 && emptyTiles < 5){
+                bestMove = bestMove(grid,DEPTH+2);
+            }else {
+                bestMove = bestMove(grid,DEPTH);
+            }
             if (bestMove == Direction.DOWN)
                 moveDown(grid);
             else if (bestMove == Direction.UP)
@@ -150,10 +168,10 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
-                grad0 += gradGrid0[x][y]*2*value;
-                grad1 += gradGrid1[x][y]*2*value;
-                grad2 += gradGrid2[x][y]*2*value;
-                grad3 += gradGrid3[x][y]*2*value;
+                //grad0 += gradGrid0[x][y]*value;
+                grad1 += gradGrid1[x][y]*value*value;
+                //grad2 += gradGrid2[x][y]*value;
+                //grad3 += gradGrid3[x][y]*value;
             }
         }
         int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
@@ -170,11 +188,15 @@ public class Expectimax {
             }
         }
         int[][] copy = deepCopyGrid(grid);
-        //TODO: try to change this.
-        if (!moveDown(copy) && !moveUp(copy) && !moveLeft(copy) && !moveRight(copy)){
-            return false;
-        }
-        return true;
+        if (moveDown(copy))
+            return true;
+        if (moveUp(copy))
+            return true;
+        if (moveLeft(copy))
+            return true;
+        if (moveRight(copy))
+            return true;
+        return false;
     }
 
     private int[][] deepCopyGrid(int[][] grid) {
