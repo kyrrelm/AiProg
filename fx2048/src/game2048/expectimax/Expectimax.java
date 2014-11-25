@@ -213,7 +213,7 @@ public class Expectimax {
             {-4,-5,-6,-7},
             {-3,-2,-2,-1},
             {3,2,2,1},
-            {6,7,8,12}
+            {7,8,9,12}
     };
 
     private final int[][]gradGrid0 = new int[][]{
