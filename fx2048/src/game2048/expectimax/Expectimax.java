@@ -168,14 +168,14 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
+                grad0 += customGradGrid[x][y]*value*value;
                 //grad0 += gradGrid0[x][y]*value;
-                grad1 += gradGrid1[x][y]*value*value;
+                //grad1 += gradGrid1[x][y]*value;
                 //grad2 += gradGrid2[x][y]*value;
                 //grad3 += gradGrid3[x][y]*value;
             }
         }
         int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
-        //System.out.println(grad);
         return grad;
     }
 
@@ -209,18 +209,25 @@ public class Expectimax {
         return copy;
     }
 
-    private final int[][]gradGrid0 = new int[][]{
-            {3,2,1,0},
-            {2,1,0,-1},
-            {1,0,-1,-2},
-            {0,-1,-2,-3}
+    private final int[][]customGradGrid = new int[][]{
+            {-3,-2,-1,0},
+            {-1,0,0,1},
+            {1,2,3,4},
+            {5,6,7,12}
     };
 
-    private final int[][]gradGrid1 = new int[][]{
+    private final int[][]gradGrid0 = new int[][]{
             {-3,-2,-1,0},
             {-2,-1,0,-1},
             {-1,0,1,2},
             {0,1,2,3}
+    };
+
+    private final int[][]gradGrid1 = new int[][]{
+            {3,2,1,0},
+            {2,1,0,-1},
+            {1,0,-1,-2},
+            {0,-1,-2,-3}
     };
     private final int[][]gradGrid2 = new int[][]{
             {0,1,2,3},
