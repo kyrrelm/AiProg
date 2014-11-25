@@ -29,15 +29,20 @@ public class Expectimax {
         //}
     }
 
+    public static void main(String[] args) {
+        Expectimax ex = new Expectimax(null);
+        ex.expectiMax(null);
+    }
     void expectiMax(Map<Location, Tile> gameGrid){
         int[][] grid = new int[4][4];
-        for (Location l: gameGrid.keySet()){
-            if (gameGrid.get(l) == null){
-                grid[l.getX()][l.getY()] = 0;
-            }else {
-                grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
-            }
-        }
+//        for (Location l: gameGrid.keySet()){
+//            if (gameGrid.get(l) == null){
+//                grid[l.getX()][l.getY()] = 0;
+//            }else {
+//                grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
+//            }
+//        }
+
         while (hasMove(grid)){
             boolean done = false;
             while (!done){
@@ -48,7 +53,7 @@ public class Expectimax {
                     done = true;
                 }
             }
-            Direction bestMove = playerBestScore(grid,DEPTH).direction;
+            Direction bestMove = bestMove(grid,DEPTH);
             if (bestMove == Direction.DOWN)
                 moveDown(grid);
             else if (bestMove == Direction.UP)
@@ -69,12 +74,28 @@ public class Expectimax {
 //        });
     }
 
-    private ScoreDirection playerBestScore(int[][] grid, int depth) {
+    private Direction bestMove(int[][] grid, int depth) {
+        double bestScore = -1;
+        Direction bestDir = null;
+
+        for (Direction d: Direction.values()){
+            int[][] copy = deepCopyGrid(grid);
+            if (move(d, copy)){
+                double score = computerAverageScore(copy, depth-1);
+                if (score > bestScore){
+                    bestScore = score;
+                    bestDir = d;
+                }
+            }
+        }
+        return bestDir;
+    }
+    private double playerBestScore(int[][] grid, int depth) {
         //TODO: Should check moves before returning?
         if (depth == 0){
             //TODO: Move out of if
             if (!hasMove(grid)){
-                return new ScoreDirection(null,-1);
+                return -1;
             }
             return gradient(grid);
         }
@@ -92,7 +113,7 @@ public class Expectimax {
                 }
             }
         }
-        return new ScoreDirection(bestDir, bestScore);
+        return bestScore;
     }
 
     private boolean move(Direction d, int[][] grid){
@@ -117,11 +138,11 @@ public class Expectimax {
                     two[y][x] = 2;
                     four[y][x] = 4;
 
-                    double score = playerBestScore(two, depth-1).score;
+                    double score = playerBestScore(two, depth-1);
                     totalScore += score * 0.9;
                     totalWeight += 0.9;
 
-                    score = playerBestScore(four, depth-1).score;
+                    score = playerBestScore(four, depth-1);
                     totalScore += score * 0.1;
                     totalWeight += 0.1;
                 }
@@ -130,7 +151,7 @@ public class Expectimax {
         return totalScore / totalWeight;
     }
 
-    private ScoreDirection gradient(int[][] grid) {
+    private double gradient(int[][] grid) {
         int grad0 = 0, grad1 = 0, grad2 = 0, grad3 =0;
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
@@ -143,7 +164,7 @@ public class Expectimax {
         }
         int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
         //System.out.println(grad);
-        return new ScoreDirection(null,grad);
+        return grad;
     }
 
     private boolean hasMove(int[][] grid) {
