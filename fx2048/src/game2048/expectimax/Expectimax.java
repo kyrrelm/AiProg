@@ -7,6 +7,7 @@ import game2048.Tile;
 import javafx.application.Platform;
 
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by Kyrre on 15.11.2014.
@@ -19,12 +20,13 @@ public class Expectimax {
         this.gameManager = gameManager;
     }
     public void play() {
-        while (true){
+        //while (true){
             //TODO: Waiit until finished with move
             while (gameManager.movingTiles){
+                System.out.println("waiting");
             }
             expectiMax(gameManager.getGameGrid());
-        }
+        //}
     }
 
     void expectiMax(Map<Location, Tile> gameGrid){
@@ -36,13 +38,35 @@ public class Expectimax {
                 grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
             }
         }
-        Direction bestMove = playerBestScore(grid,DEPTH).direction;
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                gameManager.move(bestMove);
+        while (hasMove(grid)){
+            boolean done = false;
+            while (!done){
+                int x = new Random().nextInt(4);
+                int y = new Random().nextInt(4);
+                if (grid[x][y] == 0){
+                    grid[x][y] = new Random().nextDouble() < 0.9 ? 2 : 4;
+                    done = true;
+                }
             }
-        });
+            Direction bestMove = playerBestScore(grid,DEPTH).direction;
+            if (bestMove == Direction.DOWN)
+                moveDown(grid);
+            else if (bestMove == Direction.UP)
+                moveUp(grid);
+            else if (bestMove == Direction.LEFT)
+                moveLeft(grid);
+            else if (bestMove == Direction.RIGHT)
+                moveRight(grid);
+            printGrid(grid);
+        }
+        System.out.println("done");
+
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                gameManager.move(bestMove);
+//            }
+//        });
     }
 
     private ScoreDirection playerBestScore(int[][] grid, int depth) {
