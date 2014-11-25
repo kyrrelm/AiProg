@@ -12,6 +12,7 @@ import java.util.Map;
  * Created by Kyrre on 15.11.2014.
  */
 public class Expectimax {
+    private static final int DEPTH = 6;
     private GameManager gameManager;
 
     public Expectimax(GameManager gameManager) {
@@ -19,6 +20,9 @@ public class Expectimax {
     }
     public void play() {
         while (true){
+            //TODO: Waiit until finished with move
+            while (gameManager.movingTiles){
+            }
             expectiMax(gameManager.getGameGrid());
         }
     }
@@ -32,7 +36,7 @@ public class Expectimax {
                 grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
             }
         }
-        Direction bestMove = playerBestScore(grid,6).direction;
+        Direction bestMove = playerBestScore(grid,DEPTH).direction;
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -42,8 +46,11 @@ public class Expectimax {
     }
 
     private ScoreDirection playerBestScore(int[][] grid, int depth) {
+        //TODO: Should check moves before returning?
         if (depth == 0){
-            if (!moveDown(deepCopyGrid(grid)) && !moveUp(deepCopyGrid(grid)) && !moveLeft(deepCopyGrid(grid)) && !moveRight(deepCopyGrid(grid))){
+            int[][] copy = deepCopyGrid(grid);
+            //TODO: If tile is zero, return true
+            if (!moveDown(copy) && !moveUp(copy) && !moveLeft(copy) && !moveRight(copy)){
                 return new ScoreDirection(null,0);
             }
             return gradient(grid);
@@ -114,6 +121,27 @@ public class Expectimax {
             }
         }
         return totalScore / totalWeight;
+    }
+
+    private ScoreDirection gradient(int[][] grid) {
+        int grad0 = 0, grad1 = 0, grad2 = 0, grad3 =0;
+        for (int y = 0; y < grid.length; y++) {
+            System.out.println();
+            for (int x = 0; x < grid.length; x++) {
+                int value = grid[x][y];
+                //grad0 += (3-(x+y))*value;
+                //grad1 += ((3-(x+y))*-1)*value;
+                //grad2 += (3-(3-x+y))*value;
+                System.out.print(" "+((3 - (3 - x + y)) * -1));
+                System.out.print(" "+value);
+                System.out.print(" "+((3 - (3 - x + y)) * -1)*value);
+                System.out.print(" |");
+                grad3 += ((3-(3-x+y))*-1)*value;
+            }
+        }
+        int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
+        //System.out.println(grad);
+        return new ScoreDirection(null,grad);
     }
 
     private boolean moveLeft(int[][] grid){
@@ -294,26 +322,12 @@ public class Expectimax {
         return hasChanged;
     }
 
-    private ScoreDirection gradient(int[][] grid) {
-        int grad0 = 0, grad1 = 0, grad2 = 0, grad3 =0;
-        for (int y = 0; y < grid.length; y++) {
-            for (int x = 0; x < grid.length; x++) {
-                int value = grid[x][y];
-                grad0 += (3-(x+y))*value;
-                grad1 += ((3-(x+y))*-1)*value;
-                grad2 += (3-(3-x+y))*value;
-                grad3 += ((3-(3-x+y))*-1)*value;
-            }
-        }
-        int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
-        return new ScoreDirection(null,grad);
-    }
-
     private void printGrid(int[][] grid) {
         for (int y = 0; y < grid.length; y++){
             System.out.println();
+            System.out.println();
             for (int x = 0; x < grid.length; x++){
-                System.out.print(grid[x][y] + " ");
+                System.out.print(grid[x][y] + "     ");
             }
         }
         System.out.println("\n---------------------------------------");
