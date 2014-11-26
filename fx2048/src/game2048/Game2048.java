@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
@@ -102,7 +101,7 @@ public class Game2048 extends Application {
             }
             if (keyCode.equals(KeyCode.A)) {
                 Expectimax ai = new Expectimax(gameManager);
-                something(ai);
+                runAI(ai);
                 return;
             }
             if (keyCode.isArrowKey()) {
@@ -111,7 +110,7 @@ public class Game2048 extends Application {
             }
         });
     }
-    private void something(Expectimax ai){
+    private void runAI(Expectimax ai){
         new Thread(new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
@@ -130,7 +129,7 @@ public class Game2048 extends Application {
                         });
                         latch.await();
                         while (gameManager.movingTiles){}
-                        something(ai);
+                        runAI(ai);
                         return null;
                     }
                 }).start();

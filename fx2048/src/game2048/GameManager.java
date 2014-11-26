@@ -35,10 +35,11 @@ import javafx.util.Duration;
 public class GameManager extends Group {
 
     public static final int FINAL_VALUE_TO_WIN = 2048;
-    
-    private static final Duration ANIMATION_EXISTING_TILE = Duration.millis(65);
-    private static final Duration ANIMATION_NEWLY_ADDED_TILE = Duration.millis(125);
-    private static final Duration ANIMATION_MERGED_TILE = Duration.millis(80);
+
+    private static final int ANIMATION_SPEED_UP = 5;
+    private static final Duration ANIMATION_EXISTING_TILE = Duration.millis(65/ANIMATION_SPEED_UP);
+    private static final Duration ANIMATION_NEWLY_ADDED_TILE = Duration.millis(125/ANIMATION_SPEED_UP);
+    private static final Duration ANIMATION_MERGED_TILE = Duration.millis(80/ANIMATION_SPEED_UP);
     
     public volatile boolean movingTiles = false;
     private final List<Location> locations = new ArrayList<>();

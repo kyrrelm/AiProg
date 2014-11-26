@@ -19,11 +19,6 @@ public class Expectimax {
     public Expectimax(GameManager gameManager) {
         this.gameManager = gameManager;
     }
-    public void play() {
-        while (true){
-            expectiMax(gameManager.getGameGrid());
-        }
-    }
 
     public Direction expectiMax(Map<Location, Tile> gameGrid){
         int[][] grid = new int[4][4];
