@@ -29,67 +29,35 @@ public class Expectimax {
         //}
     }
 
-    public static void main(String[] args) {
-        Expectimax ex = new Expectimax(null);
-        ex.expectiMax(null);
-    }
-    void expectiMax(Map<Location, Tile> gameGrid){
+    Direction expectiMax(Map<Location, Tile> gameGrid){
         int[][] grid = new int[4][4];
-//        for (Location l: gameGrid.keySet()){
-//            if (gameGrid.get(l) == null){
-//                grid[l.getX()][l.getY()] = 0;
-//            }else {
-//                grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
-//            }
-//        }
-
-        while (hasMove(grid)){
-            boolean done = false;
-            while (!done){
-                int x = new Random().nextInt(4);
-                int y = new Random().nextInt(4);
-                if (grid[x][y] == 0){
-                    grid[x][y] = new Random().nextDouble() < 0.9 ? 2 : 4;
-                    done = true;
-                }
-            }
-            int maxTile = 0;
-            int emptyTiles = 0;
-            for (int y = 0; y < grid.length; y++) {
-                for (int x = 0; x < grid.length; x++) {
-                    if (grid[x][y] > maxTile){
-                        maxTile = grid[x][y];
-                        continue;
-                    }
-                    if (grid[x][y] == 0){
-                        emptyTiles++;
-                    }
-                }
-            }
-            Direction bestMove;
-            if (maxTile >= 2048 && emptyTiles < 3){
-                bestMove = bestMove(grid,DEPTH+2);
+        for (Location l: gameGrid.keySet()){
+            if (gameGrid.get(l) == null){
+                grid[l.getX()][l.getY()] = 0;
             }else {
-                bestMove = bestMove(grid,DEPTH);
+                grid[l.getX()][l.getY()] = gameGrid.get(l).getValue();
             }
-            if (bestMove == Direction.DOWN)
-                moveDown(grid);
-            else if (bestMove == Direction.UP)
-                moveUp(grid);
-            else if (bestMove == Direction.LEFT)
-                moveLeft(grid);
-            else if (bestMove == Direction.RIGHT)
-                moveRight(grid);
-            printGrid(grid);
         }
-        System.out.println("done");
-
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                gameManager.move(bestMove);
-//            }
-//        });
+        int maxTile = 0;
+        int emptyTiles = 0;
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid.length; x++) {
+                if (grid[x][y] > maxTile){
+                    maxTile = grid[x][y];
+                    continue;
+                }
+                if (grid[x][y] == 0){
+                    emptyTiles++;
+                }
+            }
+        }
+        Direction bestMove;
+        if (maxTile >= 2048 && emptyTiles < 3){
+            bestMove = bestMove(grid,DEPTH+2);
+        }else {
+            bestMove = bestMove(grid,DEPTH);
+        }
+        return bestMove;
     }
 
     private Direction bestMove(int[][] grid, int depth) {
