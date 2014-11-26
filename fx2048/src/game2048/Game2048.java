@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.application.ConditionalFeature;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
@@ -14,6 +16,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author bruno.borges@oracle.com
@@ -98,12 +102,33 @@ public class Game2048 extends Application {
             }
             if (keyCode.equals(KeyCode.A)) {
                 Expectimax ai = new Expectimax(gameManager);
-                new Thread(new Runnable() {
+                Direction d = ai.expectiMax(gameManager.getGameGrid());
+                Service<Void> service = new Service<Void>() {
                     @Override
-                    public void run() {
-                        ai.play();
+                    protected Task<Void> createTask() {
+                        return new Task<Void>() {
+                            @Override
+                            protected Void call() throws Exception {
+                                //Background work
+                                final CountDownLatch latch = new CountDownLatch(1);
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try{
+                                            gameManager.move(d);
+                                        }finally{
+                                            latch.countDown();
+                                        }
+                                    }
+                                });
+                                latch.await();
+                                //Keep with the background work
+                                return null;
+                            }
+                        };
                     }
-                }).start();
+                };
+                service.start();
                 return;
             }
             if (keyCode.isArrowKey()) {

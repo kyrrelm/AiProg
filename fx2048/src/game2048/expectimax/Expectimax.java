@@ -20,16 +20,12 @@ public class Expectimax {
         this.gameManager = gameManager;
     }
     public void play() {
-        //while (true){
-            //TODO: Waiit until finished with move
-            while (gameManager.movingTiles){
-                System.out.println("waiting");
-            }
+        while (true){
             expectiMax(gameManager.getGameGrid());
-        //}
+        }
     }
 
-    Direction expectiMax(Map<Location, Tile> gameGrid){
+    public Direction expectiMax(Map<Location, Tile> gameGrid){
         int[][] grid = new int[4][4];
         for (Location l: gameGrid.keySet()){
             if (gameGrid.get(l) == null){
