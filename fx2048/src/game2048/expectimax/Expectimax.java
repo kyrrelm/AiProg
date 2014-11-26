@@ -163,22 +163,6 @@ public class Expectimax {
         return totalScore / totalWeight;
     }
 
-    private double gradient(int[][] grid) {
-        int grad0 = 0, grad1 = 0, grad2 = 0, grad3 =0;
-        for (int y = 0; y < grid.length; y++) {
-            for (int x = 0; x < grid.length; x++) {
-                int value = grid[x][y];
-                grad0 += customGradGrid[x][y]*value*value;
-                //grad0 += gradGrid0[x][y]*value;
-                //grad1 += gradGrid1[x][y]*value;
-                //grad2 += gradGrid2[x][y]*value;
-                //grad3 += gradGrid3[x][y]*value;
-            }
-        }
-        int grad = Math.max(Math.max(grad0,grad1),Math.max(grad2,grad3));
-        return grad;
-    }
-
     private boolean hasMove(int[][] grid) {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
@@ -209,6 +193,17 @@ public class Expectimax {
         return copy;
     }
 
+    private double gradient(int[][] grid) {
+        int grad = 0;
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid.length; x++) {
+                int value = grid[x][y];
+                grad += customGradGrid[x][y]*value*value;
+            }
+        }
+        return grad;
+    }
+
     private final int[][]customGradGrid = new int[][]{
             {-4,-5,-6,-7},
             {-3,-2,-2,-1},
@@ -216,31 +211,6 @@ public class Expectimax {
             {7,8,9,12}
     };
 
-    private final int[][]gradGrid0 = new int[][]{
-            {-3,-2,-1,0},
-            {-2,-1,0,-1},
-            {-1,0,1,2},
-            {0,1,2,3}
-    };
-
-    private final int[][]gradGrid1 = new int[][]{
-            {3,2,1,0},
-            {2,1,0,-1},
-            {1,0,-1,-2},
-            {0,-1,-2,-3}
-    };
-    private final int[][]gradGrid2 = new int[][]{
-            {0,1,2,3},
-            {-1,0,1,2},
-            {-2,-1,0,1},
-            {-3,-2,-1,0}
-    };
-    private final int[][]gradGrid3 = new int[][]{
-            {0,1,2,3},
-            {-1,0,1,2},
-            {-2,-1,0,1},
-            {-3,-2,-1,0}
-    };
     private boolean moveLeft(int[][] grid){
         boolean hasChanged = false;
         for (int y = 0; y < grid.length; y++){
