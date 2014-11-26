@@ -15,9 +15,10 @@ import java.util.Random;
 public class Expectimax {
     private static final int DEPTH = 6;
     private GameManager gameManager;
-
+    private int[][] gradGrid;
     public Expectimax(GameManager gameManager) {
         this.gameManager = gameManager;
+        gradGrid = safeGradGrid;
     }
 
     public Direction expectiMax(Map<Location, Tile> gameGrid){
@@ -30,10 +31,12 @@ public class Expectimax {
             }
         }
         int maxTile = 0;
+        int secondMax = 0;
         int emptyTiles = 0;
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 if (grid[x][y] > maxTile){
+                    secondMax = maxTile;
                     maxTile = grid[x][y];
                     continue;
                 }
@@ -42,8 +45,13 @@ public class Expectimax {
                 }
             }
         }
+        if (maxTile >= 4096){
+            gradGrid = customGradGrid;
+        }
         Direction bestMove;
-        if (maxTile >= 2048 && emptyTiles < 3){
+        if (maxTile >= 4096 && secondMax >= 2048 && emptyTiles < 4){
+            bestMove = bestMove(grid,DEPTH+2);
+        }else if (maxTile >= 2048 && emptyTiles < 3){
             bestMove = bestMove(grid,DEPTH+2);
         }else {
             bestMove = bestMove(grid,DEPTH);
@@ -157,7 +165,7 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
-                grad += safeGradGrid[x][y]*value*value;
+                grad += gradGrid[x][y]*value*value;
             }
         }
         return grad;
