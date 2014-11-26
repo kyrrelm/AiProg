@@ -18,7 +18,7 @@ public class Expectimax {
     private int[][] gradGrid;
     public Expectimax(GameManager gameManager) {
         this.gameManager = gameManager;
-        gradGrid = safeGradGrid;
+        gradGrid = customGradGrid;
     }
 
     public Direction expectiMax(Map<Location, Tile> gameGrid){
