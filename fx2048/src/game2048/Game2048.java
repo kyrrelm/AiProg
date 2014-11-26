@@ -102,33 +102,7 @@ public class Game2048 extends Application {
             }
             if (keyCode.equals(KeyCode.A)) {
                 Expectimax ai = new Expectimax(gameManager);
-                Direction d = ai.expectiMax(gameManager.getGameGrid());
-                Service<Void> service = new Service<Void>() {
-                    @Override
-                    protected Task<Void> createTask() {
-                        return new Task<Void>() {
-                            @Override
-                            protected Void call() throws Exception {
-                                //Background work
-                                final CountDownLatch latch = new CountDownLatch(1);
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try{
-                                            gameManager.move(d);
-                                        }finally{
-                                            latch.countDown();
-                                        }
-                                    }
-                                });
-                                latch.await();
-                                //Keep with the background work
-                                return null;
-                            }
-                        };
-                    }
-                };
-                service.start();
+                something(ai);
                 return;
             }
             if (keyCode.isArrowKey()) {
@@ -137,7 +111,31 @@ public class Game2048 extends Application {
             }
         });
     }
-
+    private void something(Expectimax ai){
+        new Thread(new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        //Background work
+                        Direction d = ai.expectiMax(gameManager.getGameGrid());
+                        final CountDownLatch latch = new CountDownLatch(1);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                try{
+                                    gameManager.move(d);
+                                }finally{
+                                    latch.countDown();
+                                }
+                            }
+                        });
+                        latch.await();
+                        while (gameManager.movingTiles){}
+                        System.out.println("derp");
+                        something(ai);
+                        return null;
+                    }
+                }).start();
+    }
     private void addSwipeHandlers(Scene scene) {
         scene.setOnSwipeUp(e -> gameManager.move(Direction.UP));
         scene.setOnSwipeRight(e -> gameManager.move(Direction.RIGHT));
