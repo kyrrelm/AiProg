@@ -157,17 +157,31 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
-                grad += customGradGrid[x][y]*value*value;
+                grad += safeGradGrid[x][y]*value*value;
             }
         }
         return grad;
     }
 
     private final int[][]customGradGrid = new int[][]{
+            {-2,-1,0,1},
+            {-1,0,1,2},
+            {0,1,2,3},
+            {14,16,20,30}
+    };
+
+    private final int[][]safeGradGrid = new int[][]{
             {-4,-5,-6,-7},
             {-3,-2,-2,-1},
             {3,2,2,1},
             {7,8,9,12}
+    };
+
+    private final int[][]experimentalGradGrid = new int[][]{
+            {-2,-1,0,1},
+            {-1,0,1,2},
+            {0,1,2,3},
+            {28,23,40,60}
     };
 
     private boolean moveLeft(int[][] grid){
