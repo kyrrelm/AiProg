@@ -16,6 +16,7 @@ public class Expectimax {
     private static final int DEPTH = 6;
     private GameManager gameManager;
     private int[][] gradGrid;
+    private boolean exp = false;
     public Expectimax(GameManager gameManager) {
         this.gameManager = gameManager;
         gradGrid = customGradGrid;
@@ -46,10 +47,11 @@ public class Expectimax {
             }
         }
         if (maxTile >= 4096){
-            gradGrid = customGradGrid;
+            gradGrid = experimentalGradGrid;
+            exp = true;
         }
         Direction bestMove;
-        if (maxTile >= 4096 && secondMax >= 2048 && emptyTiles < 4){
+        if (maxTile >= 2048 && secondMax >= 1024 && emptyTiles < 4){
             bestMove = bestMove(grid,DEPTH+2);
         }else if (maxTile >= 2048 && emptyTiles < 3){
             bestMove = bestMove(grid,DEPTH+2);
@@ -165,7 +167,11 @@ public class Expectimax {
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {
                 int value = grid[x][y];
-                grad += gradGrid[x][y]*value*value;
+                if (exp){
+                    grad += gradGrid[x][y]*value*2;
+                }else {
+                    grad += gradGrid[x][y]*value*value;
+                }
             }
         }
         return grad;
