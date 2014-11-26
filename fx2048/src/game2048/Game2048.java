@@ -130,7 +130,6 @@ public class Game2048 extends Application {
                         });
                         latch.await();
                         while (gameManager.movingTiles){}
-                        System.out.println("derp");
                         something(ai);
                         return null;
                     }
