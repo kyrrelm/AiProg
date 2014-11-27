@@ -185,9 +185,9 @@ public class Expectimax {
     };
 
     private final int[][]safeGradGrid = new int[][]{
-            {-4,-5,-6,-7},
-            {-3,-2,-2,-1},
-            {3,2,2,1},
+            {-2,-1,0,1},
+            {-1,0,1,2},
+            {0,1,2,3},
             {7,8,9,12}
     };
 
