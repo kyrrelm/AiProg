@@ -19,7 +19,7 @@ public class Expectimax {
     private boolean exp = false;
     public Expectimax(GameManager gameManager) {
         this.gameManager = gameManager;
-        gradGrid = customGradGrid;
+        gradGrid = hGradGrid;
     }
 
     public Direction expectiMax(Map<Location, Tile> gameGrid){
@@ -184,11 +184,11 @@ public class Expectimax {
             {14,16,20,30}
     };
 
-    private final int[][]safeGradGrid = new int[][]{
-            {-2,-1,0,1},
-            {-1,0,1,2},
-            {0,1,2,3},
-            {7,8,9,12}
+    private final int[][]hGradGrid = new int[][]{
+            {-2,-3,-3,-3},
+            {-1, 0, 0, 1},
+            { 6, 3, 2, 1},
+            {10,13,15,18}
     };
 
     private final int[][]experimentalGradGrid = new int[][]{
@@ -196,6 +196,13 @@ public class Expectimax {
             {-1,0,1,2},
             {0,1,2,3},
             {28,23,40,60}
+    };
+
+    private final int[][]safeGradGrid = new int[][]{
+            {-2,-1,0,1},
+            {-1,0,1,2},
+            {0,1,2,3},
+            {7,8,9,12}
     };
 
     private boolean moveLeft(int[][] grid){
